@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.ehcache.org/v3"
+        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-3.0.xsd">
+
+    <!-- Cache para listado de cursos -->
+    <cache alias="cursos">
+        <expiry>
+            <ttl unit="minutes">15</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">1000</heap>
+        </resources>
+    </cache>
+
+    <!-- Cache para listado de evaluaciones por curso -->
+    <cache alias="evaluacionesByCurso">
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">1000</heap>
+        </resources>
+    </cache>
+
+    <!-- Cache para evaluaciones por estado -->
+    <cache alias="evaluacionesByEstado">
+        <expiry>
+            <ttl unit="minutes">5</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">500</heap>
+        </resources>
+    </cache>
+
+    <!-- Cache para PQRS -->
+    <cache alias="pqrs">
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">500</heap>
+        </resources>
+    </cache>
+
+    <!-- Cache para preguntas por evaluación -->
+    <cache alias="preguntasByEvaluacion">
+        <expiry>
+            <ttl unit="minutes">15</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">500</heap>
+        </resources>
+    </cache>
+
+    <!-- Cache para usuarios -->
+    <cache alias="usuarios">
+        <expiry>
+            <ttl unit="minutes">20</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">500</heap>
+        </resources>
+    </cache>
+
+    <!-- Cache genérico para resultados de queries complejas -->
+    <cache alias="queryResults">
+        <expiry>
+            <ttl unit="minutes">5</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">2000</heap>
+        </resources>
+    </cache>
+
+</config>
