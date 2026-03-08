@@ -25,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-test.yml")
 class EvaluacionControllerIntegrationTest {
 
     @Autowired
@@ -67,7 +66,7 @@ class EvaluacionControllerIntegrationTest {
         cursoId = c.getId();
 
         // login professor
-        String loginJson = "{\"email\":\"prof2@example.com\",\"password\":\"pwd\"}";
+        String loginJson = "{\"email\":\"prof2@example.com\",\"password\":\"pwd\",\"role\":\"maestro\"}";
         String content = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginJson))
@@ -85,13 +84,15 @@ class EvaluacionControllerIntegrationTest {
         dto.put("cursoId", cursoId);
         dto.put("profesorId", userDao.findByEmail("prof2@example.com").get().getId());
         dto.put("tipo","Quiz");
+        dto.put("estado","Borrador");
+        dto.put("publicada",false);
 
         String json = objectMapper.writeValueAsString(dto);
         mockMvc.perform(post("/api/evaluaciones")
                 .header("Authorization","Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true));
 
         // publish
@@ -99,6 +100,6 @@ class EvaluacionControllerIntegrationTest {
         mockMvc.perform(post("/api/evaluaciones/"+evalId+"/publicar")
                 .header("Authorization","Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.estado").value("Activa"));
+                .andExpect(jsonPath("$.data").value("Evaluación publicada exitosamente"));
     }
 }

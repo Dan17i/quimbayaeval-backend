@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-test.yml")
 class AuthControllerIntegrationTest {
 
     @Autowired
@@ -43,7 +42,7 @@ class AuthControllerIntegrationTest {
 
     @Test
     void login_success_returnsToken() throws Exception {
-        String json = "{\"email\":\"test@example.com\",\"password\":\"pwd\"}";
+        String json = "{\"email\":\"test@example.com\",\"password\":\"pwd\",\"role\":\"estudiante\"}";
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))

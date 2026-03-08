@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-test.yml")
 class PQRSControllerIntegrationTest {
 
     @Autowired
@@ -51,7 +50,7 @@ class PQRSControllerIntegrationTest {
         // crear usuario
         User u = new User("Alice", "alice@example.com", passwordEncoder.encode("pwd"), "estudiante");
         userDao.save(u);
-        String loginJson = "{\"email\":\"alice@example.com\",\"password\":\"pwd\"}";
+        String loginJson = "{\"email\":\"alice@example.com\",\"password\":\"pwd\",\"role\":\"estudiante\"}";
         String content = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginJson))
@@ -68,13 +67,14 @@ class PQRSControllerIntegrationTest {
         dto.put("asunto","Test");
         dto.put("descripcion","¿hola?");
         dto.put("usuarioId", userDao.findByEmail("alice@example.com").get().getId());
+        dto.put("estado","Pendiente");
 
         String json = objectMapper.writeValueAsString(dto);
         mockMvc.perform(post("/api/pqrs")
                 .header("Authorization","Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true));
 
         Integer id = pqrsDao.findByUsuario(userDao.findByEmail("alice@example.com").get().getId()).get(0).getId();
@@ -87,6 +87,6 @@ class PQRSControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(respJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.estado").value("Resuelto"));
+                .andExpect(jsonPath("$.data").value("PQRS respondido exitosamente"));
     }
 }

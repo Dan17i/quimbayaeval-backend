@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-test.yml")
 class CursoControllerIntegrationTest {
 
     @Autowired
@@ -51,7 +50,7 @@ class CursoControllerIntegrationTest {
         User prof = new User("Prof", "prof@example.com", passwordEncoder.encode("pwd"), "maestro");
         userDao.save(prof);
         // obtener token mediante login
-        String loginJson = "{\"email\":\"prof@example.com\",\"password\":\"pwd\"}";
+        String loginJson = "{\"email\":\"prof@example.com\",\"password\":\"pwd\",\"role\":\"maestro\"}";
         String content = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginJson))
@@ -77,7 +76,7 @@ class CursoControllerIntegrationTest {
                 .header("Authorization","Bearer " + professorToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.codigo").value("C101"));
 

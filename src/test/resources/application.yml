@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  cache:
+    type: none
+  flyway:
+    enabled: false
+  
+# JWT config para tests
+jwt:
+  secret: test-secret-key-for-testing-purposes-only-minimum-256-bits-required
+  expiration: 3600000
+
+# CORS config para tests
+cors:
+  allowed-origins: http://localhost:5173,http://localhost:3000
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  max-age: 3600
+
+# Logging para tests
+logging:
+  level:
+    root: WARN
+    com.quimbayaeval: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
