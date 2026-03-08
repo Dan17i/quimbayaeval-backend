@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Servicio PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: quimbayaeval-db
+    environment:
+      POSTGRES_DB: quimbayaeval
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    networks:
+      - quimbayaeval-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Servicio Backend Spring Boot
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quimbayaeval-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/quimbayaeval
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      JWT_SECRET: ${JWT_SECRET:-tu-clave-secreta-muy-larga-y-segura-cambiar-en-produccion-debe-tener-minimo-256-bits}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - quimbayaeval-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  quimbayaeval-network:
+    driver: bridge
