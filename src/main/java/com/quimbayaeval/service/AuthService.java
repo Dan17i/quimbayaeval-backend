@@ -1,9 +1,12 @@
 package com.quimbayaeval.service;
 
-import com.quimbayaeval.dao.UserDao;
-import com.quimbayaeval.model.User;
-import com.quimbayaeval.model.dto.LoginRequest;
+import com.quimbayaeval.exception.ResourceNotFoundException;
+import com.quimbayaeval.exception.UnauthorizedException;
+import com.quimbayaeval.model.dto.request.LoginRequestDTO;
+import com.quimbayaeval.model.entity.UserEntity;
+import com.quimbayaeval.repository.UserRepository;
 import com.quimbayaeval.security.JwtTokenProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,13 +14,14 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * Servicio de autenticación
+ * Servicio de autenticación con JPA y logging
  */
+@Slf4j
 @Service
 public class AuthService {
 
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -28,62 +32,80 @@ public class AuthService {
     /**
      * Realiza login de usuario
      */
-    public User authenticate(LoginRequest loginRequest) {
-        Optional<User> userOpt = userDao.findByEmail(loginRequest.getEmail());
+    public UserEntity authenticate(LoginRequestDTO loginRequest) {
+        log.info("Intento de login para email: {}", loginRequest.getEmail());
+        
+        Optional<UserEntity> userOpt = userRepository.findByEmail(loginRequest.getEmail());
 
         if (userOpt.isEmpty()) {
-            throw new RuntimeException("Usuario no encontrado");
+            log.warn("Usuario no encontrado: {}", loginRequest.getEmail());
+            throw new ResourceNotFoundException("Usuario", "email", loginRequest.getEmail());
         }
 
-        User user = userOpt.get();
+        UserEntity user = userOpt.get();
+
+        // Validar que el usuario esté activo
+        if (!user.getActive()) {
+            log.warn("Usuario inactivo intentó login: {}", loginRequest.getEmail());
+            throw new UnauthorizedException("Usuario inactivo");
+        }
 
         // Validar contraseña
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Contraseña incorrecta");
+            log.warn("Contraseña incorrecta para usuario: {}", loginRequest.getEmail());
+            throw new UnauthorizedException("Credenciales inválidas");
         }
 
         // Validar role si se proporciona
         if (loginRequest.getRole() != null && !loginRequest.getRole().equals(user.getRole())) {
-            throw new RuntimeException("El rol no coincide");
+            log.warn("Rol no coincide para usuario: {}. Esperado: {}, Recibido: {}", 
+                     loginRequest.getEmail(), user.getRole(), loginRequest.getRole());
+            throw new UnauthorizedException("El rol no coincide con el usuario");
         }
 
+        log.info("Login exitoso para usuario: {} con rol: {}", user.getEmail(), user.getRole());
         return user;
     }
 
     /**
      * Registra un nuevo usuario
      */
-    public User register(User user, String passwordPlain) {
+    public UserEntity register(UserEntity user, String passwordPlain) {
+        log.info("Registrando nuevo usuario: {}", user.getEmail());
+        
         // Validar email único
-        if (userDao.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("El email ya está registrado");
+        if (userRepository.existsByEmail(user.getEmail())) {
+            log.warn("Intento de registro con email duplicado: {}", user.getEmail());
+            throw new IllegalArgumentException("El email ya está registrado");
         }
 
         // Encriptar contraseña
         user.setPassword(passwordEncoder.encode(passwordPlain));
         user.setActive(true);
 
-        return userDao.save(user);
+        UserEntity saved = userRepository.save(user);
+        log.info("Usuario registrado exitosamente: {} con ID: {}", saved.getEmail(), saved.getId());
+        return saved;
     }
 
     /**
      * Obtiene usuario por ID
      */
-    public Optional<User> getUserById(Integer id) {
-        return userDao.findById(id);
+    public Optional<UserEntity> getUserById(Integer id) {
+        return userRepository.findById(id);
     }
 
     /**
      * Obtiene usuario por email
      */
-    public Optional<User> getUserByEmail(String email) {
-        return userDao.findByEmail(email);
+    public Optional<UserEntity> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     /**
      * Genera JWT para usuario autenticado
      */
-    public String generateToken(User user) {
+    public String generateToken(UserEntity user) {
         return tokenProvider.generateToken(user.getId(), user.getEmail(), user.getRole());
     }
 
