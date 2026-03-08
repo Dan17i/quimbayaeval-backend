@@ -70,8 +70,23 @@ public class PreguntaDao {
             ps.setString(7, pregunta.getRespuestaCorrectaJson());
             return ps;
         }, keyHolder);
-        if (keyHolder.getKey() != null) {
+        
+        // Obtener el ID generado - compatible con H2 que retorna múltiples columnas
+        if (keyHolder.getKeys() != null && keyHolder.getKeys().containsKey("ID")) {
+            pregunta.setId(((Number) keyHolder.getKeys().get("ID")).intValue());
+        } else if (keyHolder.getKey() != null) {
             pregunta.setId(keyHolder.getKey().intValue());
+        } else {
+            // Fallback: consultar el último ID insertado
+            Integer lastId = jdbcTemplate.queryForObject(
+                "SELECT id FROM preguntas WHERE evaluacion_id = ? AND enunciado = ? ORDER BY id DESC LIMIT 1",
+                Integer.class,
+                pregunta.getEvaluacionId(),
+                pregunta.getEnunciado()
+            );
+            if (lastId != null) {
+                pregunta.setId(lastId);
+            }
         }
         return pregunta;
     }

@@ -25,7 +25,7 @@ public class UserDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL_INSERT = 
-        "INSERT INTO users (name, email, password, role, active) VALUES (?, ?, ?, ?, ?)";
+        "INSERT INTO users (name, email, password, role, active, created_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
     private static final String SQL_SELECT_BY_ID = 
         "SELECT id, name, email, password, role, active, created_at, updated_at FROM users WHERE id = ?";
     private static final String SQL_SELECT_BY_EMAIL = 

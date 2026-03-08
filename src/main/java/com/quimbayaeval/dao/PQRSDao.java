@@ -27,8 +27,8 @@ public class PQRSDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL_INSERT =
-        "INSERT INTO pqrs (tipo, asunto, descripcion, curso_id, usuario_id, estado) " +
-        "VALUES (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO pqrs (tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion) " +
+        "VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
     private static final String SQL_SELECT_BY_ID =
         "SELECT id, tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at " +
         "FROM pqrs WHERE id = ?";

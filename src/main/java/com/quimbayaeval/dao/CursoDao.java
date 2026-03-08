@@ -27,7 +27,7 @@ public class CursoDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL_INSERT =
-        "INSERT INTO cursos (codigo, nombre, descripcion, profesor_id) VALUES (?, ?, ?, ?)";
+        "INSERT INTO cursos (codigo, nombre, descripcion, profesor_id, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)";
     private static final String SQL_SELECT_BY_ID =
         "SELECT id, codigo, nombre, descripcion, profesor_id, created_at, updated_at FROM cursos WHERE id = ?";
     private static final String SQL_SELECT_ALL =

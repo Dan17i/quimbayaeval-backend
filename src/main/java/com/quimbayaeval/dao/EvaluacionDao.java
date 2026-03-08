@@ -27,8 +27,8 @@ public class EvaluacionDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL_INSERT =
-        "INSERT INTO evaluaciones (nombre, descripcion, curso_id, profesor_id, tipo, estado, deadline, duracion_minutos, intentos_permitidos, publicada) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO evaluaciones (nombre, descripcion, curso_id, profesor_id, tipo, estado, deadline, duracion_minutos, intentos_permitidos, publicada, created_at) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
     private static final String SQL_SELECT_BY_ID =
         "SELECT id, nombre, descripcion, curso_id, profesor_id, tipo, estado, deadline, duracion_minutos, intentos_permitidos, publicada, created_at, updated_at " +
         "FROM evaluaciones WHERE id = ?";
