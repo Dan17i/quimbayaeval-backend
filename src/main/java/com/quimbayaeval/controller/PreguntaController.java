@@ -52,8 +52,12 @@ public class PreguntaController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Pregunta>> create(@RequestBody Pregunta p) {
+        // Asegurar valor por defecto para puntuacion si es null
+        if (p.getPuntuacion() == null) {
+            p.setPuntuacion(1.0);
+        }
         Pregunta saved = preguntaService.crear(p);
-        return ResponseEntity.ok(ApiResponse.success("Pregunta creada", saved));
+        return ResponseEntity.status(201).body(ApiResponse.success("Pregunta creada", saved));
     }
 
     @PutMapping("/{id}")
