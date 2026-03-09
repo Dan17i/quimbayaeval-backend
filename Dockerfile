@@ -3,13 +3,14 @@ FROM eclipse-temurin:17-jdk-alpine AS build
 
 WORKDIR /app
 
+# Instalar Maven
+RUN apk add --no-cache maven
+
 # Copiar archivos de Maven
 COPY pom.xml .
-COPY mvn ./mvn
 
 # Descargar dependencias
-RUN apk add --no-cache maven && \
-    mvn dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 
 # Copiar código fuente
 COPY src ./src
