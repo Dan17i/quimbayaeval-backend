@@ -45,6 +45,9 @@ buildNumber.properties
 # Environment variables
 .env
 
+# Frontend documentation (for frontend repo only)
+FRONTEND_API_GUIDE.md
+
 # OS
 .DS_Store
 Thumbs.db
