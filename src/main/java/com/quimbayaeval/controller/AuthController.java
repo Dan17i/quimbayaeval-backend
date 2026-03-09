@@ -107,4 +107,5 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(ApiResponse.error("Token inválido o no proporcionado"));
     }
+
 }

@@ -1,8 +1,12 @@
 package com.quimbayaeval.service;
 
+import com.quimbayaeval.config.CustomMetrics;
 import com.quimbayaeval.dao.EvaluacionDao;
 import com.quimbayaeval.dao.JdbcQueryBuilder;
 import com.quimbayaeval.model.Evaluacion;
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.Timer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,19 +15,39 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Servicio para Evaluaciones con soporte para filtros avanzados
+ * Servicio para Evaluaciones con soporte para filtros avanzados y métricas
  */
+@Slf4j
 @Service
 public class EvaluacionService {
 
     @Autowired
     private EvaluacionDao evaluacionDao;
+    
+    @Autowired(required = false)
+    private CustomMetrics customMetrics;
 
     /**
      * Crea una nueva evaluación
      */
+    @Timed(value = "evaluacion.create", description = "Tiempo de creación de evaluación")
     public Evaluacion crear(Evaluacion evaluacion) {
-        return evaluacionDao.save(evaluacion);
+        log.info("Creando evaluación: nombre={}, cursoId={}", 
+                 evaluacion.getNombre(), evaluacion.getCursoId());
+        
+        Timer.Sample sample = customMetrics != null ? customMetrics.startEvaluacionCreationTimer() : null;
+        try {
+            Evaluacion nueva = evaluacionDao.save(evaluacion);
+            if (customMetrics != null) {
+                customMetrics.incrementEvaluacionCreated();
+            }
+            log.info("Evaluación creada exitosamente: id={}", nueva.getId());
+            return nueva;
+        } finally {
+            if (sample != null && customMetrics != null) {
+                customMetrics.stopEvaluacionCreationTimer(sample);
+            }
+        }
     }
 
     /**
