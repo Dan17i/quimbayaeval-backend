@@ -1,0 +1,454 @@
+# 🔧 Guía de Instalación y Configuración
+
+Esta guía te ayudará a configurar y ejecutar QuimbayaEVAL Backend en tu entorno local.
+
+## 📋 Requisitos Previos
+
+### Software Requerido
+
+- **Java 17+** - [Descargar](https://www.oracle.com/java/technologies/downloads/)
+- **Maven 3.8+** - [Descargar](https://maven.apache.org/download.cgi)
+- **PostgreSQL 15+** - [Descargar](https://www.postgresql.org/download/)
+- **Docker & Docker Compose** (opcional) - [Descargar](https://www.docker.com/)
+
+### Verificar Instalación
+
+```bash
+# Verificar Java
+java -version
+# Debe mostrar: java version "17.x.x"
+
+# Verificar Maven
+mvn -version
+# Debe mostrar: Apache Maven 3.8.x
+
+# Verificar PostgreSQL
+psql --version
+# Debe mostrar: psql (PostgreSQL) 15.x
+```
+
+## 🚀 Opción 1: Instalación con Docker (Recomendado)
+
+### Paso 1: Clonar el Repositorio
+
+```bash
+git clone <repo-url>
+cd quimbayaeval-backend
+```
+
+### Paso 2: Configurar Variables de Entorno
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```env
+# JWT Configuration
+JWT_SECRET=genera-un-secret-seguro-aqui
+JWT_EXPIRATION=86400000
+
+# Database
+SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/quimbayaeval
+SPRING_DATASOURCE_USERNAME=postgres
+SPRING_DATASOURCE_PASSWORD=postgres
+
+# CORS
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+```
+
+Para generar un JWT_SECRET seguro:
+
+```bash
+# En Linux/Mac
+openssl rand -base64 64
+
+# En Windows PowerShell
+$bytes = New-Object byte[] 64
+(New-Object Security.Cryptography.RNGCryptoServiceProvider).GetBytes($bytes)
+[Convert]::ToBase64String($bytes)
+```
+
+### Paso 3: Iniciar Servicios
+
+```bash
+# Iniciar PostgreSQL + Backend
+docker-compose up --build
+
+# En modo detached (background)
+docker-compose up -d --build
+```
+
+### Paso 4: Verificar que Funciona
+
+```bash
+# Health check
+curl http://localhost:8080/actuator/health
+
+# Debe responder: {"status":"UP"}
+```
+
+### Servicios Disponibles
+
+- Backend: http://localhost:8080
+- PostgreSQL: localhost:5432
+- Swagger UI: http://localhost:8080/swagger-ui.html
+
+## 🖥️ Opción 2: Instalación Local (Sin Docker)
+
+### Paso 1: Configurar PostgreSQL
+
+```bash
+# Crear base de datos
+createdb quimbayaeval
+
+# O usando psql
+psql -U postgres
+CREATE DATABASE quimbayaeval;
+\q
+```
+
+### Paso 2: Cargar Esquema de Base de Datos
+
+El esquema se carga automáticamente al iniciar la aplicación gracias a JPA/Hibernate. Si prefieres cargarlo manualmente:
+
+```bash
+psql -U postgres -d quimbayaeval -f src/main/resources/db/schema.sql
+```
+
+### Paso 3: Insertar Usuarios de Prueba
+
+```bash
+psql -U postgres -d quimbayaeval
+```
+
+```sql
+-- Insertar usuarios (password: password123)
+INSERT INTO users (name, email, password, role, active) VALUES
+('Admin Sistema', 'admin@quimbaya.edu.co', '$2a$10$QtbItQKMSvE6Q1XDdEapWeox/TOsjI.xMjM9L.8sf/Wsm2efuKV7i', 'coordinador', true),
+('María Profesora', 'profesor@quimbaya.edu.co', '$2a$10$QtbItQKMSvE6Q1XDdEapWeox/TOsjI.xMjM9L.8sf/Wsm2efuKV7i', 'maestro', true),
+('Juan Estudiante', 'estudiante@quimbaya.edu.co', '$2a$10$QtbItQKMSvE6Q1XDdEapWeox/TOsjI.xMjM9L.8sf/Wsm2efuKV7i', 'estudiante', true);
+
+-- Verificar
+SELECT id, name, email, role FROM users;
+\q
+```
+
+### Paso 4: Configurar Variables de Entorno
+
+```bash
+# Windows PowerShell
+$env:JWT_SECRET="tu-secret-generado"
+$env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/quimbayaeval"
+$env:SPRING_DATASOURCE_USERNAME="postgres"
+$env:SPRING_DATASOURCE_PASSWORD="postgres"
+$env:CORS_ALLOWED_ORIGINS="http://localhost:5173,http://localhost:3000"
+
+# Linux/Mac
+export JWT_SECRET="tu-secret-generado"
+export SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/quimbayaeval"
+export SPRING_DATASOURCE_USERNAME="postgres"
+export SPRING_DATASOURCE_PASSWORD="postgres"
+export CORS_ALLOWED_ORIGINS="http://localhost:5173,http://localhost:3000"
+```
+
+O crea un archivo `.env` en la raíz del proyecto (ver Opción 1, Paso 2).
+
+### Paso 5: Compilar el Proyecto
+
+```bash
+# Limpiar y compilar
+mvn clean package -DskipTests
+
+# Con tests
+mvn clean package
+```
+
+### Paso 6: Ejecutar la Aplicación
+
+```bash
+# Opción A: Con Maven
+mvn spring-boot:run
+
+# Opción B: Con JAR compilado
+java -jar target/quimbayaeval-backend-1.0.0-SNAPSHOT.jar
+```
+
+### Paso 7: Verificar que Funciona
+
+Deberías ver en la consola:
+
+```
+Started QuimbayaEvalBackendApplication in X.XXX seconds
+Tomcat started on port(s): 8080 (http)
+```
+
+Probar:
+
+```bash
+# Health check
+curl http://localhost:8080/actuator/health
+
+# Login
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"estudiante@quimbaya.edu.co","password":"password123","role":"estudiante"}'
+```
+
+## 🧪 Verificación Completa
+
+### 1. Health Check
+
+```bash
+curl http://localhost:8080/actuator/health
+```
+
+Respuesta esperada:
+```json
+{
+  "status": "UP"
+}
+```
+
+### 2. Login de Usuario
+
+```bash
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"estudiante@quimbaya.edu.co","password":"password123","role":"estudiante"}'
+```
+
+Respuesta esperada:
+```json
+{
+  "success": true,
+  "message": "Login exitoso",
+  "data": {
+    "token": "eyJhbGciOiJIUzUxMiJ9...",
+    "type": "Bearer",
+    "id": 4,
+    "name": "Juan Estudiante",
+    "email": "estudiante@quimbaya.edu.co",
+    "role": "estudiante"
+  }
+}
+```
+
+### 3. Endpoint Protegido
+
+```bash
+# Guardar token de la respuesta anterior
+TOKEN="pega-aqui-el-token"
+
+# Probar endpoint protegido
+curl -X GET http://localhost:8080/api/cursos \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### 4. Swagger UI
+
+Abrir en navegador:
+```
+http://localhost:8080/swagger-ui.html
+```
+
+## ⚙️ Configuración Avanzada
+
+### Cambiar Puerto del Servidor
+
+Editar `src/main/resources/application.yml`:
+
+```yaml
+server:
+  port: 8081  # Cambiar de 8080 a 8081
+```
+
+### Configurar Pool de Conexiones
+
+Editar `src/main/resources/application.yml`:
+
+```yaml
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+```
+
+### Habilitar Logs de SQL
+
+Editar `src/main/resources/application.yml`:
+
+```yaml
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+```
+
+### Configurar CORS para Múltiples Orígenes
+
+Editar `src/main/java/com/quimbayaeval/config/SecurityConfig.java`:
+
+```java
+configuration.setAllowedOrigins(Arrays.asList(
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://tu-dominio.com"
+));
+```
+
+## 🐛 Solución de Problemas
+
+### Error: "JWT_SECRET not found"
+
+**Causa**: Variable de entorno no configurada
+
+**Solución**:
+```bash
+# Verificar
+echo $JWT_SECRET  # Linux/Mac
+echo $env:JWT_SECRET  # Windows PowerShell
+
+# Configurar
+export JWT_SECRET="tu-secret"  # Linux/Mac
+$env:JWT_SECRET="tu-secret"  # Windows PowerShell
+```
+
+### Error: "Connection refused to PostgreSQL"
+
+**Causa**: PostgreSQL no está corriendo o puerto incorrecto
+
+**Solución**:
+```bash
+# Verificar servicio (Windows)
+Get-Service postgresql*
+
+# Iniciar servicio
+Start-Service postgresql-x64-15
+
+# Verificar puerto
+psql -U postgres -c "SHOW port;"
+```
+
+### Error: "Port 8080 already in use"
+
+**Causa**: Otro proceso está usando el puerto 8080
+
+**Solución**:
+```bash
+# Windows
+netstat -ano | findstr :8080
+taskkill /PID <PID> /F
+
+# Linux/Mac
+lsof -i :8080
+kill -9 <PID>
+
+# O cambiar puerto en application.yml
+```
+
+### Error: "Table 'users' doesn't exist"
+
+**Causa**: Esquema no se cargó correctamente
+
+**Solución**:
+```bash
+# Verificar configuración JPA
+# En application.yml debe estar:
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update  # o create-drop para desarrollo
+```
+
+### Error: "Cannot resolve dependencies"
+
+**Causa**: Caché de Maven corrupto
+
+**Solución**:
+```bash
+# Limpiar caché
+mvn clean install -U
+
+# O eliminar carpeta .m2
+rm -rf ~/.m2/repository  # Linux/Mac
+Remove-Item -Recurse -Force ~/.m2/repository  # Windows PowerShell
+```
+
+### Error: "Lombok annotations not working"
+
+**Causa**: Lombok no está configurado en el IDE
+
+**Solución**:
+1. Instalar plugin de Lombok en tu IDE
+2. Habilitar annotation processing:
+   - IntelliJ: Settings → Build → Compiler → Annotation Processors → Enable
+   - Eclipse: Project Properties → Java Compiler → Annotation Processing → Enable
+
+## 📝 Scripts de Utilidad
+
+### Windows PowerShell
+
+```powershell
+# Script de prueba rápida
+.\scripts\test-api-quick.ps1
+
+# Script de diagnóstico
+.\scripts\diagnostico.ps1
+
+# Limpiar y reconstruir Docker
+.\scripts\rebuild-docker.ps1
+```
+
+### Linux/Mac
+
+```bash
+# Crear script de prueba
+cat > test-api.sh << 'EOF'
+#!/bin/bash
+echo "Testing health..."
+curl http://localhost:8080/actuator/health
+echo "\nTesting login..."
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"estudiante@quimbaya.edu.co","password":"password123","role":"estudiante"}'
+EOF
+
+chmod +x test-api.sh
+./test-api.sh
+```
+
+## ✅ Checklist de Instalación
+
+- [ ] Java 17+ instalado y verificado
+- [ ] Maven 3.8+ instalado y verificado
+- [ ] PostgreSQL instalado y corriendo
+- [ ] Base de datos `quimbayaeval` creada
+- [ ] Usuarios de prueba insertados
+- [ ] JWT_SECRET generado y configurado
+- [ ] Variables de entorno configuradas
+- [ ] Proyecto compila sin errores (`mvn clean package`)
+- [ ] Aplicación inicia correctamente
+- [ ] Health check responde OK
+- [ ] Login funciona y retorna token
+- [ ] Endpoints protegidos requieren token
+- [ ] Swagger UI accesible
+
+## 🎯 Próximos Pasos
+
+Una vez que el backend esté funcionando:
+
+1. Revisar [API.md](API.md) para conocer todos los endpoints
+2. Explorar [ARCHITECTURE.md](ARCHITECTURE.md) para entender la arquitectura
+3. Consultar [CREDENCIALES.md](CREDENCIALES.md) para usuarios de prueba
+4. Integrar con frontend React (si aplica)
+
+---
+
+**¿Necesitas ayuda?** Revisa la sección de Solución de Problemas o consulta los logs de la aplicación.
