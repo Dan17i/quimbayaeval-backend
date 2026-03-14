@@ -2,6 +2,7 @@ package com.quimbayaeval.controller;
 
 import com.quimbayaeval.model.Resultado;
 import com.quimbayaeval.model.dto.ApiResponse;
+import com.quimbayaeval.model.dto.MiResultadoDTO;
 import com.quimbayaeval.model.dto.ResumenCursoDTO;
 import com.quimbayaeval.model.dto.ResultadoDetalleDTO;
 import com.quimbayaeval.security.JwtUserDetails;
@@ -22,11 +23,11 @@ public class ResultadoController {
     @Autowired
     private ResultadoService resultadoService;
 
-    // GET /api/resultados/mis-resultados — resultados del estudiante autenticado
+    // GET /api/resultados/mis-resultados — historial enriquecido del estudiante autenticado
     @GetMapping("/mis-resultados")
-    public ResponseEntity<ApiResponse<List<Resultado>>> getMisResultados(Authentication authentication) {
+    public ResponseEntity<ApiResponse<List<MiResultadoDTO>>> getMisResultados(Authentication authentication) {
         JwtUserDetails userDetails = (JwtUserDetails) authentication.getDetails();
-        List<Resultado> resultados = resultadoService.obtenerPorEstudiante(userDetails.getUserId());
+        List<MiResultadoDTO> resultados = resultadoService.obtenerHistorialEstudiante(userDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.success("Resultados del estudiante", resultados));
     }
 

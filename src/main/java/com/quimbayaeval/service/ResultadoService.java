@@ -2,6 +2,7 @@ package com.quimbayaeval.service;
 
 import com.quimbayaeval.dao.ResultadoDao;
 import com.quimbayaeval.model.Resultado;
+import com.quimbayaeval.model.dto.MiResultadoDTO;
 import com.quimbayaeval.model.dto.ResumenCursoDTO;
 import com.quimbayaeval.model.dto.ResultadoDetalleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,10 @@ public class ResultadoService {
 
     public List<Resultado> obtenerPorEstudiante(Integer estudianteId) {
         return resultadoDao.findByEstudiante(estudianteId);
+    }
+
+    public List<MiResultadoDTO> obtenerHistorialEstudiante(Integer estudianteId) {
+        return resultadoDao.findHistorialByEstudiante(estudianteId);
     }
 
     public List<Resultado> obtenerPorEvaluacion(Integer evaluacionId) {

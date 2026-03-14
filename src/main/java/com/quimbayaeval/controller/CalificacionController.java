@@ -2,9 +2,11 @@ package com.quimbayaeval.controller;
 
 import com.quimbayaeval.model.Calificacion;
 import com.quimbayaeval.model.dto.ApiResponse;
+import com.quimbayaeval.security.JwtUserDetails;
 import com.quimbayaeval.service.CalificacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -51,7 +53,12 @@ public class CalificacionController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Calificacion>> create(@RequestBody Calificacion c) {
+    public ResponseEntity<ApiResponse<Calificacion>> create(
+            @RequestBody Calificacion c,
+            Authentication authentication) {
+        // calificadoPorId siempre viene del JWT, ignorar lo que envíe el frontend
+        JwtUserDetails userDetails = (JwtUserDetails) authentication.getDetails();
+        c.setCalificadoPorId(userDetails.getUserId());
         Calificacion saved = calificacionService.crear(c);
         return ResponseEntity.ok(ApiResponse.success("Calificación creada", saved));
     }

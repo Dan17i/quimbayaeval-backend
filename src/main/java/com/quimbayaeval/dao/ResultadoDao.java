@@ -1,6 +1,7 @@
 package com.quimbayaeval.dao;
 
 import com.quimbayaeval.model.Resultado;
+import com.quimbayaeval.model.dto.MiResultadoDTO;
 import com.quimbayaeval.model.dto.ResumenCursoDTO;
 import com.quimbayaeval.model.dto.ResultadoDetalleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,43 @@ public class ResultadoDao {
     public List<Resultado> findByEstudiante(Integer estudianteId) {
         return jdbcTemplate.query(SQL_BASE + " WHERE s.estudiante_id = ? ORDER BY r.fecha_resultado DESC",
             rowMapper, estudianteId);
+    }
+
+    /**
+     * Historial enriquecido del estudiante: incluye nombres de evaluación, curso y profesor.
+     * Usado por HistorialPage del frontend.
+     */
+    public List<MiResultadoDTO> findHistorialByEstudiante(Integer estudianteId) {
+        String sql =
+            "SELECT r.id, r.submission_id, e.nombre as evaluacion_nombre, " +
+            "c.nombre as curso_nombre, p.name as profesor_nombre, " +
+            "r.puntuacion_total, r.puntuacion_maxima, r.porcentaje, " +
+            "ROUND(CAST(1 + (r.porcentaje / 100.0) * 4 AS numeric), 2) as nota_escala, " +
+            "r.estado_aprobacion, r.fecha_resultado as created_at " +
+            "FROM resultados r " +
+            "JOIN submissions s ON r.submission_id = s.id " +
+            "JOIN evaluaciones e ON s.evaluacion_id = e.id " +
+            "JOIN cursos c ON e.curso_id = c.id " +
+            "JOIN users p ON e.profesor_id = p.id " +
+            "WHERE s.estudiante_id = ? " +
+            "ORDER BY r.fecha_resultado DESC";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            MiResultadoDTO dto = new MiResultadoDTO();
+            dto.setId(rs.getInt("id"));
+            dto.setSubmissionId(rs.getInt("submission_id"));
+            dto.setEvaluacionNombre(rs.getString("evaluacion_nombre"));
+            dto.setCursoNombre(rs.getString("curso_nombre"));
+            dto.setProfesorNombre(rs.getString("profesor_nombre"));
+            dto.setPuntuacionTotal(rs.getBigDecimal("puntuacion_total"));
+            dto.setPuntuacionMaxima(rs.getBigDecimal("puntuacion_maxima"));
+            dto.setPorcentaje(rs.getBigDecimal("porcentaje"));
+            dto.setNotaEscala(rs.getBigDecimal("nota_escala"));
+            dto.setEstadoAprobacion(rs.getString("estado_aprobacion"));
+            dto.setCreatedAt(rs.getTimestamp("created_at") != null ?
+                rs.getTimestamp("created_at").toLocalDateTime() : null);
+            return dto;
+        }, estudianteId);
     }
 
     public List<Resultado> findByEvaluacion(Integer evaluacionId) {
