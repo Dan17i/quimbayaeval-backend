@@ -26,10 +26,11 @@ El token se obtiene mediante el endpoint de login y tiene una validez de 24 hora
 2. [Cursos](#cursos)
 3. [Evaluaciones](#evaluaciones)
 4. [PQRS](#pqrs)
-5. [Calificaciones](#calificaciones)
-6. [Paginación y Filtros](#paginación-y-filtros)
-7. [Códigos de Respuesta](#códigos-de-respuesta)
-8. [Ejemplos de Uso](#ejemplos-de-uso)
+5. [Usuarios](#usuarios)
+6. [Resultados](#resultados)
+7. [Calificaciones](#calificaciones)
+8. [Paginación y Filtros](#paginación-y-filtros)
+9. [Códigos de Respuesta](#códigos-de-respuesta)
 
 ---
 
@@ -591,19 +592,20 @@ Crear un nuevo PQRS.
 
 **Acceso**: Requiere autenticación (todos los roles)
 
+> El `usuarioId` se extrae automáticamente del JWT — el frontend no necesita enviarlo en el body.
+
 **Request Body**:
 ```json
 {
   "tipo": "Sugerencia",
   "asunto": "Mejorar horarios",
-  "descripcion": "Sería bueno tener más flexibilidad en los horarios",
-  "usuarioId": 4
+  "descripcion": "Sería bueno tener más flexibilidad en los horarios"
 }
 ```
 
-**Tipos válidos**: `Petición`, `Queja`, `Reclamo`, `Sugerencia`
+**Tipos válidos**: `Petición`, `Queja`, `Reclamo`, `Sugerencia`, `Pregunta`
 
-**Response 201 Created**:
+El campo `estado` es opcional — por defecto es `"Pendiente"`.
 ```json
 {
   "success": true,
@@ -655,6 +657,117 @@ Eliminar un PQRS.
   "success": true,
   "message": "PQRS eliminado exitosamente",
   "data": null
+}
+```
+
+---
+
+## 👥 Usuarios
+
+### GET /api/users
+
+Listar usuarios, con filtro opcional por rol.
+
+**Acceso**: Requiere rol `coordinador` o `maestro`
+
+**Query Parameters**:
+- `role` (opcional): `estudiante`, `maestro`, `coordinador`
+
+**Response 200 OK**:
+```json
+{
+  "success": true,
+  "message": "Usuarios obtenidos",
+  "data": [
+    {
+      "id": 2,
+      "name": "María Profesora",
+      "email": "profesor@quimbaya.edu.co",
+      "role": "maestro",
+      "active": true
+    }
+  ]
+}
+```
+
+> El campo `password` nunca se incluye en la respuesta.
+
+---
+
+## 📊 Resultados
+
+### GET /api/resultados/mis-resultados
+
+Resultados del estudiante autenticado (lee el ID desde el JWT).
+
+**Acceso**: Requiere autenticación
+
+### GET /api/resultados/evaluacion/{evaluacionId}
+
+Resultados de todos los estudiantes de una evaluación.
+
+**Acceso**: Requiere autenticación
+
+### GET /api/resultados/submission/{submissionId}
+
+Resultado de una submission específica.
+
+**Acceso**: Requiere autenticación
+
+### GET /api/resultados/curso/{cursoId}
+
+Detalle de notas de todos los estudiantes del curso. Incluye nombre del estudiante, nombre de la evaluación, nombre del profesor y nota en escala 1-5.
+
+**Acceso**: Requiere autenticación (usado por docentes)
+
+**Response 200 OK**:
+```json
+{
+  "success": true,
+  "message": "Resultados del curso",
+  "data": [
+    {
+      "id": 1,
+      "estudianteNombre": "Juan Estudiante",
+      "estudianteEmail": "estudiante@quimbaya.edu.co",
+      "evaluacionNombre": "Parcial 1",
+      "cursoNombre": "Cálculo Integral",
+      "profesorNombre": "María Profesora",
+      "puntuacionTotal": 42.5,
+      "puntuacionMaxima": 50.0,
+      "porcentaje": 85.0,
+      "notaEscala": 4.40,
+      "estadoAprobacion": "Aprobado",
+      "fechaResultado": "2026-03-15T10:00:00"
+    }
+  ]
+}
+```
+
+> `notaEscala` usa la fórmula colombiana: `1 + (porcentaje / 100) * 4`
+
+### GET /api/resultados/curso/{cursoId}/resumen
+
+Resumen estadístico por evaluación dentro del curso: promedio grupal, aprobados y reprobados.
+
+**Acceso**: Requiere autenticación (usado por coordinadores)
+
+**Response 200 OK**:
+```json
+{
+  "success": true,
+  "message": "Resumen del curso",
+  "data": [
+    {
+      "evaluacionId": 1,
+      "evaluacionNombre": "Parcial 1",
+      "promedioGrupo": 78.50,
+      "promedioEscala": 4.14,
+      "totalEstudiantes": 30,
+      "aprobados": 25,
+      "reprobados": 5
+    }
+  ]
 }
 ```
 
@@ -840,5 +953,5 @@ http://localhost:8080/swagger-ui.html
 
 ---
 
-**Última actualización**: Marzo 2026  
-**Versión API**: 1.0.0
+**Última actualización**: Marzo 14, 2026  
+**Versión API**: 1.1.0

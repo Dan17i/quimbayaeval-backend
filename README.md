@@ -9,27 +9,26 @@ Sistema backend REST API para gestión de evaluaciones académicas con autentica
 
 ## 🚀 Inicio Rápido
 
-### Script de arranque (Recomendado)
-
-Un solo comando levanta Docker, PostgreSQL y Spring Boot automáticamente:
+### Primera vez (desde cero)
 
 ```powershell
-powershell -ExecutionPolicy RemoteSigned -File .\scripts\start-dev.ps1
-```
+# 1. Levantar PostgreSQL en Docker (puerto 5433)
+docker-compose up -d
 
-> El script detecta si Docker Desktop está corriendo, lo inicia si es necesario, limpia contenedores huérfanos, levanta PostgreSQL y arranca Spring Boot con las variables de entorno correctas.
+# 2. Ejecutar Spring Boot — Flyway aplica el schema y seed automáticamente
+mvn spring-boot:run
+```
 
 Backend disponible en: `http://localhost:8080`
 
-### Manual (alternativa)
+### Volver a correr (después de Ctrl+C o reinicio)
 
 ```powershell
-# 1. Levantar PostgreSQL en Docker
-docker-compose up -d
-
-# 2. Ejecutar Spring Boot
-$env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5433/quimbayaeval"; $env:SPRING_DATASOURCE_USERNAME="postgres"; $env:SPRING_DATASOURCE_PASSWORD="postgres"; mvn spring-boot:run
+# Solo esto basta — application.yml ya tiene el puerto 5433 por defecto
+mvn spring-boot:run
 ```
+
+> Si Docker no está corriendo, primero: `docker-compose up -d`
 
 Ver [SETUP.md](SETUP.md) para instrucciones detalladas.
 
@@ -73,14 +72,20 @@ POST /api/auth/register   # Registrar usuario
 
 ### Recursos Protegidos
 ```bash
-GET  /api/cursos              # Listar cursos
-GET  /api/evaluaciones        # Listar evaluaciones
-POST /api/evaluaciones        # Crear evaluación (maestro/coordinador)
-GET  /api/pqrs                # Listar PQRS
-POST /api/pqrs                # Crear PQRS
+GET  /api/cursos                              # Listar cursos
+GET  /api/evaluaciones                        # Listar evaluaciones
+GET  /api/evaluaciones?profesorId={id}        # Filtrar por profesor
+POST /api/evaluaciones                        # Crear evaluación (maestro/coordinador)
+GET  /api/pqrs                                # Listar PQRS
+POST /api/pqrs                                # Crear PQRS (usuarioId extraído del JWT)
+GET  /api/users?role=maestro                  # Listar usuarios por rol (coordinador/maestro)
+GET  /api/resultados/mis-resultados           # Resultados del estudiante autenticado
+GET  /api/resultados/curso/{id}               # Notas de todos los estudiantes del curso (docente)
+GET  /api/resultados/curso/{id}/resumen       # Promedio grupal por evaluación (coordinador)
 ```
 
-Ver [API.md](API.md) para documentación completa de endpoints.
+### Nota escala 1-5
+La nota en escala colombiana se calcula como: `nota = 1 + (porcentaje / 100) * 4`
 
 ##  Arquitectura
 
@@ -100,16 +105,17 @@ Ver [ARCHITECTURE.md](ARCHITECTURE.md) para detalles técnicos.
 
 ##  Testing
 
-```bash
-# Ejecutar todos los tests
+```powershell
+# Ejecutar todos los tests (H2 en memoria, no necesita Docker)
+# Si en la sesión actual NO seteaste SPRING_DATASOURCE_URL:
 mvn test
 
-# Ejecutar tests específicos
-mvn test -Dtest="*ControllerTest"
-
-# Generar reporte de cobertura
-mvn test jacoco:report
+# Si la seteaste antes (ej: para correr el backend), limpiarla primero:
+Remove-Item Env:SPRING_DATASOURCE_URL -ErrorAction SilentlyContinue
+mvn test
 ```
+
+> Los tests usan H2 en memoria. La variable de entorno `SPRING_DATASOURCE_URL` tiene prioridad sobre `application.yml`, por eso hay que limpiarla si fue seteada en la sesión.
 
 ##  Métricas y Monitoreo
 
@@ -132,8 +138,9 @@ http://localhost:8080/swagger-ui.html
 # JWT
 JWT_SECRET=tu-secret-super-seguro-de-al-menos-256-bits
 
-# Base de Datos
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/quimbayaeval
+# Base de Datos — puerto 5433 (Docker)
+# No es necesario setear estas variables si usas el application.yml por defecto
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5433/quimbayaeval
 SPRING_DATASOURCE_USERNAME=postgres
 SPRING_DATASOURCE_PASSWORD=postgres
 
@@ -141,7 +148,7 @@ SPRING_DATASOURCE_PASSWORD=postgres
 CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
 ```
 
-Ver [SETUP.md](SETUP.md) para configuración completa.
+> El `application.yml` ya tiene `localhost:5433` como valor por defecto. Solo necesitas setear las variables si quieres sobreescribir esos valores.
 
 ## 📚 Documentación
 
@@ -221,6 +228,6 @@ Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detal
 
 ---
 
-**Versión**: 1.0.0  
+**Versión**: 1.1.0  
 **Estado**:  En Desarrollo  
-**Última actualización**: Marzo 13, 2026
+**Última actualización**: Marzo 14, 2026

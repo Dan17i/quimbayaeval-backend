@@ -41,8 +41,7 @@ cd quimbayaeval-backend
 > El contenedor usa el puerto **5433** (no 5432) para evitar conflicto con un PostgreSQL local.
 
 ```powershell
-# Levantar solo la base de datos
-docker-compose up postgres -d
+docker-compose up -d
 
 # Verificar que esté corriendo
 docker logs quimbayaeval-db
@@ -51,11 +50,25 @@ docker logs quimbayaeval-db
 ### Paso 3: Ejecutar Spring Boot
 
 ```powershell
-# Windows PowerShell — pasar las variables de entorno en la misma línea
-$env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5433/quimbayaeval"; $env:SPRING_DATASOURCE_USERNAME="postgres"; $env:SPRING_DATASOURCE_PASSWORD="postgres"; mvn clean spring-boot:run
+# El application.yml ya tiene puerto 5433 por defecto — no necesitas setear variables
+mvn spring-boot:run
 ```
 
-> La primera vez usa `mvn clean spring-boot:run` para limpiar el target. Las siguientes veces basta con `mvn spring-boot:run`.
+> Flyway aplica automáticamente el schema y los datos de prueba (`V1__initial_schema.sql`) al arrancar.
+
+### Volver a correr después de Ctrl+C
+
+```powershell
+# Solo esto basta
+mvn spring-boot:run
+```
+
+### Si Docker no estaba corriendo
+
+```powershell
+docker-compose up -d
+mvn spring-boot:run
+```
 
 ### Paso 4: Verificar que Funciona
 
@@ -67,7 +80,7 @@ curl http://localhost:8080/actuator/health
 ### Servicios Disponibles
 
 - Backend: http://localhost:8080
-- PostgreSQL (Docker): localhost:5433
+- PostgreSQL (Docker): localhost:**5433**
 
 ### Resetear la base de datos
 
@@ -75,9 +88,15 @@ Si necesitas partir desde cero:
 
 ```powershell
 docker-compose down -v
-docker-compose up postgres -d
-# Esperar ~15 segundos y luego arrancar Spring Boot
+docker-compose up -d
+# Esperar ~10 segundos y luego arrancar Spring Boot
+mvn spring-boot:run
 ```
+
+> Si Flyway da error de checksum al reiniciar, ejecuta:
+> ```powershell
+> docker exec quimbayaeval-db psql -U postgres -d quimbayaeval -c "UPDATE flyway_schema_history SET checksum = -1725541601 WHERE version = '1';"
+> ```
 
 ## 🖥️ Opción 2: Instalación Local (Sin Docker)
 
@@ -177,6 +196,27 @@ curl http://localhost:8080/actuator/health
 # Login
 $body = '{"email":"estudiante@quimbaya.edu.co","password":"password","role":"estudiante"}'
 Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/auth/login" -Headers @{"Content-Type"="application/json"} -Body $body
+```
+
+## 🧪 Ejecutar Tests
+
+Los tests usan **H2 en memoria** — no necesitan Docker ni PostgreSQL corriendo.
+
+```powershell
+# Si en tu sesión NO seteaste SPRING_DATASOURCE_URL (caso normal):
+mvn test
+
+# Si la seteaste antes para correr el backend, limpiarla primero:
+Remove-Item Env:SPRING_DATASOURCE_URL -ErrorAction SilentlyContinue
+mvn test
+```
+
+> Las variables de entorno tienen prioridad sobre `application.yml`. Si `SPRING_DATASOURCE_URL` está seteada, Spring Boot intenta conectarse a PostgreSQL en vez de H2 y los tests fallan.
+
+Para verificar si está seteada:
+```powershell
+echo $env:SPRING_DATASOURCE_URL
+# Si no imprime nada, puedes correr mvn test directamente
 ```
 
 ## 🧪 Verificación Completa
