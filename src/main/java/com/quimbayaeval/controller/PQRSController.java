@@ -53,6 +53,28 @@ public class PQRSController {
     }
 
     /**
+     * Obtiene PQRS del usuario autenticado
+     * GET /api/pqrs/mis-pqrs
+     */
+    @GetMapping("/mis-pqrs")
+    public ResponseEntity<ApiResponse<List<PQRS>>> obtenerMisPqrs(
+            org.springframework.security.core.Authentication authentication) {
+        try {
+            List<PQRS> pqrsList;
+            if (authentication != null && authentication.getPrincipal() instanceof com.quimbayaeval.security.JwtUserDetails userDetails) {
+                pqrsList = pqrsService.obtenerPorUsuario(userDetails.getUserId());
+            } else {
+                pqrsList = pqrsService.obtenerTodos();
+            }
+            return ResponseEntity.ok(ApiResponse.success(pqrsList));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                ApiResponse.error("Error obteniendo PQRS: " + e.getMessage())
+            );
+        }
+    }
+
+    /**
      * Obtiene un PQRS por ID
      * GET /api/pqrs/{id}
      */
@@ -124,6 +146,32 @@ public class PQRSController {
     }
 
     /**
+     * Responde un PQRS (alias PUT para compatibilidad con frontend)
+     * PUT /api/pqrs/{id}/responder
+     */
+    @PutMapping("/{id}/responder")
+    public ResponseEntity<ApiResponse<String>> responderPut(
+            @PathVariable Integer id,
+            @RequestBody RespuestaRequest request) {
+        try {
+            pqrsService.responder(id, request.getRespuesta(), request.getRespondidoPorId());
+            // Actualizar estado si viene en el request
+            if (request.getEstado() != null) {
+                Optional<PQRS> pqrsOpt = pqrsService.obtenerPorId(id);
+                pqrsOpt.ifPresent(p -> {
+                    p.setEstado(request.getEstado());
+                    pqrsService.actualizar(p);
+                });
+            }
+            return ResponseEntity.ok(ApiResponse.success("PQRS respondido exitosamente"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ApiResponse.error("Error respondiendo PQRS: " + e.getMessage())
+            );
+        }
+    }
+
+    /**
      * Responde un PQRS
      * POST /api/pqrs/{id}/respond
      */
@@ -180,21 +228,15 @@ public class PQRSController {
     public static class RespuestaRequest {
         private String respuesta;
         private Integer respondidoPorId;
+        private String estado;
 
-        public String getRespuesta() {
-            return respuesta;
-        }
+        public String getRespuesta() { return respuesta; }
+        public void setRespuesta(String respuesta) { this.respuesta = respuesta; }
 
-        public void setRespuesta(String respuesta) {
-            this.respuesta = respuesta;
-        }
+        public Integer getRespondidoPorId() { return respondidoPorId; }
+        public void setRespondidoPorId(Integer respondidoPorId) { this.respondidoPorId = respondidoPorId; }
 
-        public Integer getRespondidoPorId() {
-            return respondidoPorId;
-        }
-
-        public void setRespondidoPorId(Integer respondidoPorId) {
-            this.respondidoPorId = respondidoPorId;
-        }
+        public String getEstado() { return estado; }
+        public void setEstado(String estado) { this.estado = estado; }
     }
 }
