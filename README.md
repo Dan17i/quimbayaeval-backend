@@ -9,37 +9,26 @@ Sistema backend REST API para gestión de evaluaciones académicas con autentica
 
 ## 🚀 Inicio Rápido
 
-### Con Docker (Recomendado)
+### Script de arranque (Recomendado)
 
-```bash
-# Clonar repositorio
-git clone <repo-url>
-cd quimbayaeval-backend
+Un solo comando levanta Docker, PostgreSQL y Spring Boot automáticamente:
 
-# 1. Levantar PostgreSQL en Docker (puerto 5433 para evitar conflicto con PostgreSQL local)
-docker-compose up postgres -d
-
-# 2. Ejecutar Spring Boot con variables de entorno
-$env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5433/quimbayaeval"
-$env:SPRING_DATASOURCE_USERNAME="postgres"
-$env:SPRING_DATASOURCE_PASSWORD="postgres"
-mvn clean spring-boot:run
-
-# Backend disponible en: http://localhost:8080
+```powershell
+powershell -ExecutionPolicy RemoteSigned -File .\scripts\start-dev.ps1
 ```
 
-### Sin Docker
+> El script detecta si Docker Desktop está corriendo, lo inicia si es necesario, limpia contenedores huérfanos, levanta PostgreSQL y arranca Spring Boot con las variables de entorno correctas.
 
-```bash
-# 1. Crear base de datos
-createdb quimbayaeval
+Backend disponible en: `http://localhost:8080`
 
-# 2. Configurar variables de entorno
-cp .env.example .env
-# Editar .env con tus valores
+### Manual (alternativa)
 
-# 3. Ejecutar backend
-mvn spring-boot:run
+```powershell
+# 1. Levantar PostgreSQL en Docker
+docker-compose up -d
+
+# 2. Ejecutar Spring Boot
+$env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5433/quimbayaeval"; $env:SPRING_DATASOURCE_USERNAME="postgres"; $env:SPRING_DATASOURCE_PASSWORD="postgres"; mvn spring-boot:run
 ```
 
 Ver [SETUP.md](SETUP.md) para instrucciones detalladas.
