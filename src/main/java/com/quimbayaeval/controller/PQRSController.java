@@ -130,10 +130,21 @@ public class PQRSController {
     /**
      * Crea un nuevo PQRS
      * POST /api/pqrs
+     * El usuarioId se toma del token JWT, no del body
      */
     @PostMapping
-    public ResponseEntity<ApiResponse<PQRS>> crear(@RequestBody PQRS pqrs) {
+    public ResponseEntity<ApiResponse<PQRS>> crear(
+            @RequestBody PQRS pqrs,
+            org.springframework.security.core.Authentication authentication) {
         try {
+            // Tomar usuarioId del token JWT
+            if (authentication != null && authentication.getDetails() instanceof com.quimbayaeval.security.JwtUserDetails userDetails) {
+                pqrs.setUsuarioId(userDetails.getUserId());
+            }
+            // Asegurar estado por defecto
+            if (pqrs.getEstado() == null || pqrs.getEstado().isBlank()) {
+                pqrs.setEstado("Pendiente");
+            }
             PQRS nuevo = pqrsService.crear(pqrs);
             return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.success("PQRS creado exitosamente", nuevo)
