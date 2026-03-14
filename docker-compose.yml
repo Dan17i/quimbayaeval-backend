@@ -11,10 +11,10 @@ services:
       POSTGRES_PASSWORD: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./src/main/resources/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./src/main/resources/db/migration:/docker-entrypoint-initdb.d
     networks:
       - quimbayaeval-network
     healthcheck:
