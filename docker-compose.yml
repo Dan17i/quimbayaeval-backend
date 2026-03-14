@@ -23,26 +23,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # Servicio Backend Spring Boot
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: quimbayaeval-backend
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/quimbayaeval
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      JWT_SECRET: ${JWT_SECRET:-tu-clave-secreta-muy-larga-y-segura-cambiar-en-produccion-debe-tener-minimo-256-bits}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
-    ports:
-      - "8080:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - quimbayaeval-network
-    restart: unless-stopped
 
 volumes:
   postgres_data:
