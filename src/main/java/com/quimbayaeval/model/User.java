@@ -12,6 +12,7 @@ public class User {
     private String password;
     private String role;  // 'estudiante', 'maestro', 'coordinador'
     private Boolean active;
+    private String fotoUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -89,6 +90,14 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
     }
 
     public LocalDateTime getUpdatedAt() {

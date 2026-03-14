@@ -27,13 +27,13 @@ public class UserDao {
     private static final String SQL_INSERT = 
         "INSERT INTO users (name, email, password, role, active, created_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
     private static final String SQL_SELECT_BY_ID = 
-        "SELECT id, name, email, password, role, active, created_at, updated_at FROM users WHERE id = ?";
+        "SELECT id, name, email, password, role, active, foto_url, created_at, updated_at FROM users WHERE id = ?";
     private static final String SQL_SELECT_BY_EMAIL = 
-        "SELECT id, name, email, password, role, active, created_at, updated_at FROM users WHERE email = ?";
+        "SELECT id, name, email, password, role, active, foto_url, created_at, updated_at FROM users WHERE email = ?";
     private static final String SQL_SELECT_ALL = 
-        "SELECT id, name, email, password, role, active, created_at, updated_at FROM users WHERE active = true";
+        "SELECT id, name, email, password, role, active, foto_url, created_at, updated_at FROM users WHERE active = true";
     private static final String SQL_SELECT_BY_ROLE = 
-        "SELECT id, name, email, password, role, active, created_at, updated_at FROM users WHERE role = ? AND active = true";
+        "SELECT id, name, email, password, role, active, foto_url, created_at, updated_at FROM users WHERE role = ? AND active = true";
     private static final String SQL_UPDATE = 
         "UPDATE users SET name = ?, email = ?, role = ?, active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
     private static final String SQL_DELETE = 
@@ -49,6 +49,7 @@ public class UserDao {
             user.setPassword(rs.getString("password"));
             user.setRole(rs.getString("role"));
             user.setActive(rs.getBoolean("active"));
+            user.setFotoUrl(rs.getString("foto_url"));
             user.setCreatedAt(rs.getTimestamp("created_at") != null ?
                     rs.getTimestamp("created_at").toLocalDateTime() : null);
             user.setUpdatedAt(rs.getTimestamp("updated_at") != null ?
@@ -107,6 +108,26 @@ public class UserDao {
      */
     public List<User> findByRole(String role) {
         return jdbcTemplate.query(SQL_SELECT_BY_ROLE, rowMapper, role);
+    }
+
+    /**
+     * Actualiza nombre y foto de perfil del usuario
+     */
+    public void updatePerfil(User user) {
+        jdbcTemplate.update(
+            "UPDATE users SET name = ?, foto_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            user.getName(), user.getFotoUrl(), user.getId()
+        );
+    }
+
+    /**
+     * Actualiza solo la contraseña
+     */
+    public void updatePassword(Integer id, String hashedPassword) {
+        jdbcTemplate.update(
+            "UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            hashedPassword, id
+        );
     }
 
     /**

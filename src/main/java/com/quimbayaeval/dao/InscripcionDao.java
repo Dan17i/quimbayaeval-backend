@@ -39,6 +39,24 @@ public class InscripcionDao {
         return jdbcTemplate.query(sql, estudianteMapper, cursoId);
     }
 
+    /** Cursos en los que está inscrito un estudiante */
+    public List<com.quimbayaeval.model.Curso> findCursosByEstudiante(Integer estudianteId) {
+        String sql =
+            "SELECT c.id, c.codigo, c.nombre, c.descripcion, c.profesor_id, c.created_at, c.updated_at " +
+            "FROM cursos c " +
+            "JOIN inscripciones i ON c.id = i.curso_id " +
+            "WHERE i.estudiante_id = ? ORDER BY c.nombre";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            com.quimbayaeval.model.Curso c = new com.quimbayaeval.model.Curso();
+            c.setId(rs.getInt("id"));
+            c.setCodigo(rs.getString("codigo"));
+            c.setNombre(rs.getString("nombre"));
+            c.setDescripcion(rs.getString("descripcion"));
+            c.setProfesorId(rs.getInt("profesor_id"));
+            return c;
+        }, estudianteId);
+    }
+
     /** Matricular estudiante en curso — ignora si ya existe */
     public void inscribir(Integer cursoId, Integer estudianteId) {
         jdbcTemplate.update(

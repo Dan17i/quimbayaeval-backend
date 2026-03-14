@@ -37,6 +37,9 @@ public class UserEntity {
     
     @Column(nullable = false)
     private Boolean active = true;
+
+    @Column(name = "foto_url", length = 500)
+    private String fotoUrl;
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
