@@ -26,24 +26,21 @@ public class PQRSDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private static final String SQL_COLS =
+        "id, tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at, created_at";
     private static final String SQL_INSERT =
         "INSERT INTO pqrs (tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion) " +
         "VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
     private static final String SQL_SELECT_BY_ID =
-        "SELECT id, tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at " +
-        "FROM pqrs WHERE id = ?";
+        "SELECT " + SQL_COLS + " FROM pqrs WHERE id = ?";
     private static final String SQL_SELECT_ALL =
-        "SELECT id, tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at " +
-        "FROM pqrs ORDER BY fecha_creacion DESC";
+        "SELECT " + SQL_COLS + " FROM pqrs";
     private static final String SQL_SELECT_BY_USUARIO =
-        "SELECT id, tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at " +
-        "FROM pqrs WHERE usuario_id = ? ORDER BY fecha_creacion DESC";
+        "SELECT " + SQL_COLS + " FROM pqrs WHERE usuario_id = ? ORDER BY fecha_creacion DESC";
     private static final String SQL_SELECT_BY_ESTADO =
-        "SELECT id, tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at " +
-        "FROM pqrs WHERE estado = ? ORDER BY fecha_creacion DESC";
+        "SELECT " + SQL_COLS + " FROM pqrs WHERE estado = ? ORDER BY fecha_creacion DESC";
     private static final String SQL_SELECT_BY_TIPO =
-        "SELECT id, tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at " +
-        "FROM pqrs WHERE tipo = ? ORDER BY fecha_creacion DESC";
+        "SELECT " + SQL_COLS + " FROM pqrs WHERE tipo = ? ORDER BY fecha_creacion DESC";
     private static final String SQL_UPDATE =
         "UPDATE pqrs SET tipo = ?, asunto = ?, descripcion = ?, curso_id = ?, estado = ?, respuesta = ?, respondido_por_id = ?, fecha_respuesta = CASE WHEN respuesta IS NOT NULL THEN CURRENT_TIMESTAMP ELSE fecha_respuesta END, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
     private static final String SQL_DELETE =
@@ -68,6 +65,8 @@ public class PQRSDao {
             pqrs.setRespondidoPorId(rs.getInt("respondido_por_id"));
             pqrs.setUpdatedAt(rs.getTimestamp("updated_at") != null ?
                     rs.getTimestamp("updated_at").toLocalDateTime() : null);
+            pqrs.setCreatedAt(rs.getTimestamp("created_at") != null ?
+                    rs.getTimestamp("created_at").toLocalDateTime() : null);
             return pqrs;
         }
     };
@@ -107,7 +106,7 @@ public class PQRSDao {
      * Obtiene todos los PQRS
      */
     public List<PQRS> findAll() {
-        return jdbcTemplate.query(SQL_SELECT_ALL, rowMapper);
+        return jdbcTemplate.query(SQL_SELECT_ALL + " ORDER BY fecha_creacion DESC", rowMapper);
     }
 /**
  * Convierte un Map en lista de criterios de igualdad (=)

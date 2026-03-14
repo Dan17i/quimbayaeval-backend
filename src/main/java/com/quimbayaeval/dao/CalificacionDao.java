@@ -27,15 +27,15 @@ public class CalificacionDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL_INSERT =
-        "INSERT INTO calificaciones (submission_id, pregunta_id, calificacion, comentario, calificada_por_id) VALUES (?, ?, ?, ?, ?)";
+        "INSERT INTO calificaciones (submission_id, pregunta_id, puntuacion_obtenida, puntuacion_maxima, retroalimentacion, calificado_por_id) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_SELECT_BY_ID =
-        "SELECT id, submission_id, pregunta_id, calificacion, comentario, calificada_por_id, fecha_calificacion FROM calificaciones WHERE id = ?";
+        "SELECT id, submission_id, pregunta_id, puntuacion_obtenida, puntuacion_maxima, retroalimentacion, calificado_por_id, fecha_calificacion, created_at, updated_at FROM calificaciones WHERE id = ?";
     private static final String SQL_SELECT_ALL =
-        "SELECT id, submission_id, pregunta_id, calificacion, comentario, calificada_por_id, fecha_calificacion FROM calificaciones";
+        "SELECT id, submission_id, pregunta_id, puntuacion_obtenida, puntuacion_maxima, retroalimentacion, calificado_por_id, fecha_calificacion, created_at, updated_at FROM calificaciones";
     private static final String SQL_SELECT_BY_SUBMISSION =
-        "SELECT id, submission_id, pregunta_id, calificacion, comentario, calificada_por_id, fecha_calificacion FROM calificaciones WHERE submission_id = ?";
+        "SELECT id, submission_id, pregunta_id, puntuacion_obtenida, puntuacion_maxima, retroalimentacion, calificado_por_id, fecha_calificacion, created_at, updated_at FROM calificaciones WHERE submission_id = ?";
     private static final String SQL_UPDATE =
-        "UPDATE calificaciones SET submission_id = ?, pregunta_id = ?, calificacion = ?, comentario = ?, calificada_por_id = ? WHERE id = ?";
+        "UPDATE calificaciones SET submission_id = ?, pregunta_id = ?, puntuacion_obtenida = ?, puntuacion_maxima = ?, retroalimentacion = ?, calificado_por_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
     private static final String SQL_DELETE =
         "DELETE FROM calificaciones WHERE id = ?";
 
@@ -46,10 +46,13 @@ public class CalificacionDao {
             c.setId(rs.getInt("id"));
             c.setSubmissionId(rs.getInt("submission_id"));
             c.setPreguntaId(rs.getInt("pregunta_id"));
-            c.setCalificacion(rs.getDouble("calificacion"));
-            c.setComentario(rs.getString("comentario"));
-            c.setCalificadaPorId(rs.getInt("calificada_por_id"));
+            c.setPuntuacionObtenida(rs.getDouble("puntuacion_obtenida"));
+            c.setPuntuacionMaxima(rs.getObject("puntuacion_maxima") != null ? rs.getDouble("puntuacion_maxima") : null);
+            c.setRetroalimentacion(rs.getString("retroalimentacion"));
+            c.setCalificadoPorId(rs.getObject("calificado_por_id") != null ? rs.getInt("calificado_por_id") : null);
             c.setFechaCalificacion(rs.getTimestamp("fecha_calificacion") != null ? rs.getTimestamp("fecha_calificacion").toLocalDateTime() : null);
+            c.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+            c.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
             return c;
         }
     };
@@ -60,9 +63,10 @@ public class CalificacionDao {
             PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, cal.getSubmissionId());
             ps.setInt(2, cal.getPreguntaId());
-            ps.setDouble(3, cal.getCalificacion());
-            ps.setString(4, cal.getComentario());
-            ps.setObject(5, cal.getCalificadaPorId());
+            ps.setObject(3, cal.getPuntuacionObtenida());
+            ps.setObject(4, cal.getPuntuacionMaxima());
+            ps.setString(5, cal.getRetroalimentacion());
+            ps.setObject(6, cal.getCalificadoPorId());
             return ps;
         }, keyHolder);
         if (keyHolder.getKey() != null) {
@@ -122,9 +126,10 @@ public List<Calificacion> findAll(Map<String, Object> filters,
         jdbcTemplate.update(SQL_UPDATE,
             cal.getSubmissionId(),
             cal.getPreguntaId(),
-            cal.getCalificacion(),
-            cal.getComentario(),
-            cal.getCalificadaPorId(),
+            cal.getPuntuacionObtenida(),
+            cal.getPuntuacionMaxima(),
+            cal.getRetroalimentacion(),
+            cal.getCalificadoPorId(),
             cal.getId()
         );
     }

@@ -18,6 +18,7 @@ public class PQRS {
     private String respuesta;
     private Integer respondidoPorId;
     private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
 
     // Constructores
     public PQRS() {
@@ -126,6 +127,14 @@ public class PQRS {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

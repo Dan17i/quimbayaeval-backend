@@ -27,17 +27,17 @@ public class SubmissionDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL_INSERT =
-        "INSERT INTO submissions (evaluacion_id, estudiante_id, fecha_inicio, estado) VALUES (?, ?, CURRENT_TIMESTAMP, ?)";
+        "INSERT INTO submissions (evaluacion_id, estudiante_id, fecha_inicio, estado, intento_numero) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?)";
     private static final String SQL_SELECT_BY_ID =
-        "SELECT id, evaluacion_id, estudiante_id, fecha_inicio, fecha_finalizacion, estado FROM submissions WHERE id = ?";
+        "SELECT id, evaluacion_id, estudiante_id, respuestas_json, estado, intento_numero, fecha_inicio, fecha_envio, created_at, updated_at FROM submissions WHERE id = ?";
     private static final String SQL_SELECT_ALL =
-        "SELECT id, evaluacion_id, estudiante_id, fecha_inicio, fecha_finalizacion, estado FROM submissions";
+        "SELECT id, evaluacion_id, estudiante_id, respuestas_json, estado, intento_numero, fecha_inicio, fecha_envio, created_at, updated_at FROM submissions";
     private static final String SQL_SELECT_BY_EVALUACION =
-        "SELECT id, evaluacion_id, estudiante_id, fecha_inicio, fecha_finalizacion, estado FROM submissions WHERE evaluacion_id = ?";
+        "SELECT id, evaluacion_id, estudiante_id, respuestas_json, estado, intento_numero, fecha_inicio, fecha_envio, created_at, updated_at FROM submissions WHERE evaluacion_id = ?";
     private static final String SQL_SELECT_BY_ESTUDIANTE =
-        "SELECT id, evaluacion_id, estudiante_id, fecha_inicio, fecha_finalizacion, estado FROM submissions WHERE estudiante_id = ?";
+        "SELECT id, evaluacion_id, estudiante_id, respuestas_json, estado, intento_numero, fecha_inicio, fecha_envio, created_at, updated_at FROM submissions WHERE estudiante_id = ?";
     private static final String SQL_UPDATE =
-        "UPDATE submissions SET evaluacion_id = ?, estudiante_id = ?, fecha_inicio = ?, fecha_finalizacion = ?, estado = ? WHERE id = ?";
+        "UPDATE submissions SET evaluacion_id = ?, estudiante_id = ?, respuestas_json = ?::jsonb, estado = ?, intento_numero = ?, fecha_envio = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
     private static final String SQL_DELETE =
         "DELETE FROM submissions WHERE id = ?";
 
@@ -48,9 +48,13 @@ public class SubmissionDao {
             s.setId(rs.getInt("id"));
             s.setEvaluacionId(rs.getInt("evaluacion_id"));
             s.setEstudianteId(rs.getInt("estudiante_id"));
-            s.setFechaInicio(rs.getTimestamp("fecha_inicio") != null ? rs.getTimestamp("fecha_inicio").toLocalDateTime() : null);
-            s.setFechaFinalizacion(rs.getTimestamp("fecha_finalizacion") != null ? rs.getTimestamp("fecha_finalizacion").toLocalDateTime() : null);
+            s.setRespuestasJson(rs.getString("respuestas_json"));
             s.setEstado(rs.getString("estado"));
+            s.setIntentoNumero(rs.getInt("intento_numero"));
+            s.setFechaInicio(rs.getTimestamp("fecha_inicio") != null ? rs.getTimestamp("fecha_inicio").toLocalDateTime() : null);
+            s.setFechaEnvio(rs.getTimestamp("fecha_envio") != null ? rs.getTimestamp("fecha_envio").toLocalDateTime() : null);
+            s.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+            s.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
             return s;
         }
     };
@@ -61,7 +65,8 @@ public class SubmissionDao {
             PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, sub.getEvaluacionId());
             ps.setInt(2, sub.getEstudianteId());
-            ps.setString(3, sub.getEstado());
+            ps.setString(3, sub.getEstado() != null ? sub.getEstado() : "Borrador");
+            ps.setInt(4, sub.getIntentoNumero() != null ? sub.getIntentoNumero() : 1);
             return ps;
         }, keyHolder);
         if (keyHolder.getKey() != null) {
@@ -136,9 +141,10 @@ public class SubmissionDao {
         jdbcTemplate.update(SQL_UPDATE,
             sub.getEvaluacionId(),
             sub.getEstudianteId(),
-            sub.getFechaInicio(),
-            sub.getFechaFinalizacion(),
+            sub.getRespuestasJson(),
             sub.getEstado(),
+            sub.getIntentoNumero(),
+            sub.getFechaEnvio(),
             sub.getId()
         );
     }
