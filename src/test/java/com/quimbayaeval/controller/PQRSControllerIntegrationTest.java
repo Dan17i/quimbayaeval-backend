@@ -91,4 +91,35 @@ class PQRSControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").value("PQRS respondido exitosamente"));
     }
+
+    @Test
+    void createPQRS_withoutUsuarioId_extractsFromJwt() throws Exception {
+        // El frontend no envía usuarioId — el backend lo extrae del token JWT
+        Map<String,Object> dto = new HashMap<>();
+        dto.put("tipo","Queja");
+        dto.put("asunto","Sin usuarioId en body");
+        dto.put("descripcion","El backend debe extraer el id del token");
+        // NO se incluye usuarioId ni estado
+
+        String json = objectMapper.writeValueAsString(dto);
+        mockMvc.perform(post("/api/pqrs")
+                .header("Authorization","Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    void createPQRS_requiresAuth() throws Exception {
+        Map<String,Object> dto = new HashMap<>();
+        dto.put("tipo","Pregunta");
+        dto.put("asunto","Sin auth");
+        dto.put("descripcion","Debe fallar");
+
+        mockMvc.perform(post("/api/pqrs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isForbidden());
+    }
 }
