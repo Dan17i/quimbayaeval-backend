@@ -20,6 +20,7 @@ public class ResultadoDetalleDTO {
     private BigDecimal puntuacionTotal;
     private BigDecimal puntuacionMaxima;
     private BigDecimal porcentaje;
+    private BigDecimal notaEscala;  // escala 1-5: 1 + (porcentaje/100)*4
     private String estadoAprobacion;
     private LocalDateTime fechaResultado;
 
@@ -57,6 +58,9 @@ public class ResultadoDetalleDTO {
 
     public BigDecimal getPorcentaje() { return porcentaje; }
     public void setPorcentaje(BigDecimal porcentaje) { this.porcentaje = porcentaje; }
+
+    public BigDecimal getNotaEscala() { return notaEscala; }
+    public void setNotaEscala(BigDecimal notaEscala) { this.notaEscala = notaEscala; }
 
     public String getEstadoAprobacion() { return estadoAprobacion; }
     public void setEstadoAprobacion(String estadoAprobacion) { this.estadoAprobacion = estadoAprobacion; }

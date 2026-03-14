@@ -10,7 +10,8 @@ public class ResumenCursoDTO {
 
     private Integer evaluacionId;
     private String evaluacionNombre;
-    private BigDecimal promedioGrupo;
+    private BigDecimal promedioGrupo;    // porcentaje promedio
+    private BigDecimal promedioEscala;   // escala 1-5: 1 + (promedioGrupo/100)*4
     private Integer totalEstudiantes;
     private Integer aprobados;
     private Integer reprobados;
@@ -25,6 +26,9 @@ public class ResumenCursoDTO {
 
     public BigDecimal getPromedioGrupo() { return promedioGrupo; }
     public void setPromedioGrupo(BigDecimal promedioGrupo) { this.promedioGrupo = promedioGrupo; }
+
+    public BigDecimal getPromedioEscala() { return promedioEscala; }
+    public void setPromedioEscala(BigDecimal promedioEscala) { this.promedioEscala = promedioEscala; }
 
     public Integer getTotalEstudiantes() { return totalEstudiantes; }
     public void setTotalEstudiantes(Integer totalEstudiantes) { this.totalEstudiantes = totalEstudiantes; }
