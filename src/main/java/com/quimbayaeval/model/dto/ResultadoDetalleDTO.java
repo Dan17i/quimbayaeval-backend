@@ -17,6 +17,7 @@ public class ResultadoDetalleDTO {
     private Integer evaluacionId;
     private String evaluacionNombre;
     private String cursoNombre;
+    private String profesorNombre;
     private BigDecimal puntuacionTotal;
     private BigDecimal puntuacionMaxima;
     private BigDecimal porcentaje;
@@ -49,6 +50,9 @@ public class ResultadoDetalleDTO {
 
     public String getCursoNombre() { return cursoNombre; }
     public void setCursoNombre(String cursoNombre) { this.cursoNombre = cursoNombre; }
+
+    public String getProfesorNombre() { return profesorNombre; }
+    public void setProfesorNombre(String profesorNombre) { this.profesorNombre = profesorNombre; }
 
     public BigDecimal getPuntuacionTotal() { return puntuacionTotal; }
     public void setPuntuacionTotal(BigDecimal puntuacionTotal) { this.puntuacionTotal = puntuacionTotal; }

@@ -71,7 +71,8 @@ public class ResultadoDao {
         String sql =
             "SELECT r.id, r.submission_id, u.id as estudiante_id, u.name as estudiante_nombre, " +
             "u.email as estudiante_email, e.id as evaluacion_id, e.nombre as evaluacion_nombre, " +
-            "c.nombre as curso_nombre, r.puntuacion_total, r.puntuacion_maxima, r.porcentaje, " +
+            "c.nombre as curso_nombre, p.name as profesor_nombre, " +
+            "r.puntuacion_total, r.puntuacion_maxima, r.porcentaje, " +
             "ROUND(CAST(1 + (r.porcentaje / 100.0) * 4 AS numeric), 2) as nota_escala, " +
             "r.estado_aprobacion, r.fecha_resultado " +
             "FROM resultados r " +
@@ -79,6 +80,7 @@ public class ResultadoDao {
             "JOIN users u ON s.estudiante_id = u.id " +
             "JOIN evaluaciones e ON s.evaluacion_id = e.id " +
             "JOIN cursos c ON e.curso_id = c.id " +
+            "JOIN users p ON e.profesor_id = p.id " +
             "WHERE e.curso_id = ? " +
             "ORDER BY e.nombre, u.name";
 
@@ -92,6 +94,7 @@ public class ResultadoDao {
             dto.setEvaluacionId(rs.getInt("evaluacion_id"));
             dto.setEvaluacionNombre(rs.getString("evaluacion_nombre"));
             dto.setCursoNombre(rs.getString("curso_nombre"));
+            dto.setProfesorNombre(rs.getString("profesor_nombre"));
             dto.setPuntuacionTotal(rs.getBigDecimal("puntuacion_total"));
             dto.setPuntuacionMaxima(rs.getBigDecimal("puntuacion_maxima"));
             dto.setPorcentaje(rs.getBigDecimal("porcentaje"));
