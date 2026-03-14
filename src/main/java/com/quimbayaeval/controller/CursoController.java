@@ -1,6 +1,8 @@
 package com.quimbayaeval.controller;
 
+import com.quimbayaeval.dao.InscripcionDao;
 import com.quimbayaeval.model.Curso;
+import com.quimbayaeval.model.User;
 import com.quimbayaeval.model.dto.ApiResponse;
 import com.quimbayaeval.service.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class CursoController {
 
     @Autowired
     private CursoService cursoService;
+
+    @Autowired
+    private InscripcionDao inscripcionDao;
 
     /**
      * Obtiene todos los cursos
@@ -138,5 +143,47 @@ public class CursoController {
                 ApiResponse.error("Error eliminando curso: " + e.getMessage())
             );
         }
+    }
+
+    // ── Gestión de inscripciones ──────────────────────────────────────────────
+
+    /**
+     * Lista los estudiantes matriculados en un curso
+     * GET /api/cursos/{id}/estudiantes
+     */
+    @GetMapping("/{id}/estudiantes")
+    public ResponseEntity<ApiResponse<List<User>>> obtenerEstudiantes(@PathVariable Integer id) {
+        List<User> estudiantes = inscripcionDao.findEstudiantesByCurso(id);
+        return ResponseEntity.ok(ApiResponse.success("Estudiantes del curso", estudiantes));
+    }
+
+    /**
+     * Matricula un estudiante en un curso
+     * POST /api/cursos/{id}/estudiantes
+     * Body: { "estudianteId": 4 }
+     */
+    @PostMapping("/{id}/estudiantes")
+    public ResponseEntity<ApiResponse<String>> inscribir(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Integer> body) {
+        Integer estudianteId = body.get("estudianteId");
+        if (estudianteId == null) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("estudianteId es requerido"));
+        }
+        inscripcionDao.inscribir(id, estudianteId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ApiResponse.success("Estudiante matriculado exitosamente"));
+    }
+
+    /**
+     * Desmatricula un estudiante de un curso
+     * DELETE /api/cursos/{id}/estudiantes/{estudianteId}
+     */
+    @DeleteMapping("/{id}/estudiantes/{estudianteId}")
+    public ResponseEntity<ApiResponse<String>> desinscribir(
+            @PathVariable Integer id,
+            @PathVariable Integer estudianteId) {
+        inscripcionDao.desinscribir(id, estudianteId);
+        return ResponseEntity.ok(ApiResponse.success("Estudiante desmatriculado exitosamente"));
     }
 }
