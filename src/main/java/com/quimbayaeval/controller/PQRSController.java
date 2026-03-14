@@ -138,10 +138,34 @@ public class PQRSController {
             org.springframework.security.core.Authentication authentication) {
         try {
             // Tomar usuarioId del token JWT
-            if (authentication != null && authentication.getDetails() instanceof com.quimbayaeval.security.JwtUserDetails userDetails) {
-                pqrs.setUsuarioId(userDetails.getUserId());
+            if (authentication != null) {
+                Object details = authentication.getDetails();
+                if (details instanceof com.quimbayaeval.security.JwtUserDetails userDetails) {
+                    pqrs.setUsuarioId(userDetails.getUserId());
+                }
             }
-            // Asegurar estado por defecto
+            // Validar campos mínimos
+            if (pqrs.getUsuarioId() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.error("No se pudo identificar el usuario autenticado")
+                );
+            }
+            if (pqrs.getTipo() == null || pqrs.getTipo().isBlank()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.error("El tipo es obligatorio")
+                );
+            }
+            if (pqrs.getAsunto() == null || pqrs.getAsunto().isBlank()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.error("El asunto es obligatorio")
+                );
+            }
+            if (pqrs.getDescripcion() == null || pqrs.getDescripcion().isBlank()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.error("La descripción es obligatoria")
+                );
+            }
+            // Estado por defecto
             if (pqrs.getEstado() == null || pqrs.getEstado().isBlank()) {
                 pqrs.setEstado("Pendiente");
             }
