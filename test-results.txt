@@ -1,0 +1,745 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.quimbayaeval:quimbayaeval-backend >----------------
+[INFO] Building QuimbayaEVAL Backend 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ quimbayaeval-backend ---
+[INFO] Deleting C:\Users\DANIEL-PC\Documents\bases SENA\quimbayaeval-backend\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ quimbayaeval-backend ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ quimbayaeval-backend ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 70 source files with javac [debug release 17] to target\classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ quimbayaeval-backend ---
+[INFO] Copying 2 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ quimbayaeval-backend ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 31 source files with javac [debug release 17] to target\test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ quimbayaeval-backend ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.quimbayaeval.controller.AuthControllerIntegrationTest
+15:14:04.920 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.quimbayaeval.controller.AuthControllerIntegrationTest]: AuthControllerIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:14:05.493 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.quimbayaeval.QuimbayaEvalBackendApplication for test class com.quimbayaeval.controller.AuthControllerIntegrationTest
+15:14:06.255 [main] INFO org.springframework.boot.devtools.restart.RestartApplicationListener -- Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.2)
+
+2026-03-14T15:14:07.507-05:00  INFO 23360 --- [           main] c.q.c.AuthControllerIntegrationTest      : Starting AuthControllerIntegrationTest using Java 21.0.7 with PID 23360 (started by DANIEL-PC in C:\Users\DANIEL-PC\Documents\bases SENA\quimbayaeval-backend)
+2026-03-14T15:14:07.512-05:00  INFO 23360 --- [           main] c.q.c.AuthControllerIntegrationTest      : No active profile set, falling back to 1 default profile: "default"
+2026-03-14T15:14:17.165-05:00  WARN 23360 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-14T15:14:22.930-05:00  WARN 23360 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-14T15:14:23.067-05:00  WARN 23360 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 5beaebf3-3946-4570-a2ab-8cfc6cd93455
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-14T15:14:24.599-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Configurando Security Filter Chain
+2026-03-14T15:14:24.603-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Configurando CORS con orÝgenes permitidos: http://localhost:5173,http://localhost:3000
+2026-03-14T15:14:24.764-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Security Filter Chain configurado exitosamente
+2026-03-14T15:14:28.880-05:00  INFO 23360 --- [           main] c.q.c.AuthControllerIntegrationTest      : Started AuthControllerIntegrationTest in 22.672 seconds (process running for 27.845)
+mvn : WARNING: A Java agent has been loaded dynamically (C:\Users\DANIEL-PC\.m2\repository\net\by
+tebuddy\byte-buddy-agent\1.14.11\byte-buddy-agent-1.14.11.jar)
+En línea: 1 Carácter: 151
++ ... cuments\bases SENA\quimbayaeval-backend'; mvn clean test 2>&1 | Out-F ...
++                                               ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (WARNING: A Java...nt-1.14.11.jar):String) [], Remot 
+   eException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to 
+hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for 
+more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes 
+because bootstrap classpath has been appended
+2026-03-14T15:14:31.838-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@example.com
+2026-03-14T15:14:31.847-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:14:32.488-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: test@example.com con rol: estudiante
+2026-03-14T15:14:32.815-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: test@example.com
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 28.88 s -- in com.quimbayaeval.controller.AuthControllerIntegrationTest
+[INFO] Running com.quimbayaeval.controller.AuthControllerJpaTest
+2026-03-14T15:14:33.485-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Errores de validaci¾n: {email=El email debe ser vßlido}
+2026-03-14T15:14:33.685-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@example.com
+2026-03-14T15:14:33.686-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:14:33.842-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Rol no coincide para usuario: test@example.com. Esperado: estudiante, Recibido: maestro
+2026-03-14T15:14:33.843-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Error de autorizaci¾n: El rol no coincide con el usuario
+2026-03-14T15:14:34.040-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Errores de validaci¾n: {email=El email es obligatorio}
+2026-03-14T15:14:34.227-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de registro recibido para: newuser@example.com
+2026-03-14T15:14:34.228-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Registrando nuevo usuario: newuser@example.com
+2026-03-14T15:14:34.393-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario registrado exitosamente: newuser@example.com con ID: 6
+2026-03-14T15:14:34.395-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Usuario registrado exitosamente: newuser@example.com
+2026-03-14T15:14:34.599-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@example.com
+2026-03-14T15:14:34.600-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:14:34.757-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: test@example.com con rol: estudiante
+2026-03-14T15:14:34.759-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: test@example.com
+2026-03-14T15:14:35.061-05:00  WARN 23360 --- [           main] c.q.security.JwtTokenProvider            : Token invßlido: Malformed protected header JSON: Unable to deserialize: Unexpected character ('?' (code 65533 / 0xfffd)): expected a valid value (JSON String, Number, Array, Object or token 'null', 'true' or 'false')
+ at [Source: (InputStreamReader); line: 1, column: 2]
+2026-03-14T15:14:35.253-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de registro recibido para: test@example.com
+2026-03-14T15:14:35.253-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Registrando nuevo usuario: test@example.com
+2026-03-14T15:14:35.259-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de registro con email duplicado: test@example.com
+2026-03-14T15:14:35.260-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Argumento invßlido: El email ya estß registrado
+2026-03-14T15:14:35.442-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@example.com
+2026-03-14T15:14:35.442-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:14:35.596-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: test@example.com con rol: estudiante
+2026-03-14T15:14:35.598-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: test@example.com
+2026-03-14T15:14:36.024-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@example.com
+2026-03-14T15:14:36.024-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:14:36.186-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Contrase±a incorrecta para usuario: test@example.com
+2026-03-14T15:14:36.186-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Error de autorizaci¾n: Credenciales invßlidas
+2026-03-14T15:14:36.406-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: nonexistent@example.com
+2026-03-14T15:14:36.406-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: nonexistent@example.com
+2026-03-14T15:14:36.411-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario no encontrado: nonexistent@example.com
+2026-03-14T15:14:36.413-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Recurso no encontrado: Usuario con email='nonexistent@example.com' no encontrado
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.362 s -- in com.quimbayaeval.controller.AuthControllerJpaTest
+[INFO] Running com.quimbayaeval.controller.CursoControllerIntegrationTest
+2026-03-14T15:14:36.618-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof@example.com
+2026-03-14T15:14:36.619-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof@example.com
+2026-03-14T15:14:36.773-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof@example.com con rol: maestro
+2026-03-14T15:14:36.775-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof@example.com
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.464 s -- in com.quimbayaeval.controller.CursoControllerIntegrationTest
+[INFO] Running com.quimbayaeval.controller.CursoControllerPaginationTest
+2026-03-14T15:14:37.082-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof@example.com
+2026-03-14T15:14:37.082-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof@example.com
+2026-03-14T15:14:37.240-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof@example.com con rol: maestro
+2026-03-14T15:14:37.242-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof@example.com
+2026-03-14T15:14:37.480-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof@example.com
+2026-03-14T15:14:37.481-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof@example.com
+2026-03-14T15:14:37.645-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof@example.com con rol: maestro
+2026-03-14T15:14:37.647-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof@example.com
+2026-03-14T15:14:37.884-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof@example.com
+2026-03-14T15:14:37.886-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof@example.com
+2026-03-14T15:14:38.045-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof@example.com con rol: maestro
+2026-03-14T15:14:38.047-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof@example.com
+2026-03-14T15:14:38.274-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof@example.com
+2026-03-14T15:14:38.274-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof@example.com
+2026-03-14T15:14:38.440-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof@example.com con rol: maestro
+2026-03-14T15:14:38.442-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof@example.com
+2026-03-14T15:14:38.661-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof@example.com
+2026-03-14T15:14:38.662-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof@example.com
+2026-03-14T15:14:38.822-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof@example.com con rol: maestro
+2026-03-14T15:14:38.824-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof@example.com
+2026-03-14T15:14:39.039-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof@example.com
+2026-03-14T15:14:39.040-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof@example.com
+2026-03-14T15:14:39.203-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof@example.com con rol: maestro
+2026-03-14T15:14:39.205-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof@example.com
+2026-03-14T15:14:39.459-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof@example.com
+2026-03-14T15:14:39.460-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof@example.com
+2026-03-14T15:14:39.630-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof@example.com con rol: maestro
+2026-03-14T15:14:39.631-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof@example.com
+2026-03-14T15:14:39.858-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof@example.com
+2026-03-14T15:14:39.859-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof@example.com
+2026-03-14T15:14:40.048-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof@example.com con rol: maestro
+2026-03-14T15:14:40.051-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof@example.com
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.199 s -- in com.quimbayaeval.controller.CursoControllerPaginationTest
+[INFO] Running com.quimbayaeval.controller.EvaluacionControllerAdvancedFilterTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.2)
+
+2026-03-14T15:14:40.226-05:00  INFO 23360 --- [           main] c.EvaluacionControllerAdvancedFilterTest : Starting EvaluacionControllerAdvancedFilterTest using Java 21.0.7 with PID 23360 (started by DANIEL-PC in C:\Users\DANIEL-PC\Documents\bases SENA\quimbayaeval-backend)
+2026-03-14T15:14:40.228-05:00  INFO 23360 --- [           main] c.EvaluacionControllerAdvancedFilterTest : The following 1 profile is active: "test"
+2026-03-14T15:14:43.384-05:00  WARN 23360 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-14T15:14:46.341-05:00  WARN 23360 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-14T15:14:46.481-05:00  WARN 23360 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 8826a26b-8fe8-4130-af63-25f4eb93d09a
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-14T15:14:47.930-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Configurando Security Filter Chain
+2026-03-14T15:14:47.931-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Configurando CORS con orÝgenes permitidos: http://localhost:5173,http://localhost:3000
+2026-03-14T15:14:47.962-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Security Filter Chain configurado exitosamente
+2026-03-14T15:14:50.667-05:00  INFO 23360 --- [           main] c.EvaluacionControllerAdvancedFilterTest : Started EvaluacionControllerAdvancedFilterTest in 10.54 seconds (process running for 49.634)
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.40 s -- in com.quimbayaeval.controller.EvaluacionControllerAdvancedFilterTest
+[INFO] Running com.quimbayaeval.controller.EvaluacionControllerIntegrationTest
+2026-03-14T15:14:51.727-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof2@example.com
+2026-03-14T15:14:51.727-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof2@example.com
+2026-03-14T15:14:51.891-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof2@example.com con rol: maestro
+2026-03-14T15:14:51.895-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof2@example.com
+2026-03-14T15:14:51.924-05:00  INFO 23360 --- [           main] c.q.service.EvaluacionService            : Creando evaluaci¾n: nombre=Eval1, cursoId=1
+2026-03-14T15:14:51.929-05:00  INFO 23360 --- [           main] c.q.service.EvaluacionService            : Evaluaci¾n creada exitosamente: id=1
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.486 s -- in com.quimbayaeval.controller.EvaluacionControllerIntegrationTest
+[INFO] Running com.quimbayaeval.controller.PQRSControllerIntegrationTest
+2026-03-14T15:14:52.195-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: alice@example.com
+2026-03-14T15:14:52.196-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: alice@example.com
+2026-03-14T15:14:52.392-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: alice@example.com con rol: estudiante
+2026-03-14T15:14:52.394-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: alice@example.com
+2026-03-14T15:14:52.694-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: alice@example.com
+2026-03-14T15:14:52.695-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: alice@example.com
+2026-03-14T15:14:52.864-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: alice@example.com con rol: estudiante
+2026-03-14T15:14:52.867-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: alice@example.com
+2026-03-14T15:14:53.172-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: alice@example.com
+2026-03-14T15:14:53.172-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: alice@example.com
+2026-03-14T15:14:53.334-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: alice@example.com con rol: estudiante
+2026-03-14T15:14:53.335-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: alice@example.com
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.369 s -- in com.quimbayaeval.controller.PQRSControllerIntegrationTest
+[INFO] Running com.quimbayaeval.controller.PreguntaControllerIntegrationTest
+2026-03-14T15:14:53.585-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: prof3@example.com
+2026-03-14T15:14:53.586-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: prof3@example.com
+2026-03-14T15:14:53.745-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: prof3@example.com con rol: maestro
+2026-03-14T15:14:53.747-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: prof3@example.com
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.460 s -- in com.quimbayaeval.controller.PreguntaControllerIntegrationTest
+[INFO] Running com.quimbayaeval.controller.ResultadoControllerIntegrationTest
+2026-03-14T15:14:54.349-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:54.349-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:54.513-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:14:54.515-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:54.525-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:14:54.525-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:14:54.688-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:14:54.690-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:14:54.701-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:14:54.701-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:14:54.866-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:14:54.869-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+2026-03-14T15:14:55.385-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:55.386-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:55.561-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:14:55.563-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:55.573-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:14:55.573-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:14:55.738-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:14:55.740-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:14:55.751-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:14:55.752-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:14:55.920-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:14:55.922-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+2026-03-14T15:14:56.474-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:56.475-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:56.638-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:14:56.640-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:56.650-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:14:56.650-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:14:56.812-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:14:56.813-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:14:56.823-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:14:56.824-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:14:56.988-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:14:56.990-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+2026-03-14T15:14:57.581-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:57.582-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:57.749-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:14:57.751-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:57.761-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:14:57.761-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:14:57.921-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:14:57.922-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:14:57.931-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:14:57.931-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:14:58.093-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:14:58.094-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+2026-03-14T15:14:58.611-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:58.611-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:58.778-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:14:58.780-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:58.789-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:14:58.789-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:14:58.958-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:14:58.959-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:14:58.968-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:14:58.968-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:14:59.142-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:14:59.143-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+2026-03-14T15:14:59.678-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:59.678-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:59.845-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:14:59.846-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:14:59.855-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:14:59.856-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:15:00.019-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:15:00.021-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:15:00.030-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:15:00.030-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:15:00.200-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:15:00.201-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+2026-03-14T15:15:00.722-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:00.723-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:00.890-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:15:00.893-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:00.903-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:15:00.904-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:15:01.071-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:15:01.073-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:15:01.080-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:15:01.081-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:15:01.245-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:15:01.247-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+2026-03-14T15:15:01.788-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:01.788-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:01.960-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:15:01.962-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:01.972-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:15:01.972-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:15:02.142-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:15:02.144-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:15:02.155-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:15:02.156-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:15:02.319-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:15:02.321-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+2026-03-14T15:15:02.847-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:02.848-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:03.013-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:15:03.015-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:03.027-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:15:03.028-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:15:03.198-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:15:03.200-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:15:03.210-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:15:03.210-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:15:03.380-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:15:03.382-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+2026-03-14T15:15:03.905-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:03.906-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:04.069-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: estudiante.test@quimbaya.edu.co con rol: estudiante
+2026-03-14T15:15:04.071-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: estudiante.test@quimbaya.edu.co
+2026-03-14T15:15:04.082-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@quimbaya.edu.co
+2026-03-14T15:15:04.082-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@quimbaya.edu.co
+2026-03-14T15:15:04.249-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@quimbaya.edu.co con rol: maestro
+2026-03-14T15:15:04.250-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@quimbaya.edu.co
+2026-03-14T15:15:04.259-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@quimbaya.edu.co
+2026-03-14T15:15:04.259-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@quimbaya.edu.co
+2026-03-14T15:15:04.417-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@quimbaya.edu.co con rol: coordinador
+2026-03-14T15:15:04.418-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@quimbaya.edu.co
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.63 s -- in com.quimbayaeval.controller.ResultadoControllerIntegrationTest
+[INFO] Running com.quimbayaeval.controller.UserControllerIntegrationTest
+2026-03-14T15:15:04.972-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@q.edu.co
+2026-03-14T15:15:04.973-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@q.edu.co
+2026-03-14T15:15:05.135-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@q.edu.co con rol: coordinador
+2026-03-14T15:15:05.137-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@q.edu.co
+2026-03-14T15:15:05.145-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@q.edu.co
+2026-03-14T15:15:05.145-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@q.edu.co
+2026-03-14T15:15:05.322-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@q.edu.co con rol: maestro
+2026-03-14T15:15:05.323-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@q.edu.co
+2026-03-14T15:15:05.813-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@q.edu.co
+2026-03-14T15:15:05.814-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@q.edu.co
+2026-03-14T15:15:05.971-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@q.edu.co con rol: coordinador
+2026-03-14T15:15:05.972-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@q.edu.co
+2026-03-14T15:15:05.979-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@q.edu.co
+2026-03-14T15:15:05.979-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@q.edu.co
+2026-03-14T15:15:06.144-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@q.edu.co con rol: maestro
+2026-03-14T15:15:06.146-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@q.edu.co
+2026-03-14T15:15:06.658-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@q.edu.co
+2026-03-14T15:15:06.658-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@q.edu.co
+2026-03-14T15:15:06.823-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@q.edu.co con rol: coordinador
+2026-03-14T15:15:06.824-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@q.edu.co
+2026-03-14T15:15:06.832-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@q.edu.co
+2026-03-14T15:15:06.833-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@q.edu.co
+2026-03-14T15:15:06.998-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@q.edu.co con rol: maestro
+2026-03-14T15:15:06.999-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@q.edu.co
+2026-03-14T15:15:07.487-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@q.edu.co
+2026-03-14T15:15:07.488-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@q.edu.co
+2026-03-14T15:15:07.645-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@q.edu.co con rol: coordinador
+2026-03-14T15:15:07.647-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@q.edu.co
+2026-03-14T15:15:07.654-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@q.edu.co
+2026-03-14T15:15:07.655-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@q.edu.co
+2026-03-14T15:15:07.811-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@q.edu.co con rol: maestro
+2026-03-14T15:15:07.812-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@q.edu.co
+2026-03-14T15:15:08.319-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: admin.test@q.edu.co
+2026-03-14T15:15:08.319-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: admin.test@q.edu.co
+2026-03-14T15:15:08.471-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: admin.test@q.edu.co con rol: coordinador
+2026-03-14T15:15:08.472-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: admin.test@q.edu.co
+2026-03-14T15:15:08.479-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: profe.test@q.edu.co
+2026-03-14T15:15:08.479-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: profe.test@q.edu.co
+2026-03-14T15:15:08.642-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: profe.test@q.edu.co con rol: maestro
+2026-03-14T15:15:08.644-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: profe.test@q.edu.co
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.205 s -- in com.quimbayaeval.controller.UserControllerIntegrationTest
+[INFO] Running com.quimbayaeval.dao.CursoDaoPaginationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.2)
+
+2026-03-14T15:15:08.809-05:00  INFO 23360 --- [           main] c.q.dao.CursoDaoPaginationTest           : Starting CursoDaoPaginationTest using Java 21.0.7 with PID 23360 (started by DANIEL-PC in C:\Users\DANIEL-PC\Documents\bases SENA\quimbayaeval-backend)
+2026-03-14T15:15:08.810-05:00  INFO 23360 --- [           main] c.q.dao.CursoDaoPaginationTest           : No active profile set, falling back to 1 default profile: "default"
+2026-03-14T15:15:10.326-05:00  WARN 23360 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-14T15:15:11.375-05:00  WARN 23360 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-14T15:15:11.483-05:00  WARN 23360 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 98e3fa43-f69b-4a3c-ad30-d1d262bb5178
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-14T15:15:12.096-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Configurando Security Filter Chain
+2026-03-14T15:15:12.096-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Configurando CORS con orÝgenes permitidos: http://localhost:5173,http://localhost:3000
+2026-03-14T15:15:12.109-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Security Filter Chain configurado exitosamente
+2026-03-14T15:15:13.373-05:00  INFO 23360 --- [           main] c.q.dao.CursoDaoPaginationTest           : Started CursoDaoPaginationTest in 4.627 seconds (process running for 72.339)
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.893 s -- in com.quimbayaeval.dao.CursoDaoPaginationTest
+[INFO] Running com.quimbayaeval.dao.JdbcQueryBuilderAdvancedFilterTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in com.quimbayaeval.dao.JdbcQueryBuilderAdvancedFilterTest
+[INFO] Running com.quimbayaeval.exception.GlobalExceptionHandlerTest
+2026-03-14T15:15:13.606-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Acceso denegado: Access denied
+2026-03-14T15:15:13.809-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Error de validaci¾n de negocio: Validation failed
+2026-03-14T15:15:14.257-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Errores de validaci¾n: {password=must not be blank, email=must not be blank}
+2026-03-14T15:15:14.279-05:00 ERROR 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Error interno del servidor
+
+java.lang.Exception: Unexpected error
+	at com.quimbayaeval.exception.GlobalExceptionHandlerTest.handleGenericException_returnsInternalServerError(GlobalExceptionHandlerTest.java:148) ~[test-classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728) ~[junit-platform-commons-1.10.1.jar:1.10.1]
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69) ~[junit-jupiter-engine-5.10.1.jar:5.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54) ~[junit-platform-engine-1.10.1.jar:1.10.1]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198) ~[junit-platform-launcher-1.10.1.jar:1.10.1]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169) ~[junit-platform-launcher-1.10.1.jar:1.10.1]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93) ~[junit-platform-launcher-1.10.1.jar:1.10.1]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58) ~[junit-platform-launcher-1.10.1.jar:1.10.1]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141) ~[junit-platform-launcher-1.10.1.jar:1.10.1]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57) ~[junit-platform-launcher-1.10.1.jar:1.10.1]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103) ~[junit-platform-launcher-1.10.1.jar:1.10.1]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85) ~[junit-platform-launcher-1.10.1.jar:1.10.1]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47) ~[junit-platform-launcher-1.10.1.jar:1.10.1]
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122) ~[surefire-junit-platform-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.1.2.jar:3.1.2]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.1.2.jar:3.1.2]
+
+2026-03-14T15:15:14.293-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Argumento invßlido: Invalid argument
+2026-03-14T15:15:14.295-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Recurso no encontrado: Resource not found
+2026-03-14T15:15:14.298-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Error de autorizaci¾n: Unauthorized access
+2026-03-14T15:15:14.302-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Credenciales invßlidas
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.700 s -- in com.quimbayaeval.exception.GlobalExceptionHandlerTest
+[INFO] Running com.quimbayaeval.integration.AuthenticationFlowTest
+2026-03-14T15:15:14.512-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@test.com
+2026-03-14T15:15:14.512-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@test.com
+2026-03-14T15:15:14.669-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: test@test.com con rol: estudiante
+2026-03-14T15:15:14.671-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: test@test.com
+2026-03-14T15:15:14.859-05:00  WARN 23360 --- [           main] c.q.security.JwtTokenProvider            : Token invßlido: Invalid compact JWT string: Compact JWSs must contain exactly 2 period characters, and compact JWEs must contain exactly 4.  Found: 0
+2026-03-14T15:15:15.037-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Errores de validaci¾n: {email=El email debe ser vßlido}
+2026-03-14T15:15:15.214-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: nonexistent@test.com
+2026-03-14T15:15:15.215-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: nonexistent@test.com
+2026-03-14T15:15:15.219-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario no encontrado: nonexistent@test.com
+2026-03-14T15:15:15.220-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Recurso no encontrado: Usuario con email='nonexistent@test.com' no encontrado
+2026-03-14T15:15:15.412-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@test.com
+2026-03-14T15:15:15.412-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@test.com
+2026-03-14T15:15:15.570-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: test@test.com con rol: estudiante
+2026-03-14T15:15:15.571-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: test@test.com
+2026-03-14T15:15:16.588-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@test.com
+2026-03-14T15:15:16.588-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@test.com
+2026-03-14T15:15:16.744-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: test@test.com con rol: estudiante
+2026-03-14T15:15:16.746-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Login exitoso para usuario: test@test.com
+2026-03-14T15:15:16.945-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@test.com
+2026-03-14T15:15:16.945-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@test.com
+2026-03-14T15:15:17.098-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Contrase±a incorrecta para usuario: test@test.com
+2026-03-14T15:15:17.099-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Error de autorizaci¾n: Credenciales invßlidas
+2026-03-14T15:15:17.434-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Errores de validaci¾n: {password=La contrase±a es obligatoria}
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.134 s -- in com.quimbayaeval.integration.AuthenticationFlowTest
+[INFO] Running com.quimbayaeval.QuimbayaEvalApplicationContextTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in com.quimbayaeval.QuimbayaEvalApplicationContextTest
+[INFO] Running com.quimbayaeval.repository.CursoRepositoryTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.2)
+
+2026-03-14T15:15:17.586-05:00  INFO 23360 --- [           main] c.q.repository.CursoRepositoryTest       : Starting CursoRepositoryTest using Java 21.0.7 with PID 23360 (started by DANIEL-PC in C:\Users\DANIEL-PC\Documents\bases SENA\quimbayaeval-backend)
+2026-03-14T15:15:17.586-05:00  INFO 23360 --- [           main] c.q.repository.CursoRepositoryTest       : No active profile set, falling back to 1 default profile: "default"
+2026-03-14T15:15:18.163-05:00  WARN 23360 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+Hibernate: drop table if exists cursos cascade 
+Hibernate: drop table if exists evaluaciones cascade 
+Hibernate: drop table if exists pqrs cascade 
+Hibernate: drop table if exists users cascade 
+Hibernate: create table cursos (id integer generated by default as identity, profesor_id integer, created_at timestamp(6) not null, updated_at timestamp(6), codigo varchar(50) not null unique, descripcion TEXT, nombre varchar(255) not null, primary key (id))
+Hibernate: create table evaluaciones (curso_id integer not null, duracion_minutos integer, id integer generated by default as identity, intentos_permitidos integer, profesor_id integer not null, publicada boolean not null, created_at timestamp(6) not null, deadline timestamp(6), updated_at timestamp(6), estado varchar(50) not null, tipo varchar(50) not null, descripcion TEXT, nombre varchar(255) not null, primary key (id))
+Hibernate: create table pqrs (curso_id integer, id integer generated by default as identity, respondido_por_id integer, usuario_id integer not null, created_at timestamp(6) not null, fecha_creacion timestamp(6) not null, fecha_respuesta timestamp(6), updated_at timestamp(6), estado varchar(50) not null, tipo varchar(50) not null, asunto varchar(255) not null, descripcion TEXT not null, respuesta TEXT, primary key (id))
+Hibernate: create table users (active boolean not null, id integer generated by default as identity, created_at timestamp(6) not null, updated_at timestamp(6), role varchar(50) not null, email varchar(255) not null unique, name varchar(255) not null, password varchar(255) not null, primary key (id))
+2026-03-14T15:15:18.610-05:00  INFO 23360 --- [           main] c.q.repository.CursoRepositoryTest       : Started CursoRepositoryTest in 1.076 seconds (process running for 77.577)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0 where ce1_0.codigo=?
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id from cursos ce1_0 where ce1_0.codigo=? fetch first ? rows only
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id from cursos ce1_0 where ce1_0.codigo=? fetch first ? rows only
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0 where ce1_0.codigo=?
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0 where ce1_0.profesor_id=?
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: insert into cursos (codigo,created_at,descripcion,nombre,profesor_id,updated_at,id) values (?,?,?,?,?,?,default)
+Hibernate: select ce1_0.id,ce1_0.codigo,ce1_0.created_at,ce1_0.descripcion,ce1_0.nombre,ce1_0.profesor_id,ce1_0.updated_at from cursos ce1_0 where ce1_0.profesor_id=?
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.340 s -- in com.quimbayaeval.repository.CursoRepositoryTest
+[INFO] Running com.quimbayaeval.repository.EvaluacionRepositoryTest
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0 where ee1_0.profesor_id=?
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0 where ee1_0.estado=?
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0 where ee1_0.estado=?
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0 where ee1_0.curso_id=? offset ? rows fetch first ? rows only
+Hibernate: select count(ee1_0.id) from evaluaciones ee1_0 where ee1_0.curso_id=?
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0 where ee1_0.curso_id=?
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: select ee1_0.id,ee1_0.created_at,ee1_0.curso_id,ee1_0.deadline,ee1_0.descripcion,ee1_0.duracion_minutos,ee1_0.estado,ee1_0.intentos_permitidos,ee1_0.nombre,ee1_0.profesor_id,ee1_0.publicada,ee1_0.tipo,ee1_0.updated_at from evaluaciones ee1_0
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into evaluaciones (created_at,curso_id,deadline,descripcion,duracion_minutos,estado,intentos_permitidos,nombre,profesor_id,publicada,tipo,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.189 s -- in com.quimbayaeval.repository.EvaluacionRepositoryTest
+[INFO] Running com.quimbayaeval.repository.PQRSRepositoryTest
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: insert into pqrs (asunto,created_at,curso_id,descripcion,estado,fecha_creacion,fecha_respuesta,respondido_por_id,respuesta,tipo,updated_at,usuario_id,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into pqrs (asunto,created_at,curso_id,descripcion,estado,fecha_creacion,fecha_respuesta,respondido_por_id,respuesta,tipo,updated_at,usuario_id,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: select p1_0.id,p1_0.asunto,p1_0.created_at,p1_0.curso_id,p1_0.descripcion,p1_0.estado,p1_0.fecha_creacion,p1_0.fecha_respuesta,p1_0.respondido_por_id,p1_0.respuesta,p1_0.tipo,p1_0.updated_at,p1_0.usuario_id from pqrs p1_0 where p1_0.estado=?
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: insert into pqrs (asunto,created_at,curso_id,descripcion,estado,fecha_creacion,fecha_respuesta,respondido_por_id,respuesta,tipo,updated_at,usuario_id,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: insert into pqrs (asunto,created_at,curso_id,descripcion,estado,fecha_creacion,fecha_respuesta,respondido_por_id,respuesta,tipo,updated_at,usuario_id,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: insert into pqrs (asunto,created_at,curso_id,descripcion,estado,fecha_creacion,fecha_respuesta,respondido_por_id,respuesta,tipo,updated_at,usuario_id,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into pqrs (asunto,created_at,curso_id,descripcion,estado,fecha_creacion,fecha_respuesta,respondido_por_id,respuesta,tipo,updated_at,usuario_id,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: select p1_0.id,p1_0.asunto,p1_0.created_at,p1_0.curso_id,p1_0.descripcion,p1_0.estado,p1_0.fecha_creacion,p1_0.fecha_respuesta,p1_0.respondido_por_id,p1_0.respuesta,p1_0.tipo,p1_0.updated_at,p1_0.usuario_id from pqrs p1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: insert into pqrs (asunto,created_at,curso_id,descripcion,estado,fecha_creacion,fecha_respuesta,respondido_por_id,respuesta,tipo,updated_at,usuario_id,id) values (?,?,?,?,?,?,?,?,?,?,?,?,default)
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.113 s -- in com.quimbayaeval.repository.PQRSRepositoryTest
+[INFO] Running com.quimbayaeval.repository.UserRepositoryTest
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0 where ue1_0.email=?
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0 where ue1_0.email=?
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: select ue1_0.id from users ue1_0 where ue1_0.email=? fetch first ? rows only
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0 where ue1_0.email=? and ue1_0.role=?
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: select ue1_0.id from users ue1_0 where ue1_0.email=? fetch first ? rows only
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0
+Hibernate: insert into users (active,created_at,email,name,password,role,updated_at,id) values (?,?,?,?,?,?,?,default)
+Hibernate: select ue1_0.id,ue1_0.active,ue1_0.created_at,ue1_0.email,ue1_0.name,ue1_0.password,ue1_0.role,ue1_0.updated_at from users ue1_0 where ue1_0.email=? and ue1_0.role=?
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.162 s -- in com.quimbayaeval.repository.UserRepositoryTest
+[INFO] Running com.quimbayaeval.security.JwtTokenProviderTest
+2026-03-14T15:15:20.314-05:00  WARN 23360 --- [           main] c.q.security.JwtTokenProvider            : Token invßlido: Malformed protected header JSON: Unable to deserialize: Unexpected character ('?' (code 65533 / 0xfffd)): expected a valid value (JSON String, Number, Array, Object or token 'null', 'true' or 'false')
+ at [Source: (InputStreamReader); line: 1, column: 2]
+2026-03-14T15:15:20.331-05:00  WARN 23360 --- [           main] c.q.security.JwtTokenProvider            : Token invßlido: CharSequence cannot be null or empty.
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.041 s -- in com.quimbayaeval.security.JwtTokenProviderTest
+[INFO] Running com.quimbayaeval.security.SecurityConfigTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.2)
+
+2026-03-14T15:15:20.425-05:00  INFO 23360 --- [           main] c.q.security.SecurityConfigTest          : Starting SecurityConfigTest using Java 21.0.7 with PID 23360 (started by DANIEL-PC in C:\Users\DANIEL-PC\Documents\bases SENA\quimbayaeval-backend)
+2026-03-14T15:15:20.425-05:00  INFO 23360 --- [           main] c.q.security.SecurityConfigTest          : No active profile set, falling back to 1 default profile: "default"
+2026-03-14T15:15:21.971-05:00  WARN 23360 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-14T15:15:22.799-05:00  WARN 23360 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-14T15:15:22.856-05:00  WARN 23360 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: bf5d4643-96ff-41eb-b864-b985f78f16e2
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-14T15:15:23.452-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Configurando Security Filter Chain
+2026-03-14T15:15:23.453-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Configurando CORS con orÝgenes permitidos: http://localhost:5173,http://localhost:3000
+2026-03-14T15:15:23.465-05:00  INFO 23360 --- [           main] com.quimbayaeval.config.SecurityConfig   : Security Filter Chain configurado exitosamente
+2026-03-14T15:15:24.746-05:00  INFO 23360 --- [           main] c.q.security.SecurityConfigTest          : Started SecurityConfigTest in 4.372 seconds (process running for 83.712)
+2026-03-14T15:15:24.879-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@test.com
+2026-03-14T15:15:24.880-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@test.com
+2026-03-14T15:15:24.881-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario no encontrado: test@test.com
+2026-03-14T15:15:24.883-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Recurso no encontrado: Usuario con email='test@test.com' no encontrado
+2026-03-14T15:15:24.932-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@test.com
+2026-03-14T15:15:24.932-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@test.com
+2026-03-14T15:15:24.933-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario no encontrado: test@test.com
+2026-03-14T15:15:24.933-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Recurso no encontrado: Usuario con email='test@test.com' no encontrado
+2026-03-14T15:15:25.059-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@test.com
+2026-03-14T15:15:25.059-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@test.com
+2026-03-14T15:15:25.059-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario no encontrado: test@test.com
+2026-03-14T15:15:25.061-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Recurso no encontrado: Usuario con email='test@test.com' no encontrado
+2026-03-14T15:15:25.073-05:00  INFO 23360 --- [           main] c.q.controller.AuthController            : Request de login recibido para: test@test.com
+2026-03-14T15:15:25.073-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@test.com
+2026-03-14T15:15:25.073-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario no encontrado: test@test.com
+2026-03-14T15:15:25.074-05:00  WARN 23360 --- [           main] c.q.exception.GlobalExceptionHandler     : Recurso no encontrado: Usuario con email='test@test.com' no encontrado
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.765 s -- in com.quimbayaeval.security.SecurityConfigTest
+[INFO] Running com.quimbayaeval.service.AuthServiceJpaTest
+2026-03-14T15:15:25.400-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Registrando nuevo usuario: existing@example.com
+2026-03-14T15:15:25.401-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de registro con email duplicado: existing@example.com
+2026-03-14T15:15:25.443-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Registrando nuevo usuario: new@example.com
+2026-03-14T15:15:25.444-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario registrado exitosamente: new@example.com con ID: null
+2026-03-14T15:15:25.455-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:15:25.456-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Rol no coincide para usuario: test@example.com. Esperado: maestro, Recibido: estudiante
+2026-03-14T15:15:25.478-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:15:25.478-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Contrase±a incorrecta para usuario: test@example.com
+2026-03-14T15:15:25.487-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:15:25.487-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Login exitoso para usuario: test@example.com con rol: estudiante
+2026-03-14T15:15:25.494-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:15:25.495-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario inactivo intent¾ login: test@example.com
+2026-03-14T15:15:25.503-05:00  INFO 23360 --- [           main] com.quimbayaeval.service.AuthService     : Intento de login para email: test@example.com
+2026-03-14T15:15:25.503-05:00  WARN 23360 --- [           main] com.quimbayaeval.service.AuthService     : Usuario no encontrado: test@example.com
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.393 s -- in com.quimbayaeval.service.AuthServiceJpaTest
+[INFO] Running com.quimbayaeval.service.CursoServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.136 s -- in com.quimbayaeval.service.CursoServiceTest
+[INFO] Running com.quimbayaeval.service.CursoServiceValidationTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 s -- in com.quimbayaeval.service.CursoServiceValidationTest
+[INFO] Running com.quimbayaeval.service.EvaluacionServiceTest
+2026-03-14T15:15:25.840-05:00  INFO 23360 --- [           main] c.q.service.EvaluacionService            : Creando evaluaci¾n: nombre=null, cursoId=null
+2026-03-14T15:15:25.840-05:00  INFO 23360 --- [           main] c.q.service.EvaluacionService            : Evaluaci¾n creada exitosamente: id=null
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.141 s -- in com.quimbayaeval.service.EvaluacionServiceTest
+[INFO] Running com.quimbayaeval.service.EvaluacionServiceValidationTest
+2026-03-14T15:15:25.857-05:00  INFO 23360 --- [           main] c.q.service.EvaluacionService            : Creando evaluaci¾n: nombre=Test, cursoId=1
+2026-03-14T15:15:25.857-05:00  INFO 23360 --- [           main] c.q.service.EvaluacionService            : Evaluaci¾n creada exitosamente: id=null
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in com.quimbayaeval.service.EvaluacionServiceValidationTest
+[INFO] Running com.quimbayaeval.service.PQRSServiceTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.123 s -- in com.quimbayaeval.service.PQRSServiceTest
+[INFO] Running com.quimbayaeval.service.PreguntaServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.115 s -- in com.quimbayaeval.service.PreguntaServiceTest
+[INFO] Running com.quimbayaeval.service.ResultadoServiceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.157 s -- in com.quimbayaeval.service.ResultadoServiceTest
+[INFO] Running com.quimbayaeval.validation.DTOValidationTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.106 s -- in com.quimbayaeval.validation.DTOValidationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 214, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:55 min
+[INFO] Finished at: 2026-03-14T15:15:26-05:00
+[INFO] ------------------------------------------------------------------------
