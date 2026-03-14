@@ -45,8 +45,10 @@ class PQRSControllerIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
         jdbcTemplate.execute("DELETE FROM pqrs");
         jdbcTemplate.execute("DELETE FROM users");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
         // crear usuario
         User u = new User("Alice", "alice@example.com", passwordEncoder.encode("pwd"), "estudiante");
         userDao.save(u);

@@ -43,9 +43,12 @@ class CursoControllerIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        // limpiar
-        cursoDao.findAll().forEach(c -> cursoDao.deleteById(c.getId()));
+        // limpiar en orden correcto (hijos antes que padres)
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("DELETE FROM pqrs");
+        jdbcTemplate.execute("DELETE FROM cursos");
         jdbcTemplate.execute("DELETE FROM users");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
         // crear profesor
         User prof = new User("Prof", "prof@example.com", passwordEncoder.encode("pwd"), "maestro");
         userDao.save(prof);

@@ -45,9 +45,11 @@ class CursoControllerPaginationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        // limpiar tablas
-        cursoDao.findAll().forEach(c -> cursoDao.deleteById(c.getId()));
+        // limpiar tablas en orden correcto
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("DELETE FROM cursos");
         jdbcTemplate.execute("DELETE FROM users");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
 
         // crear profesor
         User prof = new User("Prof", "prof@example.com", passwordEncoder.encode("pwd"), "maestro");

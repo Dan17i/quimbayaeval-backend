@@ -51,11 +51,13 @@ class PreguntaControllerIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        // Limpiar datos
+        // Limpiar datos en orden correcto
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
         jdbcTemplate.execute("DELETE FROM preguntas");
         jdbcTemplate.execute("DELETE FROM evaluaciones");
         jdbcTemplate.execute("DELETE FROM cursos");
         jdbcTemplate.execute("DELETE FROM users");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
 
         User prof = new User("Prof", "prof3@example.com", passwordEncoder.encode("pwd"), "maestro");
         userDao.save(prof);

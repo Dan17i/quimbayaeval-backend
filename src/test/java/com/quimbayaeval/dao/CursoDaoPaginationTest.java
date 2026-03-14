@@ -25,11 +25,13 @@ class CursoDaoPaginationTest {
 
     @BeforeEach
     void setUp() {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
         jdbcTemplate.execute("DELETE FROM cursos");
-        // insertar 12 cursos
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+        // insertar 12 cursos (sin FK a users para simplificar)
         for (int i = 1; i <= 12; i++) {
             String sql = String.format(
-                    "INSERT INTO cursos (codigo, nombre, descripcion, profesor_id, created_at) VALUES ('C%d', 'Curso %d', 'Desc %d', 1, CURRENT_TIMESTAMP)",
+                    "INSERT INTO cursos (codigo, nombre, descripcion, profesor_id, created_at) VALUES ('C%d', 'Curso %d', 'Desc %d', NULL, CURRENT_TIMESTAMP)",
                     i, i, i);
             jdbcTemplate.execute(sql);
         }

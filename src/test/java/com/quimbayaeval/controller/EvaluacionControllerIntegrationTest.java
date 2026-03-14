@@ -51,9 +51,11 @@ class EvaluacionControllerIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
         jdbcTemplate.execute("DELETE FROM evaluaciones");
         jdbcTemplate.execute("DELETE FROM cursos");
         jdbcTemplate.execute("DELETE FROM users");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
         // crear profesor y curso
         User prof = new User("Prof", "prof2@example.com", passwordEncoder.encode("pwd"), "maestro");
         userDao.save(prof);

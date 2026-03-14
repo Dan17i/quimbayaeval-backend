@@ -29,8 +29,8 @@ public class PQRSDao {
     private static final String SQL_COLS =
         "id, tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at, created_at";
     private static final String SQL_INSERT =
-        "INSERT INTO pqrs (tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion) " +
-        "VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+        "INSERT INTO pqrs (tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, created_at) " +
+        "VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
     private static final String SQL_SELECT_BY_ID =
         "SELECT " + SQL_COLS + " FROM pqrs WHERE id = ?";
     private static final String SQL_SELECT_ALL =
