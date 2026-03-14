@@ -66,22 +66,48 @@ Ver [CREDENCIALES.md](CREDENCIALES.md) para más detalles.
 
 ### Autenticación (Públicos)
 ```bash
-POST /api/auth/login      # Iniciar sesión
+POST /api/auth/login      # Iniciar sesión (requiere campo "role")
 POST /api/auth/register   # Registrar usuario
 ```
 
-### Recursos Protegidos
+### Usuarios
 ```bash
-GET  /api/cursos                              # Listar cursos
-GET  /api/evaluaciones                        # Listar evaluaciones
-GET  /api/evaluaciones?profesorId={id}        # Filtrar por profesor
-POST /api/evaluaciones                        # Crear evaluación (maestro/coordinador)
-GET  /api/pqrs                                # Listar PQRS
-POST /api/pqrs                                # Crear PQRS (usuarioId extraído del JWT)
-GET  /api/users?role=maestro                  # Listar usuarios por rol (coordinador/maestro)
-GET  /api/resultados/mis-resultados           # Resultados del estudiante autenticado
-GET  /api/resultados/curso/{id}               # Notas de todos los estudiantes del curso (docente)
-GET  /api/resultados/curso/{id}/resumen       # Promedio grupal por evaluación (coordinador)
+GET    /api/users                        # Listar usuarios activos (?role=maestro)
+GET    /api/users/me                     # Perfil propio + cursos (desde JWT)
+PUT    /api/users/me                     # Editar nombre y fotoUrl
+PUT    /api/users/me/password            # Cambiar contraseña
+PATCH  /api/users/{id}/status            # Activar/bloquear usuario (coordinador)
+DELETE /api/users/{id}                   # Soft delete (coordinador)
+```
+
+### Cursos
+```bash
+GET    /api/cursos                       # Listar cursos
+POST   /api/cursos                       # Crear curso (coordinador)
+PUT    /api/cursos/{id}                  # Actualizar curso
+DELETE /api/cursos/{id}                  # Eliminar curso
+GET    /api/cursos/{id}/estudiantes      # Estudiantes matriculados
+POST   /api/cursos/{id}/estudiantes      # Matricular estudiante
+DELETE /api/cursos/{id}/estudiantes/{estudianteId}  # Desmatricular
+```
+
+### Evaluaciones
+```bash
+GET  /api/evaluaciones                   # Listar (?profesorId, ?cursoId, ?estado, ?tipo)
+GET  /api/evaluaciones/{id}              # Obtener por ID
+POST /api/evaluaciones                   # Crear (maestro/coordinador)
+PUT  /api/evaluaciones/{id}              # Actualizar
+POST /api/evaluaciones/{id}/publicar     # Publicar (estado → Activa)
+DELETE /api/evaluaciones/{id}            # Eliminar
+```
+
+### Resultados y Calificaciones
+```bash
+GET  /api/resultados/mis-resultados      # Resultados del estudiante autenticado
+GET  /api/resultados/curso/{id}          # Notas de todos los estudiantes del curso
+GET  /api/resultados/curso/{id}/resumen  # Promedio grupal por evaluación
+POST /api/calificaciones                 # Calificar (calificadoPorId desde JWT)
+POST /api/pqrs                           # Crear PQRS (usuarioId desde JWT)
 ```
 
 ### Nota escala 1-5
@@ -228,6 +254,6 @@ Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detal
 
 ---
 
-**Versión**: 1.1.0  
+**Versión**: 1.2.0  
 **Estado**:  En Desarrollo  
 **Última actualización**: Marzo 14, 2026

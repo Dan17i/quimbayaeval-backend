@@ -1,65 +1,31 @@
 # 📡 Documentación de API - QuimbayaEVAL
 
-Documentación completa de todos los endpoints REST disponibles en QuimbayaEVAL Backend.
+Base URL: `http://localhost:8080/api`
 
-## 🔗 Base URL
-
-```
-http://localhost:8080/api
-```
-
-## 🔐 Autenticación
-
-Todos los endpoints protegidos requieren un token JWT en el header `Authorization`:
-
+Todos los endpoints protegidos requieren header:
 ```
 Authorization: Bearer <token>
 ```
 
-El token se obtiene mediante el endpoint de login y tiene una validez de 24 horas.
-
 ---
 
-## 📋 Tabla de Contenidos
-
-1. [Autenticación](#autenticación-endpoints)
-2. [Cursos](#cursos)
-3. [Evaluaciones](#evaluaciones)
-4. [PQRS](#pqrs)
-5. [Usuarios](#usuarios)
-6. [Resultados](#resultados)
-7. [Calificaciones](#calificaciones)
-8. [Paginación y Filtros](#paginación-y-filtros)
-9. [Códigos de Respuesta](#códigos-de-respuesta)
-
----
-
-## 🔑 Autenticación Endpoints
+## Autenticación
 
 ### POST /api/auth/login
-
-Iniciar sesión y obtener token JWT.
-
 **Acceso**: Público
 
-**Request Body**:
+**Body**:
 ```json
-{
-  "email": "estudiante@quimbaya.edu.co",
-  "password": "password123",
-  "role": "estudiante"
-}
+{ "email": "estudiante@quimbaya.edu.co", "password": "password", "role": "estudiante" }
 ```
+> `role` es obligatorio. Valores: `estudiante`, `maestro`, `coordinador`
 
-**Roles válidos**: `estudiante`, `maestro`, `coordinador`
-
-**Response 200 OK**:
+**Response 200**:
 ```json
 {
   "success": true,
-  "message": "Login exitoso",
   "data": {
-    "token": "eyJhbGciOiJIUzUxMiJ9...",
+    "token": "eyJhbGci...",
     "type": "Bearer",
     "id": 4,
     "name": "Juan Estudiante",
@@ -69,309 +35,172 @@ Iniciar sesión y obtener token JWT.
 }
 ```
 
-**Response 401 Unauthorized**:
-```json
-{
-  "success": false,
-  "message": "Credenciales inválidas",
-  "data": null
-}
-```
-
-**Ejemplo cURL**:
-```bash
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"estudiante@quimbaya.edu.co","password":"password123","role":"estudiante"}'
-```
-
 ### POST /api/auth/register
-
-Registrar nuevo usuario.
-
 **Acceso**: Público
 
-**Request Body**:
+**Body**:
 ```json
-{
-  "name": "Nuevo Usuario",
-  "email": "nuevo@quimbaya.edu.co",
-  "password": "password123",
-  "role": "estudiante"
-}
-```
-
-**Response 201 Created**:
-```json
-{
-  "success": true,
-  "message": "Usuario registrado exitosamente",
-  "data": {
-    "id": 8,
-    "name": "Nuevo Usuario",
-    "email": "nuevo@quimbaya.edu.co",
-    "role": "estudiante"
-  }
-}
+{ "name": "Nuevo Usuario", "email": "nuevo@quimbaya.edu.co", "password": "password", "role": "estudiante" }
 ```
 
 ---
 
-## 📚 Cursos
+## Usuarios
 
-### GET /api/cursos
+### GET /api/users
+Lista usuarios activos. Sin password en respuesta.
 
-Listar todos los cursos con paginación.
+**Query params**: `?role=maestro` (opcional) — filtra por rol
 
-**Acceso**: Requiere autenticación (todos los roles)
+**Acceso**: Autenticado
 
-**Query Parameters**:
-- `page` (opcional): Número de página (default: 0)
-- `size` (opcional): Registros por página (default: 10)
-- `sort` (opcional): Campo para ordenar (default: nombre)
-- `direction` (opcional): ASC o DESC (default: ASC)
-
-**Response 200 OK**:
+**Response**:
 ```json
 {
-  "success": true,
-  "message": "Cursos obtenidos exitosamente",
+  "data": [
+    { "id": 2, "name": "María Profesora", "email": "profesor@quimbaya.edu.co", "role": "maestro", "active": true, "fotoUrl": null }
+  ]
+}
+```
+
+### GET /api/users/me
+Perfil del usuario autenticado. Incluye cursos según rol.
+
+**Acceso**: Autenticado
+
+**Response**:
+```json
+{
   "data": {
-    "content": [
-      {
-        "id": 1,
-        "codigo": "MAT-301",
-        "nombre": "Cálculo Integral",
-        "descripcion": "Curso de cálculo avanzado",
-        "creditos": 4,
-        "profesorId": 2,
-        "profesorNombre": "María Profesora",
-        "activo": true
-      }
-    ],
-    "page": 0,
-    "size": 10,
-    "totalElements": 15,
-    "totalPages": 2
-  }
-}
-```
-
-**Ejemplo cURL**:
-```bash
-curl -X GET "http://localhost:8080/api/cursos?page=0&size=10&sort=nombre&direction=ASC" \
-  -H "Authorization: Bearer <token>"
-```
-
-### GET /api/cursos/{id}
-
-Obtener un curso específico por ID.
-
-**Acceso**: Requiere autenticación
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Curso obtenido exitosamente",
-  "data": {
-    "id": 1,
-    "codigo": "MAT-301",
-    "nombre": "Cálculo Integral",
-    "descripcion": "Curso de cálculo avanzado",
-    "creditos": 4,
-    "profesorId": 2,
-    "profesorNombre": "María Profesora",
-    "activo": true
-  }
-}
-```
-
-**Response 404 Not Found**:
-```json
-{
-  "success": false,
-  "message": "Curso no encontrado",
-  "data": null
-}
-```
-
-### POST /api/cursos
-
-Crear un nuevo curso.
-
-**Acceso**: Requiere rol `coordinador`
-
-**Request Body**:
-```json
-{
-  "codigo": "FIS-201",
-  "nombre": "Física I",
-  "descripcion": "Introducción a la física",
-  "creditos": 3,
-  "profesorId": 2
-}
-```
-
-**Response 201 Created**:
-```json
-{
-  "success": true,
-  "message": "Curso creado exitosamente",
-  "data": {
-    "id": 16,
-    "codigo": "FIS-201",
-    "nombre": "Física I",
-    "descripcion": "Introducción a la física",
-    "creditos": 3,
-    "profesorId": 2,
-    "activo": true
-  }
-}
-```
-
-### PUT /api/cursos/{id}
-
-Actualizar un curso existente.
-
-**Acceso**: Requiere rol `coordinador`
-
-**Request Body**:
-```json
-{
-  "codigo": "FIS-201",
-  "nombre": "Física I - Actualizado",
-  "descripcion": "Descripción actualizada",
-  "creditos": 4,
-  "profesorId": 2
-}
-```
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Curso actualizado exitosamente",
-  "data": { /* curso actualizado */ }
-}
-```
-
-### DELETE /api/cursos/{id}
-
-Eliminar un curso.
-
-**Acceso**: Requiere rol `coordinador`
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Curso eliminado exitosamente",
-  "data": null
-}
-```
-
----
-
-## 📝 Evaluaciones
-
-### GET /api/evaluaciones
-
-Listar todas las evaluaciones.
-
-**Acceso**: Requiere autenticación
-
-**Query Parameters**: Soporta paginación (ver sección Paginación)
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Evaluaciones obtenidas exitosamente",
-  "data": {
-    "content": [
-      {
-        "id": 1,
-        "nombre": "Parcial 1",
-        "descripcion": "Primera evaluación",
-        "tipo": "Examen",
-        "cursoId": 1,
-        "cursoNombre": "Cálculo Integral",
-        "profesorId": 2,
-        "estado": "Activa",
-        "fechaInicio": "2026-03-15T08:00:00",
-        "fechaFin": "2026-03-15T10:00:00",
-        "duracionMinutos": 120,
-        "intentosPermitidos": 1,
-        "puntajeTotal": 100
-      }
-    ],
-    "page": 0,
-    "size": 10,
-    "totalElements": 25,
-    "totalPages": 3
-  }
-}
-```
-
-### GET /api/evaluaciones/{id}
-
-Obtener una evaluación específica.
-
-**Acceso**: Requiere autenticación
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Evaluación obtenida exitosamente",
-  "data": {
-    "id": 1,
-    "nombre": "Parcial 1",
-    "descripcion": "Primera evaluación",
-    "tipo": "Examen",
-    "cursoId": 1,
-    "profesorId": 2,
-    "estado": "Activa",
-    "fechaInicio": "2026-03-15T08:00:00",
-    "fechaFin": "2026-03-15T10:00:00",
-    "duracionMinutos": 120,
-    "preguntas": [
-      {
-        "id": 1,
-        "texto": "¿Cuál es la derivada de x²?",
-        "tipo": "Selección Múltiple",
-        "puntaje": 10,
-        "opciones": ["2x", "x", "2", "x²"]
-      }
+    "id": 4,
+    "name": "Juan Estudiante",
+    "email": "estudiante@quimbaya.edu.co",
+    "role": "estudiante",
+    "fotoUrl": "https://i.imgur.com/abc.jpg",
+    "cursos": [
+      { "id": 1, "codigo": "MAT101", "nombre": "Matemáticas", "descripcion": "...", "profesorId": 2 }
     ]
   }
 }
 ```
+> Estudiante: `cursos` = cursos inscritos. Maestro: `cursos` = cursos asignados. Coordinador: sin campo `cursos`.
+
+### PUT /api/users/me
+Editar nombre y foto de perfil.
+
+**Acceso**: Autenticado
+
+**Body**:
+```json
+{ "name": "Nuevo Nombre", "fotoUrl": "https://i.imgur.com/abc.jpg" }
+```
+> `fotoUrl` es una URL externa (Imgur, Gravatar, etc.). No hay upload de archivos.
+
+### PUT /api/users/me/password
+Cambiar contraseña.
+
+**Acceso**: Autenticado
+
+**Body**:
+```json
+{ "passwordActual": "password", "passwordNueva": "nueva123" }
+```
+> `passwordNueva` debe tener al menos 6 caracteres.
+
+### PATCH /api/users/{id}/status
+Activar o bloquear usuario.
+
+**Acceso**: Coordinador
+
+**Body**:
+```json
+{ "status": "activo" }
+```
+> Valores: `activo`, `bloqueado`
+
+### DELETE /api/users/{id}
+Soft delete — marca `active = false`.
+
+**Acceso**: Coordinador
+
+---
+
+## Cursos
+
+### GET /api/cursos
+Lista todos los cursos.
+
+**Acceso**: Autenticado
+
+**Query params**: `?page=0&size=10&sort=nombre&direction=ASC`
+
+### GET /api/cursos/{id}
+Obtener curso por ID.
+
+### POST /api/cursos
+Crear curso.
+
+**Acceso**: Coordinador
+
+**Body**:
+```json
+{ "codigo": "MAT101", "nombre": "Matemáticas", "descripcion": "...", "profesorId": 2 }
+```
+
+### PUT /api/cursos/{id}
+Actualizar curso. **Acceso**: Coordinador
+
+### DELETE /api/cursos/{id}
+Eliminar curso. **Acceso**: Coordinador
+
+### GET /api/cursos/{id}/estudiantes
+Lista estudiantes matriculados en el curso.
+
+### POST /api/cursos/{id}/estudiantes
+Matricular estudiante en el curso.
+
+**Body**:
+```json
+{ "estudianteId": 4 }
+```
+
+### DELETE /api/cursos/{id}/estudiantes/{estudianteId}
+Desmatricular estudiante del curso.
+
+---
+
+## Evaluaciones
+
+### GET /api/evaluaciones
+Lista evaluaciones con filtros opcionales.
+
+**Query params**:
+- `?profesorId={id}` — evaluaciones de un profesor
+- `?cursoId={id}` — evaluaciones de un curso
+- `?estado=Activa` — por estado
+- `?tipo=Examen` — por tipo
+- `?publicada=true`
+- `?page=0&size=10&sort=nombre`
+
+**Tipos válidos**: `Examen`, `Quiz`, `Taller`, `Proyecto`, `Tarea`
+
+**Estados válidos**: `Borrador`, `Programada`, `Activa`, `Cerrada`
+
+### GET /api/evaluaciones/{id}
+Obtener evaluación por ID.
 
 ### GET /api/evaluaciones/curso/{cursoId}
-
-Obtener evaluaciones de un curso específico.
-
-**Acceso**: Requiere autenticación
-
-**Response 200 OK**: Similar a GET /api/evaluaciones
+Evaluaciones de un curso.
 
 ### GET /api/evaluaciones/estado/activas
-
-Obtener solo evaluaciones activas.
-
-**Acceso**: Requiere autenticación
-
-**Response 200 OK**: Similar a GET /api/evaluaciones
+Solo evaluaciones activas (publicada = true, estado = Activa).
 
 ### POST /api/evaluaciones
+Crear evaluación.
 
-Crear una nueva evaluación.
+**Acceso**: Maestro / Coordinador
 
-**Acceso**: Requiere rol `maestro` o `coordinador`
-
-**Request Body**:
+**Body**:
 ```json
 {
   "nombre": "Quiz 1",
@@ -379,384 +208,182 @@ Crear una nueva evaluación.
   "tipo": "Quiz",
   "cursoId": 1,
   "profesorId": 2,
-  "fechaInicio": "2026-03-20T08:00:00",
-  "fechaFin": "2026-03-20T09:00:00",
   "duracionMinutos": 60,
-  "intentosPermitidos": 2,
-  "puntajeTotal": 50,
-  "preguntas": [
-    {
-      "texto": "¿Cuál es la integral de 2x?",
-      "tipo": "Selección Múltiple",
-      "puntaje": 10,
-      "opciones": ["x²", "2x²", "x", "2"],
-      "respuestaCorrecta": "x²"
-    }
-  ]
+  "intentosPermitidos": 1
 }
 ```
-
-**Response 201 Created**:
-```json
-{
-  "success": true,
-  "message": "Evaluación creada exitosamente",
-  "data": {
-    "id": 26,
-    "nombre": "Quiz 1",
-    "estado": "Programada",
-    /* ... resto de campos ... */
-  }
-}
-```
+> Estado inicial: `Borrador`. `publicada` = false.
 
 ### POST /api/evaluaciones/{id}/publicar
+Publica la evaluación (estado → `Activa`, publicada → true).
 
-Publicar una evaluación (cambiar estado a "Activa").
-
-**Acceso**: Requiere rol `maestro` o `coordinador`
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Evaluación publicada exitosamente",
-  "data": {
-    "id": 26,
-    "estado": "Activa",
-    /* ... resto de campos ... */
-  }
-}
-```
-
-### POST /api/evaluaciones/{id}/submit
-
-Enviar respuestas de una evaluación.
-
-**Acceso**: Requiere rol `estudiante`
-
-**Request Body**:
-```json
-{
-  "estudianteId": 4,
-  "respuestas": [
-    {
-      "preguntaId": 1,
-      "respuesta": "x²"
-    },
-    {
-      "preguntaId": 2,
-      "respuesta": "2x"
-    }
-  ]
-}
-```
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Evaluación enviada exitosamente",
-  "data": {
-    "submissionId": 42,
-    "evaluacionId": 1,
-    "estudianteId": 4,
-    "estado": "Completa",
-    "fechaEnvio": "2026-03-15T09:45:00",
-    "puntajeObtenido": 85,
-    "puntajeTotal": 100
-  }
-}
-```
+**Acceso**: Maestro / Coordinador
 
 ### PUT /api/evaluaciones/{id}
-
-Actualizar una evaluación.
-
-**Acceso**: Requiere rol `maestro` o `coordinador`
-
-**Request Body**: Similar a POST /api/evaluaciones
-
-**Response 200 OK**: Similar a POST /api/evaluaciones
+Actualizar evaluación. **Acceso**: Maestro / Coordinador
 
 ### DELETE /api/evaluaciones/{id}
-
-Eliminar una evaluación.
-
-**Acceso**: Requiere rol `coordinador`
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Evaluación eliminada exitosamente",
-  "data": null
-}
-```
+Eliminar evaluación. **Acceso**: Coordinador
 
 ---
 
-## 📮 PQRS
+## Preguntas
 
-### GET /api/pqrs
+### GET /api/preguntas/evaluacion/{evaluacionId}
+Lista preguntas de una evaluación.
 
-Listar todos los PQRS.
-
-**Acceso**: Requiere autenticación
-
-**Query Parameters**: Soporta paginación
-
-**Response 200 OK**:
+**Response**:
 ```json
 {
-  "success": true,
-  "message": "PQRS obtenidos exitosamente",
-  "data": {
-    "content": [
-      {
-        "id": 1,
-        "tipo": "Pregunta",
-        "asunto": "Duda sobre evaluación",
-        "descripcion": "Tengo una duda sobre el parcial",
-        "usuarioId": 4,
-        "usuarioNombre": "Juan Estudiante",
-        "estado": "Pendiente",
-        "fechaCreacion": "2026-03-10T14:30:00",
-        "fechaRespuesta": null,
-        "respuesta": null
-      }
-    ],
-    "page": 0,
-    "size": 10,
-    "totalElements": 8,
-    "totalPages": 1
-  }
-}
-```
-
-### GET /api/pqrs/{id}
-
-Obtener un PQRS específico.
-
-**Acceso**: Requiere autenticación
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "PQRS obtenido exitosamente",
-  "data": {
-    "id": 1,
-    "tipo": "Pregunta",
-    "asunto": "Duda sobre evaluación",
-    "descripcion": "Tengo una duda sobre el parcial",
-    "usuarioId": 4,
-    "usuarioNombre": "Juan Estudiante",
-    "estado": "Resuelta",
-    "fechaCreacion": "2026-03-10T14:30:00",
-    "fechaRespuesta": "2026-03-11T09:15:00",
-    "respuesta": "La evaluación se realizará el día 15 de marzo"
-  }
-}
-```
-
-### GET /api/pqrs/mis-pqrs
-
-Obtener los PQRS del usuario autenticado (lee el ID desde el JWT).
-
-**Acceso**: Requiere autenticación
-
-**Response 200 OK**: Similar a GET /api/pqrs
-
-### GET /api/pqrs/usuario/{usuarioId}
-
-Obtener PQRS de un usuario específico.
-
-**Acceso**: Requiere autenticación
-
-**Response 200 OK**: Similar a GET /api/pqrs
-
-### GET /api/pqrs/estado/{estado}
-
-Obtener PQRS por estado.
-
-**Acceso**: Requiere autenticación
-
-**Estados válidos**: `Pendiente`, `En Proceso`, `Resuelta`, `Cerrada`
-
-**Response 200 OK**: Similar a GET /api/pqrs
-
-### POST /api/pqrs
-
-Crear un nuevo PQRS.
-
-**Acceso**: Requiere autenticación (todos los roles)
-
-> El `usuarioId` se extrae automáticamente del JWT — el frontend no necesita enviarlo en el body.
-
-**Request Body**:
-```json
-{
-  "tipo": "Sugerencia",
-  "asunto": "Mejorar horarios",
-  "descripcion": "Sería bueno tener más flexibilidad en los horarios"
-}
-```
-
-**Tipos válidos**: `Petición`, `Queja`, `Reclamo`, `Sugerencia`, `Pregunta`
-
-El campo `estado` es opcional — por defecto es `"Pendiente"`.
-```json
-{
-  "success": true,
-  "message": "PQRS creado exitosamente",
-  "data": {
-    "id": 9,
-    "tipo": "Sugerencia",
-    "asunto": "Mejorar horarios",
-    "descripcion": "Sería bueno tener más flexibilidad en los horarios",
-    "usuarioId": 4,
-    "estado": "Pendiente",
-    "fechaCreacion": "2026-03-12T10:20:00"
-  }
-}
-```
-
-### PUT /api/pqrs/{id}
-
-Actualizar un PQRS (cambiar estado o agregar respuesta).
-
-**Acceso**: Requiere rol `maestro` o `coordinador`
-
-**Request Body**:
-```json
-{
-  "estado": "Resuelta",
-  "respuesta": "Hemos tomado en cuenta tu sugerencia"
-}
-```
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "PQRS actualizado exitosamente",
-  "data": { /* PQRS actualizado */ }
-}
-```
-
-### DELETE /api/pqrs/{id}
-
-Eliminar un PQRS.
-
-**Acceso**: Requiere rol `coordinador`
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "PQRS eliminado exitosamente",
-  "data": null
-}
-```
-
----
-
-## 👥 Usuarios
-
-### GET /api/users
-
-Listar usuarios, con filtro opcional por rol.
-
-**Acceso**: Requiere rol `coordinador` o `maestro`
-
-**Query Parameters**:
-- `role` (opcional): `estudiante`, `maestro`, `coordinador`
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Usuarios obtenidos",
-  "data": [
-    {
-      "id": 2,
-      "name": "María Profesora",
-      "email": "profesor@quimbaya.edu.co",
-      "role": "maestro",
-      "active": true
-    }
-  ]
-}
-```
-
-> El campo `password` nunca se incluye en la respuesta.
-
----
-
-## 📊 Resultados
-
-### GET /api/resultados/mis-resultados
-
-Resultados del estudiante autenticado (lee el ID desde el JWT).
-
-**Acceso**: Requiere autenticación
-
-### GET /api/resultados/evaluacion/{evaluacionId}
-
-Resultados de todos los estudiantes de una evaluación.
-
-**Acceso**: Requiere autenticación
-
-### GET /api/resultados/submission/{submissionId}
-
-Resultado de una submission específica.
-
-**Acceso**: Requiere autenticación
-
-### GET /api/resultados/curso/{cursoId}
-
-Detalle de notas de todos los estudiantes del curso. Incluye nombre del estudiante, nombre de la evaluación, nombre del profesor y nota en escala 1-5.
-
-**Acceso**: Requiere autenticación (usado por docentes)
-
-**Response 200 OK**:
-```json
-{
-  "success": true,
-  "message": "Resultados del curso",
   "data": [
     {
       "id": 1,
-      "estudianteNombre": "Juan Estudiante",
-      "estudianteEmail": "estudiante@quimbaya.edu.co",
+      "evaluacionId": 1,
+      "enunciado": "¿Cuál es la derivada de x²?",
+      "tipo": "seleccion_multiple",
+      "puntuacion": 10.0,
+      "orden": 1,
+      "opcionesJson": "[\"2x\",\"x\",\"2\",\"x²\"]",
+      "respuestaCorrectaJson": "\"2x\""
+    }
+  ]
+}
+```
+
+**Tipos de pregunta**: `seleccion_multiple`, `verdadero_falso`, `respuesta_corta`, `ensayo`
+
+> `opcionesJson` es un string JSON serializado: `"[\"Opción A\",\"Opción B\"]"`
+
+### POST /api/preguntas
+Crear pregunta.
+
+**Acceso**: Maestro / Coordinador
+
+**Body**:
+```json
+{
+  "evaluacionId": 1,
+  "enunciado": "¿Cuál es la derivada de x²?",
+  "tipo": "seleccion_multiple",
+  "puntuacion": 10.0,
+  "orden": 1,
+  "opcionesJson": "[\"2x\",\"x\",\"2\",\"x²\"]",
+  "respuestaCorrectaJson": "\"2x\""
+}
+```
+
+---
+
+## Submissions
+
+### GET /api/submissions/evaluacion/{evaluacionId}
+Lista submissions de una evaluación (para calificar).
+
+**Acceso**: Maestro / Coordinador
+
+### POST /api/submissions
+Enviar respuestas de una evaluación (estudiante presenta).
+
+**Acceso**: Estudiante
+
+**Body**:
+```json
+{
+  "evaluacionId": 1,
+  "estudianteId": 4,
+  "respuestasJson": "{\"1\":\"2x\",\"2\":\"Verdadero\"}"
+}
+```
+
+---
+
+## Calificaciones
+
+### GET /api/calificaciones/estudiante/{estudianteId}
+Calificaciones de un estudiante.
+
+### GET /api/calificaciones/evaluacion/{evaluacionId}
+Calificaciones de una evaluación.
+
+### POST /api/calificaciones
+Calificar una submission.
+
+**Acceso**: Maestro / Coordinador
+
+**Body**:
+```json
+{
+  "submissionId": 1,
+  "estudianteId": 4,
+  "evaluacionId": 1,
+  "puntuacionObtenida": 42.5,
+  "puntuacionMaxima": 50.0,
+  "comentarios": "Buen trabajo"
+}
+```
+> `calificadoPorId` se extrae automáticamente del JWT — no es necesario enviarlo.
+
+---
+
+## Resultados
+
+### GET /api/resultados/mis-resultados
+Resultados del estudiante autenticado (ID desde JWT).
+
+**Acceso**: Autenticado
+
+**Response**:
+```json
+{
+  "data": [
+    {
+      "id": 1,
       "evaluacionNombre": "Parcial 1",
-      "cursoNombre": "Cálculo Integral",
+      "cursoNombre": "Matemáticas",
       "profesorNombre": "María Profesora",
       "puntuacionTotal": 42.5,
       "puntuacionMaxima": 50.0,
       "porcentaje": 85.0,
       "notaEscala": 4.40,
-      "estadoAprobacion": "Aprobado",
-      "fechaResultado": "2026-03-15T10:00:00"
+      "createdAt": "2026-03-15T10:00:00"
     }
   ]
 }
 ```
 
-> `notaEscala` usa la fórmula colombiana: `1 + (porcentaje / 100) * 4`
+### GET /api/resultados/curso/{cursoId}
+Notas de todos los estudiantes del curso.
 
-### GET /api/resultados/curso/{cursoId}/resumen
+**Acceso**: Autenticado (docentes)
 
-Resumen estadístico por evaluación dentro del curso: promedio grupal, aprobados y reprobados.
-
-**Acceso**: Requiere autenticación (usado por coordinadores)
-
-**Response 200 OK**:
+**Response**:
 ```json
 {
-  "success": true,
-  "message": "Resumen del curso",
+  "data": [
+    {
+      "estudianteNombre": "Juan Estudiante",
+      "estudianteEmail": "estudiante@quimbaya.edu.co",
+      "evaluacionNombre": "Parcial 1",
+      "cursoNombre": "Matemáticas",
+      "profesorNombre": "María Profesora",
+      "puntuacionTotal": 42.5,
+      "puntuacionMaxima": 50.0,
+      "porcentaje": 85.0,
+      "notaEscala": 4.40,
+      "estadoAprobacion": "Aprobado"
+    }
+  ]
+}
+```
+
+### GET /api/resultados/curso/{cursoId}/resumen
+Resumen estadístico por evaluación del curso.
+
+**Acceso**: Autenticado (coordinadores)
+
+**Response**:
+```json
+{
   "data": [
     {
       "evaluacionId": 1,
@@ -771,187 +398,70 @@ Resumen estadístico por evaluación dentro del curso: promedio grupal, aprobado
 }
 ```
 
+> Fórmula nota escala colombiana: `notaEscala = 1 + (porcentaje / 100) * 4`
+
+### GET /api/resultados/evaluacion/{evaluacionId}
+Resultados de todos los estudiantes de una evaluación.
+
+### GET /api/resultados/submission/{submissionId}
+Resultado de una submission específica.
+
 ---
 
-## 📊 Calificaciones
+## PQRS
 
-### GET /api/calificaciones/estudiante/{estudianteId}
+### GET /api/pqrs
+Lista todos los PQRS. **Acceso**: Autenticado
 
-Obtener calificaciones de un estudiante.
+### GET /api/pqrs/{id}
+Obtener PQRS por ID.
 
-**Acceso**: Requiere autenticación
+### GET /api/pqrs/mis-pqrs
+PQRS del usuario autenticado (ID desde JWT).
 
-**Response 200 OK**:
+### GET /api/pqrs/usuario/{usuarioId}
+PQRS de un usuario específico.
+
+### GET /api/pqrs/estado/{estado}
+PQRS por estado. Valores: `Pendiente`, `En Proceso`, `Resuelta`, `Cerrada`
+
+### POST /api/pqrs
+Crear PQRS.
+
+**Acceso**: Autenticado
+
+**Body**:
 ```json
-{
-  "success": true,
-  "message": "Calificaciones obtenidas exitosamente",
-  "data": [
-    {
-      "id": 1,
-      "evaluacionId": 1,
-      "evaluacionNombre": "Parcial 1",
-      "cursoNombre": "Cálculo Integral",
-      "estudianteId": 4,
-      "puntajeObtenido": 85,
-      "puntajeTotal": 100,
-      "porcentaje": 85.0,
-      "fecha": "2026-03-15T10:00:00"
-    }
-  ]
-}
+{ "tipo": "Sugerencia", "asunto": "Mejorar horarios", "descripcion": "..." }
 ```
+> `usuarioId` se extrae del JWT automáticamente. `estado` por defecto: `Pendiente`.
+> Tipos: `Petición`, `Queja`, `Reclamo`, `Sugerencia`, `Pregunta`
 
-### GET /api/calificaciones/evaluacion/{evaluacionId}
+### PUT /api/pqrs/{id}
+Actualizar estado o agregar respuesta. **Acceso**: Maestro / Coordinador
 
-Obtener todas las calificaciones de una evaluación.
-
-**Acceso**: Requiere rol `maestro` o `coordinador`
-
-**Response 200 OK**: Similar a GET /api/calificaciones/estudiante/{estudianteId}
-
----
-
-## 📄 Paginación y Filtros
-
-Todos los endpoints GET que retornan listas soportan los siguientes parámetros:
-
-### Parámetros de Paginación
-
-| Parámetro | Tipo | Default | Descripción |
-|-----------|------|---------|-------------|
-| `page` | Integer | 0 | Número de página (0-indexado) |
-| `size` | Integer | 10 | Registros por página |
-| `sort` | String | - | Campo para ordenar |
-| `direction` | String | ASC | Dirección de ordenamiento (ASC o DESC) |
-
-### Ejemplo de Uso
-
-```bash
-# Página 2, 20 registros, ordenado por nombre descendente
-GET /api/cursos?page=1&size=20&sort=nombre&direction=DESC
-
-# Primera página con 5 registros
-GET /api/evaluaciones?page=0&size=5
-
-# Ordenar por fecha de creación
-GET /api/pqrs?sort=fechaCreacion&direction=DESC
-```
-
-### Respuesta Paginada
-
+**Body**:
 ```json
-{
-  "success": true,
-  "message": "Datos obtenidos exitosamente",
-  "data": {
-    "content": [ /* array de elementos */ ],
-    "page": 1,
-    "size": 20,
-    "totalElements": 45,
-    "totalPages": 3,
-    "first": false,
-    "last": false
-  }
-}
+{ "estado": "Resuelta", "respuesta": "Hemos tomado en cuenta tu sugerencia" }
 ```
+
+### DELETE /api/pqrs/{id}
+Eliminar PQRS. **Acceso**: Coordinador
 
 ---
 
-## 🔢 Códigos de Respuesta
+## Códigos de Respuesta
 
 | Código | Descripción |
 |--------|-------------|
-| 200 | OK - Solicitud exitosa |
-| 201 | Created - Recurso creado exitosamente |
-| 400 | Bad Request - Datos inválidos o faltantes |
-| 401 | Unauthorized - Token inválido o faltante |
-| 403 | Forbidden - Sin permisos para esta acción |
-| 404 | Not Found - Recurso no encontrado |
-| 409 | Conflict - Conflicto con el estado actual |
-| 500 | Internal Server Error - Error del servidor |
-
-### Formato de Error
-
-```json
-{
-  "success": false,
-  "message": "Descripción del error",
-  "data": {
-    "campo": "Mensaje de validación específico"
-  }
-}
-```
+| 200 | OK |
+| 201 | Creado |
+| 400 | Datos inválidos |
+| 401 | Token inválido o faltante |
+| 403 | Sin permisos |
+| 404 | No encontrado |
+| 500 | Error del servidor |
 
 ---
 
-## 💡 Ejemplos de Uso
-
-### Flujo Completo: Login y Crear Evaluación
-
-```bash
-# 1. Login
-TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"profesor@quimbaya.edu.co","password":"password123","role":"maestro"}' \
-  | jq -r '.data.token')
-
-# 2. Crear evaluación
-curl -X POST http://localhost:8080/api/evaluaciones \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "Quiz 1",
-    "tipo": "Quiz",
-    "cursoId": 1,
-    "profesorId": 2,
-    "fechaInicio": "2026-03-20T08:00:00",
-    "fechaFin": "2026-03-20T09:00:00",
-    "duracionMinutos": 60
-  }'
-
-# 3. Publicar evaluación
-curl -X POST http://localhost:8080/api/evaluaciones/26/publicar \
-  -H "Authorization: Bearer $TOKEN"
-```
-
-### Flujo: Estudiante Responde Evaluación
-
-```bash
-# 1. Login como estudiante
-TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"estudiante@quimbaya.edu.co","password":"password123","role":"estudiante"}' \
-  | jq -r '.data.token')
-
-# 2. Ver evaluaciones activas
-curl -X GET http://localhost:8080/api/evaluaciones/estado/activas \
-  -H "Authorization: Bearer $TOKEN"
-
-# 3. Enviar respuestas
-curl -X POST http://localhost:8080/api/evaluaciones/1/submit \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "estudianteId": 4,
-    "respuestas": [
-      {"preguntaId": 1, "respuesta": "x²"},
-      {"preguntaId": 2, "respuesta": "2x"}
-    ]
-  }'
-```
-
----
-
-## 📖 Documentación Interactiva
-
-Para explorar y probar los endpoints de forma interactiva, accede a Swagger UI:
-
-```
-http://localhost:8080/swagger-ui.html
-```
-
----
-
-**Última actualización**: Marzo 14, 2026  
-**Versión API**: 1.1.0
+**Versión**: 1.2.0 — Última actualización: Marzo 14, 2026

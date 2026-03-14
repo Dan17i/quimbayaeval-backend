@@ -122,21 +122,20 @@ psql -U postgres -d quimbayaeval -f src/main/resources/db/schema.sql
 
 ### Paso 3: Insertar Usuarios de Prueba
 
+Con Docker + Flyway esto es automático. Si usas PostgreSQL local sin Docker, carga la migración manualmente:
+
 ```bash
-psql -U postgres -d quimbayaeval
+psql -U postgres -d quimbayaeval -f src/main/resources/db/migration/V1__initial_schema.sql
+psql -U postgres -d quimbayaeval -f src/main/resources/db/migration/V2__add_foto_url_to_users.sql
 ```
 
-```sql
--- Insertar usuarios (password: password123)
-INSERT INTO users (name, email, password, role, active) VALUES
-('Admin Sistema', 'admin@quimbaya.edu.co', '$2a$10$QtbItQKMSvE6Q1XDdEapWeox/TOsjI.xMjM9L.8sf/Wsm2efuKV7i', 'coordinador', true),
-('María Profesora', 'profesor@quimbaya.edu.co', '$2a$10$QtbItQKMSvE6Q1XDdEapWeox/TOsjI.xMjM9L.8sf/Wsm2efuKV7i', 'maestro', true),
-('Juan Estudiante', 'estudiante@quimbaya.edu.co', '$2a$10$QtbItQKMSvE6Q1XDdEapWeox/TOsjI.xMjM9L.8sf/Wsm2efuKV7i', 'estudiante', true);
+Usuarios de prueba (todos con password `password`):
 
--- Verificar
-SELECT id, name, email, role FROM users;
-\q
-```
+| Email | Rol |
+|-------|-----|
+| admin@quimbaya.edu.co | coordinador |
+| profesor@quimbaya.edu.co | maestro |
+| estudiante@quimbaya.edu.co | estudiante |
 
 ### Paso 4: Configurar Variables de Entorno
 
@@ -239,22 +238,6 @@ Respuesta esperada:
 ```powershell
 $body = '{"email":"estudiante@quimbaya.edu.co","password":"password","role":"estudiante"}'
 Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/auth/login" -Headers @{"Content-Type"="application/json"} -Body $body
-```
-
-Respuesta esperada:
-```json
-{
-  "success": true,
-  "message": "Login exitoso",
-  "data": {
-    "token": "eyJhbGciOiJIUzUxMiJ9...",
-    "type": "Bearer",
-    "id": 4,
-    "name": "Juan Estudiante",
-    "email": "estudiante@quimbaya.edu.co",
-    "role": "estudiante"
-  }
-}
 ```
 
 ### 3. Endpoint Protegido
@@ -443,7 +426,7 @@ curl http://localhost:8080/actuator/health
 echo "\nTesting login..."
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"estudiante@quimbaya.edu.co","password":"password123","role":"estudiante"}'
+  -d '{"email":"estudiante@quimbaya.edu.co","password":"password","role":"estudiante"}'
 EOF
 
 chmod +x test-api.sh
