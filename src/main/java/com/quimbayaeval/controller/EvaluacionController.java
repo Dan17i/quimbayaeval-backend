@@ -46,10 +46,17 @@ public class EvaluacionController {
             @RequestParam(required = false) String estado,
             @RequestParam(required = false) String tipo,
             @RequestParam(required = false) Integer cursoId,
+            @RequestParam(required = false) Integer profesorId,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Boolean publicada) {
         try {
             List<Evaluacion> evaluaciones;
+
+            // Filtro por profesorId (para reportes de admin/coordinador)
+            if (profesorId != null && page == null) {
+                evaluaciones = evaluacionService.obtenerDelProfesor(profesorId);
+                return ResponseEntity.ok(ApiResponse.success(evaluaciones));
+            }
             
             if (page != null && size != null) {
                 // Construir criterios de filtro avanzados

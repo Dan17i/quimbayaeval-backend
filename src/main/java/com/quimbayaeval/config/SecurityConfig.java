@@ -69,6 +69,7 @@ public class SecurityConfig {
                     
                     // Usuarios - Solo coordinadores
                     .requestMatchers("/api/usuarios/**").hasRole("COORDINADOR")
+                    .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("COORDINADOR", "MAESTRO")
                     
                     // Reportes - Maestros y coordinadores
                     .requestMatchers("/api/reportes/**").hasAnyRole("MAESTRO", "COORDINADOR")
