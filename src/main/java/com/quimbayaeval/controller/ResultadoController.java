@@ -2,6 +2,8 @@ package com.quimbayaeval.controller;
 
 import com.quimbayaeval.model.Resultado;
 import com.quimbayaeval.model.dto.ApiResponse;
+import com.quimbayaeval.model.dto.ResumenCursoDTO;
+import com.quimbayaeval.model.dto.ResultadoDetalleDTO;
 import com.quimbayaeval.security.JwtUserDetails;
 import com.quimbayaeval.service.ResultadoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +46,21 @@ public class ResultadoController {
         return resultado
             .map(r -> ResponseEntity.ok(ApiResponse.success("Resultado encontrado", r)))
             .orElse(ResponseEntity.status(404).body(ApiResponse.error("Resultado no encontrado")));
+    }
+
+    // GET /api/resultados/curso/{cursoId} — detalle de notas por curso (docente)
+    @GetMapping("/curso/{cursoId}")
+    public ResponseEntity<ApiResponse<List<ResultadoDetalleDTO>>> getByCurso(
+            @PathVariable Integer cursoId) {
+        List<ResultadoDetalleDTO> detalles = resultadoService.obtenerDetallesPorCurso(cursoId);
+        return ResponseEntity.ok(ApiResponse.success("Resultados del curso", detalles));
+    }
+
+    // GET /api/resultados/curso/{cursoId}/resumen — promedio grupal por evaluación (coordinador)
+    @GetMapping("/curso/{cursoId}/resumen")
+    public ResponseEntity<ApiResponse<List<ResumenCursoDTO>>> getResumenByCurso(
+            @PathVariable Integer cursoId) {
+        List<ResumenCursoDTO> resumen = resultadoService.obtenerResumenPorCurso(cursoId);
+        return ResponseEntity.ok(ApiResponse.success("Resumen del curso", resumen));
     }
 }
