@@ -231,7 +231,11 @@ ON CONFLICT DO NOTHING;
 INSERT INTO submissions (evaluacion_id, estudiante_id, fecha_inicio, fecha_envio, estado) VALUES
 (1, 4, CURRENT_TIMESTAMP - INTERVAL '2 hours',  CURRENT_TIMESTAMP - INTERVAL '1 hour',   'Enviada'),
 (2, 5, CURRENT_TIMESTAMP - INTERVAL '1 day',    CURRENT_TIMESTAMP - INTERVAL '23 hours', 'Calificada'),
-(2, 6, CURRENT_TIMESTAMP - INTERVAL '3 hours',  CURRENT_TIMESTAMP - INTERVAL '2 hours',  'Enviada')
+(2, 6, CURRENT_TIMESTAMP - INTERVAL '3 hours',  CURRENT_TIMESTAMP - INTERVAL '2 hours',  'Enviada'),
+(5, 4, CURRENT_TIMESTAMP - INTERVAL '2 days',   CURRENT_TIMESTAMP - INTERVAL '47 hours', 'Calificada'),
+(5, 5, CURRENT_TIMESTAMP - INTERVAL '2 days',   CURRENT_TIMESTAMP - INTERVAL '46 hours', 'Calificada'),
+(1, 5, CURRENT_TIMESTAMP - INTERVAL '1 day',    CURRENT_TIMESTAMP - INTERVAL '20 hours', 'Enviada'),
+(2, 4, CURRENT_TIMESTAMP - INTERVAL '4 days',   CURRENT_TIMESTAMP - INTERVAL '3 days',   'Calificada')
 ON CONFLICT DO NOTHING;
 
 -- Respuestas
@@ -250,7 +254,10 @@ ON CONFLICT DO NOTHING;
 
 -- Resultados
 INSERT INTO resultados (submission_id, puntuacion_total, puntuacion_maxima, porcentaje, estado_aprobacion) VALUES
-(2, 4.0, 4.0, 100.0, 'Aprobado')
+(2, 4.0, 4.0, 100.0, 'Aprobado'),
+(4, 3.5, 4.0, 87.5,  'Aprobado'),
+(5, 2.5, 4.0, 62.5,  'Aprobado'),
+(7, 3.0, 4.0, 75.0,  'Aprobado')
 ON CONFLICT DO NOTHING;
 
 -- PQRS (con los estados y tipos correctos)
