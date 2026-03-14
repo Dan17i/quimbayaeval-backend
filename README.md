@@ -16,11 +16,16 @@ Sistema backend REST API para gestión de evaluaciones académicas con autentica
 git clone <repo-url>
 cd quimbayaeval-backend
 
-# Iniciar servicios (PostgreSQL + Backend)
-docker-compose up --build
+# 1. Levantar PostgreSQL en Docker (puerto 5433 para evitar conflicto con PostgreSQL local)
+docker-compose up postgres -d
+
+# 2. Ejecutar Spring Boot con variables de entorno
+$env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5433/quimbayaeval"
+$env:SPRING_DATASOURCE_USERNAME="postgres"
+$env:SPRING_DATASOURCE_PASSWORD="postgres"
+mvn clean spring-boot:run
 
 # Backend disponible en: http://localhost:8080
-# Swagger UI: http://localhost:8080/swagger-ui.html
 ```
 
 ### Sin Docker
@@ -63,9 +68,9 @@ Ver [SETUP.md](SETUP.md) para instrucciones detalladas.
 
 | Usuario | Email | Password | Rol |
 |---------|-------|----------|-----|
-| Juan Estudiante | estudiante@quimbaya.edu.co | password123 | estudiante |
-| María Profesora | profesor@quimbaya.edu.co | password123 | maestro |
-| Admin Sistema | admin@quimbaya.edu.co | password123 | coordinador |
+| Juan Estudiante | estudiante@quimbaya.edu.co | password | estudiante |
+| María Profesora | profesor@quimbaya.edu.co | password | maestro |
+| Admin Sistema | admin@quimbaya.edu.co | password | coordinador |
 
 Ver [CREDENCIALES.md](CREDENCIALES.md) para más detalles.
 
@@ -228,5 +233,5 @@ Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detal
 ---
 
 **Versión**: 1.0.0  
-**Estado**:  Producción Ready (Desarrollo)  
-**Última actualización**: Marzo 2026
+**Estado**:  En Desarrollo  
+**Última actualización**: Marzo 13, 2026

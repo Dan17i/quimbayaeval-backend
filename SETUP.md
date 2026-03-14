@@ -36,60 +36,48 @@ git clone <repo-url>
 cd quimbayaeval-backend
 ```
 
-### Paso 2: Configurar Variables de Entorno
+### Paso 2: Levantar PostgreSQL en Docker
 
-Crea un archivo `.env` en la raíz del proyecto:
+> El contenedor usa el puerto **5433** (no 5432) para evitar conflicto con un PostgreSQL local.
 
-```env
-# JWT Configuration
-JWT_SECRET=genera-un-secret-seguro-aqui
-JWT_EXPIRATION=86400000
+```powershell
+# Levantar solo la base de datos
+docker-compose up postgres -d
 
-# Database
-SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/quimbayaeval
-SPRING_DATASOURCE_USERNAME=postgres
-SPRING_DATASOURCE_PASSWORD=postgres
-
-# CORS
-CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+# Verificar que esté corriendo
+docker logs quimbayaeval-db
 ```
 
-Para generar un JWT_SECRET seguro:
+### Paso 3: Ejecutar Spring Boot
 
-```bash
-# En Linux/Mac
-openssl rand -base64 64
-
-# En Windows PowerShell
-$bytes = New-Object byte[] 64
-(New-Object Security.Cryptography.RNGCryptoServiceProvider).GetBytes($bytes)
-[Convert]::ToBase64String($bytes)
+```powershell
+# Windows PowerShell — pasar las variables de entorno en la misma línea
+$env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5433/quimbayaeval"; $env:SPRING_DATASOURCE_USERNAME="postgres"; $env:SPRING_DATASOURCE_PASSWORD="postgres"; mvn clean spring-boot:run
 ```
 
-### Paso 3: Iniciar Servicios
-
-```bash
-# Iniciar PostgreSQL + Backend
-docker-compose up --build
-
-# En modo detached (background)
-docker-compose up -d --build
-```
+> La primera vez usa `mvn clean spring-boot:run` para limpiar el target. Las siguientes veces basta con `mvn spring-boot:run`.
 
 ### Paso 4: Verificar que Funciona
 
-```bash
-# Health check
+```powershell
 curl http://localhost:8080/actuator/health
-
-# Debe responder: {"status":"UP"}
+# Respuesta esperada: {"status":"UP"}
 ```
 
 ### Servicios Disponibles
 
 - Backend: http://localhost:8080
-- PostgreSQL: localhost:5432
-- Swagger UI: http://localhost:8080/swagger-ui.html
+- PostgreSQL (Docker): localhost:5433
+
+### Resetear la base de datos
+
+Si necesitas partir desde cero:
+
+```powershell
+docker-compose down -v
+docker-compose up postgres -d
+# Esperar ~15 segundos y luego arrancar Spring Boot
+```
 
 ## 🖥️ Opción 2: Instalación Local (Sin Docker)
 
@@ -182,14 +170,13 @@ Tomcat started on port(s): 8080 (http)
 
 Probar:
 
-```bash
+```powershell
 # Health check
 curl http://localhost:8080/actuator/health
 
 # Login
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"estudiante@quimbaya.edu.co","password":"password123","role":"estudiante"}'
+$body = '{"email":"estudiante@quimbaya.edu.co","password":"password","role":"estudiante"}'
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/auth/login" -Headers @{"Content-Type"="application/json"} -Body $body
 ```
 
 ## 🧪 Verificación Completa
@@ -209,10 +196,9 @@ Respuesta esperada:
 
 ### 2. Login de Usuario
 
-```bash
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"estudiante@quimbaya.edu.co","password":"password123","role":"estudiante"}'
+```powershell
+$body = '{"email":"estudiante@quimbaya.edu.co","password":"password","role":"estudiante"}'
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/auth/login" -Headers @{"Content-Type"="application/json"} -Body $body
 ```
 
 Respuesta esperada:

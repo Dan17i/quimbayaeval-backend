@@ -559,6 +559,14 @@ Obtener un PQRS específico.
 }
 ```
 
+### GET /api/pqrs/mis-pqrs
+
+Obtener los PQRS del usuario autenticado (lee el ID desde el JWT).
+
+**Acceso**: Requiere autenticación
+
+**Response 200 OK**: Similar a GET /api/pqrs
+
 ### GET /api/pqrs/usuario/{usuarioId}
 
 Obtener PQRS de un usuario específico.
@@ -593,7 +601,7 @@ Crear un nuevo PQRS.
 }
 ```
 
-**Tipos válidos**: `Petición`, `Queja`, `Reclamo`, `Sugerencia`, `Pregunta`
+**Tipos válidos**: `Petición`, `Queja`, `Reclamo`, `Sugerencia`
 
 **Response 201 Created**:
 ```json

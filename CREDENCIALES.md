@@ -2,17 +2,17 @@
 
 ## Usuarios de Prueba
 
-Todos los usuarios tienen la misma contraseña: **`password123`**
+Todos los usuarios tienen la misma contraseña: **`password`**
 
 | ID | Nombre | Email | Password | Rol | Descripción |
 |----|--------|-------|----------|-----|-------------|
-| 1 | Admin Sistema | admin@quimbaya.edu.co | password123 | coordinador | Administrador del sistema |
-| 2 | María Profesora | profesor@quimbaya.edu.co | password123 | maestro | Profesora de Matemáticas y Física |
-| 3 | Ana Martínez | ana.martinez@quimbaya.edu.co | password123 | maestro | Profesora de Programación y BD |
-| 4 | Juan Estudiante | estudiante@quimbaya.edu.co | password123 | estudiante | Estudiante de prueba principal |
-| 5 | María García | maria.garcia@quimbaya.edu.co | password123 | estudiante | Estudiante de prueba |
-| 6 | Pedro Pérez | pedro.perez@quimbaya.edu.co | password123 | estudiante | Estudiante de prueba |
-| 7 | Carlos López | carlos.lopez@quimbaya.edu.co | password123 | estudiante | Estudiante de prueba |
+| 1 | Admin Sistema | admin@quimbaya.edu.co | password | coordinador | Administrador del sistema |
+| 2 | María Profesora | profesor@quimbaya.edu.co | password | maestro | Profesora de Matemáticas y Física |
+| 3 | Ana Martínez | ana.martinez@quimbaya.edu.co | password | maestro | Profesora de Programación y BD |
+| 4 | Juan Estudiante | estudiante@quimbaya.edu.co | password | estudiante | Estudiante de prueba principal |
+| 5 | María García | maria.garcia@quimbaya.edu.co | password | estudiante | Estudiante de prueba |
+| 6 | Pedro Pérez | pedro.perez@quimbaya.edu.co | password | estudiante | Estudiante de prueba |
+| 7 | Carlos López | carlos.lopez@quimbaya.edu.co | password | estudiante | Estudiante de prueba |
 
 ---
 
@@ -36,7 +36,7 @@ Los roles deben escribirse en **minúsculas**:
 # Login como Estudiante
 $response = Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/auth/login" `
   -Headers @{ "Content-Type" = "application/json" } `
-  -Body '{"email":"estudiante@quimbaya.edu.co","password":"password123","role":"estudiante"}'
+  -Body '{"email":"estudiante@quimbaya.edu.co","password":"password","role":"estudiante"}'
 
 $TOKEN = $response.data.token
 ```
@@ -45,7 +45,7 @@ $TOKEN = $response.data.token
 # Login como Profesor
 $response = Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/auth/login" `
   -Headers @{ "Content-Type" = "application/json" } `
-  -Body '{"email":"profesor@quimbaya.edu.co","password":"password123","role":"maestro"}'
+  -Body '{"email":"profesor@quimbaya.edu.co","password":"password","role":"maestro"}'
 
 $TOKEN_PROFESOR = $response.data.token
 ```
@@ -54,7 +54,7 @@ $TOKEN_PROFESOR = $response.data.token
 # Login como Coordinador
 $response = Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/auth/login" `
   -Headers @{ "Content-Type" = "application/json" } `
-  -Body '{"email":"admin@quimbaya.edu.co","password":"password123","role":"coordinador"}'
+  -Body '{"email":"admin@quimbaya.edu.co","password":"password","role":"coordinador"}'
 
 $TOKEN_ADMIN = $response.data.token
 ```
@@ -62,7 +62,7 @@ $TOKEN_ADMIN = $response.data.token
 ### cURL (CMD)
 
 ```cmd
-curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"email\":\"estudiante@quimbaya.edu.co\",\"password\":\"password123\",\"role\":\"estudiante\"}"
+curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"email\":\"estudiante@quimbaya.edu.co\",\"password\":\"password\",\"role\":\"estudiante\"}"
 ```
 
 ### JSON Body
@@ -70,7 +70,7 @@ curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/
 ```json
 {
   "email": "estudiante@quimbaya.edu.co",
-  "password": "password123",
+  "password": "password",
   "role": "estudiante"
 }
 ```
@@ -148,7 +148,7 @@ Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/cursos" `
 
 ### Error: "Credenciales inválidas"
 **Causa**: Email o password incorrectos
-**Solución**: Verificar que el email termine en `.co` y la password sea `password123`
+**Solución**: Verificar que el email termine en `@quimbaya.edu.co` y la password sea `password`
 
 ### Error: "Usuario no encontrado"
 **Causa**: El email no existe en la base de datos
@@ -156,4 +156,4 @@ Invoke-RestMethod -Method Get -Uri "http://localhost:8080/api/cursos" `
 
 ---
 
-**Última actualización**: Marzo 9, 2026
+**Última actualización**: Marzo 13, 2026
