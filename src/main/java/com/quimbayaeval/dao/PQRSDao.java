@@ -54,7 +54,7 @@ public class PQRSDao {
             pqrs.setTipo(rs.getString("tipo"));
             pqrs.setAsunto(rs.getString("asunto"));
             pqrs.setDescripcion(rs.getString("descripcion"));
-            pqrs.setCursoId(rs.getInt("curso_id"));
+            pqrs.setCursoId(rs.getObject("curso_id") != null ? rs.getInt("curso_id") : null);
             pqrs.setUsuarioId(rs.getInt("usuario_id"));
             pqrs.setEstado(rs.getString("estado"));
             pqrs.setFechaCreacion(rs.getTimestamp("fecha_creacion") != null ?
@@ -62,7 +62,7 @@ public class PQRSDao {
             pqrs.setFechaRespuesta(rs.getTimestamp("fecha_respuesta") != null ?
                     rs.getTimestamp("fecha_respuesta").toLocalDateTime() : null);
             pqrs.setRespuesta(rs.getString("respuesta"));
-            pqrs.setRespondidoPorId(rs.getInt("respondido_por_id"));
+            pqrs.setRespondidoPorId(rs.getObject("respondido_por_id") != null ? rs.getInt("respondido_por_id") : null);
             pqrs.setUpdatedAt(rs.getTimestamp("updated_at") != null ?
                     rs.getTimestamp("updated_at").toLocalDateTime() : null);
             pqrs.setCreatedAt(rs.getTimestamp("created_at") != null ?
