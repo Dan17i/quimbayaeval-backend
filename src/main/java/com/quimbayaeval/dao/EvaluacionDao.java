@@ -80,7 +80,7 @@ public class EvaluacionDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, new String[]{"id"});
             ps.setString(1, evaluacion.getNombre());
             ps.setString(2, evaluacion.getDescripcion());
             ps.setInt(3, evaluacion.getCursoId());

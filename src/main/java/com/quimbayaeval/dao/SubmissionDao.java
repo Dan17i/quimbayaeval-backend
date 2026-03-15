@@ -62,7 +62,7 @@ public class SubmissionDao {
     public Submission save(Submission sub) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, new String[]{"id"});
             ps.setInt(1, sub.getEvaluacionId());
             ps.setInt(2, sub.getEstudianteId());
             ps.setString(3, sub.getEstado() != null ? sub.getEstado() : "Borrador");

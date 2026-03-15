@@ -78,7 +78,7 @@ public class PQRSDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, new String[]{"id"});
             ps.setString(1, pqrs.getTipo());
             ps.setString(2, pqrs.getAsunto());
             ps.setString(3, pqrs.getDescripcion());

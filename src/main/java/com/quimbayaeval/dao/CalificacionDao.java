@@ -60,7 +60,7 @@ public class CalificacionDao {
     public Calificacion save(Calificacion cal) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, new String[]{"id"});
             ps.setInt(1, cal.getSubmissionId());
             ps.setInt(2, cal.getPreguntaId());
             ps.setObject(3, cal.getPuntuacionObtenida());

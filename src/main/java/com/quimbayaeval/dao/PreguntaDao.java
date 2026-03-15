@@ -60,7 +60,7 @@ public class PreguntaDao {
     public Pregunta save(Pregunta pregunta) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, new String[]{"id"});
             ps.setInt(1, pregunta.getEvaluacionId());
             ps.setString(2, pregunta.getEnunciado());
             ps.setString(3, pregunta.getTipo());

@@ -65,7 +65,7 @@ public class CursoDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(SQL_INSERT, new String[]{"id"});
             ps.setString(1, curso.getCodigo());
             ps.setString(2, curso.getNombre());
             ps.setString(3, curso.getDescripcion());
