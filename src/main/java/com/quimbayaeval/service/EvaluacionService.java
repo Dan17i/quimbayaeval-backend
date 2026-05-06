@@ -4,11 +4,13 @@ import com.quimbayaeval.config.CustomMetrics;
 import com.quimbayaeval.dao.EvaluacionDao;
 import com.quimbayaeval.dao.JdbcQueryBuilder;
 import com.quimbayaeval.model.Evaluacion;
+import com.quimbayaeval.exception.UnauthorizedException;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Timer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -101,10 +103,17 @@ public class EvaluacionService {
     }
 
     /**
-     * Obtiene evaluaciones activas
+     * Obtiene evaluaciones activas (maestro/coordinador: todas; estudiante: ver obtenerActivasParaEstudiante)
      */
     public List<Evaluacion> obtenerActivas() {
         return evaluacionDao.findByEstado("Activa");
+    }
+
+    /**
+     * Obtiene evaluaciones activas y publicadas de los cursos donde el estudiante está matriculado.
+     */
+    public List<Evaluacion> obtenerActivasParaEstudiante(Integer estudianteId) {
+        return evaluacionDao.findActivasByEstudiante(estudianteId);
     }
 
     /**
@@ -115,15 +124,27 @@ public class EvaluacionService {
     }
 
     /**
-     * Actualiza una evaluación
+     * Actualiza una evaluación.
+     * El coordinador puede editar cualquiera; el maestro solo las suyas.
      */
-    public void actualizar(Evaluacion evaluacion) {
+    @Transactional
+    public void actualizar(Evaluacion evaluacion, Integer profesorIdJwt, String rolJwt) {
+        if (!"coordinador".equals(rolJwt)) {
+            Evaluacion existente = evaluacionDao.findById(evaluacion.getId())
+                .orElseThrow(() -> new com.quimbayaeval.exception.ResourceNotFoundException(
+                    "Evaluacion", "id", evaluacion.getId()));
+            if (!existente.getProfesorId().equals(profesorIdJwt)) {
+                throw new UnauthorizedException(
+                    "Solo el profesor propietario puede modificar esta evaluación");
+            }
+        }
         evaluacionDao.update(evaluacion);
     }
 
     /**
      * Publica una evaluación
      */
+    @Transactional
     public void publicar(Integer id) {
         Optional<Evaluacion> evalOpt = evaluacionDao.findById(id);
         if (evalOpt.isPresent()) {

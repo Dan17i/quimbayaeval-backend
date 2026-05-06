@@ -179,6 +179,18 @@ public class EvaluacionDao {
         return jdbcTemplate.query(SQL_SELECT_BY_ESTADO, rowMapper, estado);
     }
 
+    /** Evaluaciones activas y publicadas de los cursos en que el estudiante está matriculado. */
+    public List<Evaluacion> findActivasByEstudiante(Integer estudianteId) {
+        String sql =
+            "SELECT e.id, e.nombre, e.descripcion, e.curso_id, e.profesor_id, e.tipo, e.estado, " +
+            "e.deadline, e.duracion_minutos, e.intentos_permitidos, e.publicada, e.created_at, e.updated_at " +
+            "FROM evaluaciones e " +
+            "JOIN inscripciones i ON e.curso_id = i.curso_id " +
+            "WHERE e.estado = 'Activa' AND e.publicada = true AND i.estudiante_id = ? " +
+            "ORDER BY e.deadline ASC";
+        return jdbcTemplate.query(sql, rowMapper, estudianteId);
+    }
+
     /**
      * Obtiene evaluaciones con filtros avanzados (LIKE, ENTRE, etc.)
      */

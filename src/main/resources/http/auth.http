@@ -1,0 +1,122 @@
+### ============================================================
+###  AUTH CONTROLLER - Pruebas de API
+###  Base: /api/auth
+###  Archivo: auth.http
+### ============================================================
+
+### Variables de entorno (modifica según tu configuración)
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### Token capturado del login (pegar manualmente o usar env file)
+@token = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlc3R1ZGlhbnRlQHF1aW1iYXlhLmVkdS5jbyIsInVzZXJJZCI6NCwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3NzQ3NTA3NjUsImV4cCI6MTc3NDgzNzE2NX0.gNqqBvDW27VrfrStBSx244B0nlSw2K7oAWFA_bmT6XivouZhVDcKOl_GvO7L9W-ea871ZdsaUCiRnOwR0JISxw
+
+
+### ============================================================
+### 1. LOGIN - Usuario estudiante
+### POST /api/auth/login
+### Espera: 200 OK con token JWT
+### ============================================================
+
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "estudiante@quimbaya.edu.co",
+  "password": "password",
+  "role": "estudiante"
+}
+
+
+### ============================================================
+### 2. LOGIN - Usuario administrador / docente
+### POST /api/auth/login
+### Espera: 200 OK con token JWT
+### ============================================================
+
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "profesor@quimbaya.edu.co",
+  "password": "password",
+  "role": "maestro"
+}
+
+
+### ============================================================
+### 3. LOGIN - Credenciales incorrectas
+### POST /api/auth/login
+### Espera: 4xx error de autenticación
+### ============================================================
+
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@quimbaya.edu.co",
+  "password": "wrongpassword",
+  "role": "estudiante"
+}
+
+
+### ============================================================
+### 4. REGISTER - Nuevo usuario estudiante
+### POST /api/auth/register
+### Espera: 201 CREATED con token JWT
+### ============================================================
+
+POST {{baseUrl}}/api/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "test.nuevo2@test.com",
+  "password": "password123",
+  "role": "estudiante"
+}
+
+
+### ============================================================
+### 5. REGISTER - Email ya registrado (duplicado)
+### POST /api/auth/register
+### Espera: 4xx error de conflicto
+### ============================================================
+
+POST {{baseUrl}}/api/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "test.nuevo2@test.com",
+  "password": "password123",
+  "role": "estudiante"
+}
+
+
+### ============================================================
+### 6. VALIDATE TOKEN - Token válido
+### GET /api/auth/validate
+### Espera: 200 OK con "valid"
+### Nota: pegar el token obtenido en el login
+### ============================================================
+
+GET {{baseUrl}}/api/auth/validate
+Authorization: Bearer {{token}}
+
+
+### ============================================================
+### 7. VALIDATE TOKEN - Sin encabezado Authorization
+### GET /api/auth/validate
+### Espera: 401 UNAUTHORIZED
+### ============================================================
+
+GET {{baseUrl}}/api/auth/validate
+
+
+### ============================================================
+### 8. VALIDATE TOKEN - Token malformado
+### GET /api/auth/validate
+### Espera: 401 UNAUTHORIZED
+### ============================================================
+
+GET {{baseUrl}}/api/auth/validate
+Authorization: Bearer esto.no.es.un.token.valido

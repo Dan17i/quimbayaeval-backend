@@ -18,32 +18,46 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/pqrs")
-@CrossOrigin(origins = "*")
 public class PQRSController {
 
     @Autowired
     private PQRSService pqrsService;
 
     /**
-     * Obtiene todos los PQRS
+     * Obtiene PQRS según el rol del usuario autenticado:
+     *   - COORDINADOR → todos los PQRS
+     *   - MAESTRO     → solo destinatario='maestro' en sus propios cursos
+     *   - ESTUDIANTE  → solo los suyos (redirige a /mis-pqrs)
      * GET /api/pqrs
-     * Parámetros opcionales:
-     *   ?page=0&size=10&sort=id&direction=DESC
+     * Parámetros opcionales: ?page=0&size=10&sort=id&direction=DESC
      */
     @GetMapping
     public ResponseEntity<ApiResponse<List<PQRS>>> obtenerTodos(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size,
             @RequestParam(required = false) String sort,
-            @RequestParam(required = false) String direction) {
+            @RequestParam(required = false) String direction,
+            org.springframework.security.core.Authentication authentication) {
         try {
+            com.quimbayaeval.security.JwtUserDetails userDetails =
+                (com.quimbayaeval.security.JwtUserDetails) authentication.getDetails();
+            String role = userDetails.getRole();
+
             List<PQRS> pqrsList;
-            if (page != null && size != null) {
-                Map<String, Object> filters = new HashMap<>();
-                pqrsList = pqrsService.obtenerTodos(filters, page, size, sort, direction);
+
+            if ("coordinador".equals(role)) {
+                if (page != null && size != null) {
+                    pqrsList = pqrsService.obtenerTodos(new HashMap<>(), page, size, sort, direction);
+                } else {
+                    pqrsList = pqrsService.obtenerTodos();
+                }
+            } else if ("maestro".equals(role)) {
+                pqrsList = pqrsService.obtenerParaMaestro(userDetails.getUserId());
             } else {
-                pqrsList = pqrsService.obtenerTodos();
+                // estudiante — solo los propios
+                pqrsList = pqrsService.obtenerPorUsuario(userDetails.getUserId());
             }
+
             return ResponseEntity.ok(ApiResponse.success(pqrsList));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -60,12 +74,9 @@ public class PQRSController {
     public ResponseEntity<ApiResponse<List<PQRS>>> obtenerMisPqrs(
             org.springframework.security.core.Authentication authentication) {
         try {
-            List<PQRS> pqrsList;
-            if (authentication != null && authentication.getPrincipal() instanceof com.quimbayaeval.security.JwtUserDetails userDetails) {
-                pqrsList = pqrsService.obtenerPorUsuario(userDetails.getUserId());
-            } else {
-                pqrsList = pqrsService.obtenerTodos();
-            }
+            com.quimbayaeval.security.JwtUserDetails userDetails =
+                (com.quimbayaeval.security.JwtUserDetails) authentication.getDetails();
+            List<PQRS> pqrsList = pqrsService.obtenerPorUsuario(userDetails.getUserId());
             return ResponseEntity.ok(ApiResponse.success(pqrsList));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -169,6 +180,14 @@ public class PQRSController {
             if (pqrs.getEstado() == null || pqrs.getEstado().isBlank()) {
                 pqrs.setEstado("Pendiente");
             }
+            // Destinatario: 'maestro' (asunto académico) o 'coordinador' (queja sobre el docente)
+            if (pqrs.getDestinatario() == null || pqrs.getDestinatario().isBlank()) {
+                pqrs.setDestinatario("maestro");
+            } else if (!pqrs.getDestinatario().equals("maestro") && !pqrs.getDestinatario().equals("coordinador")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.error("El destinatario debe ser 'maestro' o 'coordinador'")
+                );
+            }
             PQRS nuevo = pqrsService.crear(pqrs);
             return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.success("PQRS creado exitosamente", nuevo)
@@ -237,6 +256,42 @@ public class PQRSController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ApiResponse.error("Error actualizando PQRS: " + e.getMessage())
+            );
+        }
+    }
+
+    /**
+     * Cambia el estado de un PQRS.
+     * PUT /api/pqrs/{id}/estado
+     *
+     * @param id   ID del PQRS a actualizar
+     * @param body Mapa con clave "estado" y el nuevo valor
+     * @return Mensaje de confirmación o error
+     */
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<ApiResponse<String>> cambiarEstado(
+            @PathVariable Integer id,
+            @RequestBody Map<String, String> body) {
+        try {
+            String nuevoEstado = body.get("estado");
+            if (nuevoEstado == null || nuevoEstado.isBlank()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        ApiResponse.error("El estado es obligatorio")
+                );
+            }
+            Optional<PQRS> pqrsOpt = pqrsService.obtenerPorId(id);
+            if (pqrsOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        ApiResponse.error("PQRS no encontrado")
+                );
+            }
+            PQRS pqrs = pqrsOpt.get();
+            pqrs.setEstado(nuevoEstado);
+            pqrsService.actualizar(pqrs);
+            return ResponseEntity.ok(ApiResponse.success("Estado actualizado a: " + nuevoEstado));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.error("Error cambiando estado: " + e.getMessage())
             );
         }
     }

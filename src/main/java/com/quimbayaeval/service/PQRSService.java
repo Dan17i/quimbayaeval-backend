@@ -51,10 +51,18 @@ public class PQRSService {
     }
 
     /**
-     * Obtiene PQRS del usuario
+     * Obtiene PQRS del usuario (estudiante ve los suyos)
      */
     public List<PQRS> obtenerPorUsuario(Integer usuarioId) {
         return pqrsDao.findByUsuario(usuarioId);
+    }
+
+    /**
+     * Obtiene PQRS visibles para un maestro:
+     * solo las de destinatario='maestro' en cursos que él imparte.
+     */
+    public List<PQRS> obtenerParaMaestro(Integer maestroId) {
+        return pqrsDao.findParaMaestro(maestroId);
     }
 
     /**
@@ -80,7 +88,7 @@ public class PQRSService {
             PQRS pqrs = pqrsOpt.get();
             pqrs.setRespuesta(respuesta);
             pqrs.setRespondidoPorId(respondidoPorId);
-            pqrs.setEstado("Resuelto");
+            pqrs.setEstado("Resuelta");
             pqrsDao.update(pqrs);
         }
     }

@@ -39,7 +39,10 @@ public class PQRSEntity {
     private Integer usuarioId;
     
     @Column(nullable = false, length = 50)
-    private String estado = "Pendiente";  // 'Pendiente', 'En Proceso', 'Resuelto'
+    private String estado = "Pendiente";  // 'Pendiente', 'En Proceso', 'Resuelta', 'Cerrada'
+
+    @Column(nullable = false, length = 20)
+    private String destinatario = "maestro";  // 'maestro' | 'coordinador'
     
     @CreationTimestamp
     @Column(name = "fecha_creacion", nullable = false, updatable = false)

@@ -1,0 +1,207 @@
+### ============================================================
+###  CURSO CONTROLLER - Pruebas de API
+###  Base: /api/cursos
+###  Archivo: curso.http
+### ============================================================
+
+### Variables de entorno
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### Tokens - pegar desde auth.http
+@tokenEstudiante = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlc3R1ZGlhbnRlQHF1aW1iYXlhLmVkdS5jbyIsInVzZXJJZCI6NCwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3NzQ3NTI2NjQsImV4cCI6MTc3NDgzOTA2NH0.5qIzIiPPeXaBhTLANUVNjFGI_o-pl3IH1ZaLfKvZs87H_SBpFLgSsuf_jIlc-v_J2Z5tlVHAZ5oYpUJ5ACkuVA
+@tokenMaestro    = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9mZXNvckBxdWltYmF5YS5lZHUuY28iLCJ1c2VySWQiOjIsInJvbGUiOiJtYWVzdHJvIiwiaWF0IjoxNzc0NzUyNjkxLCJleHAiOjE3NzQ4MzkwOTF9.AdvEhESvoVeyhRfNRAEC5YpN0dwFfKA4dYGV2yw7QR2G90lAhP_ZRrTaaNy77uEg54uwPf6R3yUk4ZofZcNTwQ
+@tokenCoordinador = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBxdWltYmF5YS5lZHUuY28iLCJ1c2VySWQiOjEsInJvbGUiOiJjb29yZGluYWRvciIsImlhdCI6MTc3NDc1Mjc4MCwiZXhwIjoxNzc0ODM5MTgwfQ.zV2klLaC0zqORiRi6Q7QN-ovm41eiuMoGtNozYa6bMgS89wLV3MwIa9yKODkxOIAsTJZp3_RDxyFNLocRqEq0w
+
+### ID de curso creado (actualizar después del request #7)
+@cursoId = 1
+
+
+### ============================================================
+### 1. GET TODOS LOS CURSOS - Sin paginación
+### GET /api/cursos
+### Rol: cualquier autenticado
+### Espera: 200 OK con lista de cursos
+### ============================================================
+
+GET {{baseUrl}}/api/cursos
+Authorization: Bearer {{tokenEstudiante}}
+
+
+### ============================================================
+### 2. GET TODOS LOS CURSOS - Con paginación
+### GET /api/cursos?page=0&size=5&sort=nombre&direction=ASC
+### Espera: 200 OK con lista paginada
+### ============================================================
+
+GET {{baseUrl}}/api/cursos?page=0&size=5&sort=nombre&direction=ASC
+Authorization: Bearer {{tokenEstudiante}}
+
+
+### ============================================================
+### 3. GET TODOS LOS CURSOS - Sin token
+### GET /api/cursos
+### Espera: 401 o 403
+### ============================================================
+
+GET {{baseUrl}}/api/cursos
+
+
+### ============================================================
+### 4. GET CURSO POR ID - Existe
+### GET /api/cursos/{id}
+### Espera: 200 OK con datos del curso
+### ============================================================
+
+GET {{baseUrl}}/api/cursos/{{cursoId}}
+Authorization: Bearer {{tokenEstudiante}}
+
+
+### ============================================================
+### 5. GET CURSO POR ID - No existe
+### GET /api/cursos/{id}
+### Espera: 404 "Curso no encontrado"
+### ============================================================
+
+GET {{baseUrl}}/api/cursos/9999
+Authorization: Bearer {{tokenEstudiante}}
+
+
+### ============================================================
+### 6. GET CURSOS DE UN PROFESOR
+### GET /api/cursos/profesor/{profesorId}
+### Espera: 200 OK con cursos del profesor id=2
+### ============================================================
+
+GET {{baseUrl}}/api/cursos/profesor/2
+Authorization: Bearer {{tokenMaestro}}
+
+
+### ============================================================
+### 7. POST CREAR CURSO
+### POST /api/cursos
+### Rol: MAESTRO o COORDINADOR
+### Espera: 201 CREATED con datos del curso creado
+### NOTA: copiar el id retornado en @cursoId
+### ============================================================
+
+POST {{baseUrl}}/api/cursos
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenMaestro}}
+
+{
+  "nombre": "Curso de Prueba HTTP",
+  "descripcion": "Curso creado desde pruebas .http",
+  "profesorId": 2
+}
+
+
+### ============================================================
+### 8. POST CREAR CURSO - Sin token
+### POST /api/cursos
+### Espera: 401 o 403
+### ============================================================
+
+POST {{baseUrl}}/api/cursos
+Content-Type: {{contentType}}
+
+{
+  "nombre": "Curso sin auth",
+  "descripcion": "No debería crearse"
+}
+
+
+### ============================================================
+### 9. PUT ACTUALIZAR CURSO
+### PUT /api/cursos/{id}
+### Rol: MAESTRO o COORDINADOR
+### Espera: 200 OK "Curso actualizado exitosamente"
+### ============================================================
+
+PUT {{baseUrl}}/api/cursos/{{cursoId}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenMaestro}}
+
+{
+  "nombre": "Curso de Prueba Actualizado",
+  "descripcion": "Descripción actualizada desde pruebas .http",
+  "profesorId": 2
+}
+
+
+### ============================================================
+### 10. PUT ACTUALIZAR CURSO - ID inexistente
+### PUT /api/cursos/{id}
+### Espera: 400 o 404
+### ============================================================
+
+PUT {{baseUrl}}/api/cursos/9999
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenMaestro}}
+
+{
+  "nombre": "No existe",
+  "descripcion": "Este curso no existe"
+}
+
+
+### ============================================================
+### 11. GET ESTUDIANTES DE UN CURSO
+### GET /api/cursos/{id}/estudiantes
+### Espera: 200 OK con lista de estudiantes matriculados
+### ============================================================
+
+GET {{baseUrl}}/api/cursos/{{cursoId}}/estudiantes
+Authorization: Bearer {{tokenMaestro}}
+
+
+### ============================================================
+### 12. POST MATRICULAR ESTUDIANTE EN CURSO
+### POST /api/cursos/{id}/estudiantes
+### Espera: 201 CREATED "Estudiante matriculado exitosamente"
+### ============================================================
+
+POST {{baseUrl}}/api/cursos/{{cursoId}}/estudiantes
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenMaestro}}
+
+{
+  "estudianteId": 4
+}
+
+
+### ============================================================
+### 13. POST MATRICULAR - Sin estudianteId en body
+### POST /api/cursos/{id}/estudiantes
+### Espera: 400 "estudianteId es requerido"
+### ============================================================
+
+POST {{baseUrl}}/api/cursos/{{cursoId}}/estudiantes
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenMaestro}}
+
+{
+  "otrocampo": 99
+}
+
+
+### ============================================================
+### 14. DELETE DESMATRICULAR ESTUDIANTE
+### DELETE /api/cursos/{id}/estudiantes/{estudianteId}
+### Espera: 200 OK "Estudiante desmatriculado exitosamente"
+### ============================================================
+
+DELETE {{baseUrl}}/api/cursos/{{cursoId}}/estudiantes/4
+Authorization: Bearer {{tokenMaestro}}
+
+
+### ============================================================
+### 15. DELETE ELIMINAR CURSO
+### DELETE /api/cursos/{id}
+### Rol: MAESTRO o COORDINADOR
+### Espera: 200 OK "Curso eliminado exitosamente"
+### NOTA: ejecutar de último para no romper otros requests
+### ============================================================
+
+DELETE {{baseUrl}}/api/cursos/{{cursoId}}
+Authorization: Bearer {{tokenMaestro}}

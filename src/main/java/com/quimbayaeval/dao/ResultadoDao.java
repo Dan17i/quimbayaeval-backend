@@ -46,6 +46,36 @@ public class ResultadoDao {
         }
     };
 
+    private static final String SQL_DELETE_RESULTADO =
+        "DELETE FROM resultados WHERE submission_id = ?";
+
+    private static final String SQL_INSERT_RESULTADO =
+        "INSERT INTO resultados (submission_id, puntuacion_total, puntuacion_maxima, porcentaje, estado_aprobacion, fecha_resultado) " +
+        "SELECT s.id, " +
+        "    COALESCE(c.total, 0), " +
+        "    COALESCE(p.maxima, 0), " +
+        "    CASE WHEN COALESCE(p.maxima, 0) = 0 THEN 0 " +
+        "         ELSE ROUND(CAST(COALESCE(c.total, 0) / p.maxima * 100 AS NUMERIC), 2) END, " +
+        "    CASE WHEN COALESCE(p.maxima, 0) = 0 THEN 'Pendiente' " +
+        "         WHEN COALESCE(c.total, 0) / p.maxima * 100 >= 60 THEN 'Aprobado' " +
+        "         ELSE 'Reprobado' END, " +
+        "    CURRENT_TIMESTAMP " +
+        "FROM submissions s " +
+        "LEFT JOIN (SELECT submission_id, SUM(puntuacion_obtenida) AS total " +
+        "           FROM calificaciones GROUP BY submission_id) c ON c.submission_id = s.id " +
+        "LEFT JOIN (SELECT evaluacion_id, SUM(puntuacion) AS maxima " +
+        "           FROM preguntas GROUP BY evaluacion_id) p ON p.evaluacion_id = s.evaluacion_id " +
+        "WHERE s.id = ?";
+
+    /**
+     * Recalcula y persiste el resultado de una submission en base a sus calificaciones actuales.
+     * DELETE + INSERT within the caller's transaction guarantees idempotency on both H2 and PostgreSQL.
+     */
+    public void upsertFromSubmission(Integer submissionId) {
+        jdbcTemplate.update(SQL_DELETE_RESULTADO, submissionId);
+        jdbcTemplate.update(SQL_INSERT_RESULTADO, submissionId);
+    }
+
     public List<Resultado> findByEstudiante(Integer estudianteId) {
         return jdbcTemplate.query(SQL_BASE + " WHERE s.estudiante_id = ? ORDER BY r.fecha_resultado DESC",
             rowMapper, estudianteId);

@@ -224,16 +224,14 @@ class AuthControllerJpaTest {
 
     @Test
     void validateToken_noToken_returnsUnauthorized() throws Exception {
-        // Act & Assert
         mockMvc.perform(get("/api/auth/validate"))
-                .andExpect(status().isForbidden()); // Spring Security devuelve 403
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void validateToken_invalidToken_returnsUnauthorized() throws Exception {
-        // Act & Assert
         mockMvc.perform(get("/api/auth/validate")
                 .header("Authorization", "Bearer invalid.token.here"))
-                .andExpect(status().isForbidden()); // Spring Security devuelve 403
+                .andExpect(status().isUnauthorized());
     }
 }

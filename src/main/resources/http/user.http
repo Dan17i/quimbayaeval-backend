@@ -1,0 +1,234 @@
+### ============================================================
+###  USER CONTROLLER - Pruebas de API
+###  Base: /api/users
+###  Archivo: user.http
+### ============================================================
+
+### Variables de entorno
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### Tokens - pegar después de ejecutar auth.http
+@tokenEstudiante = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlc3R1ZGlhbnRlQHF1aW1iYXlhLmVkdS5jbyIsInVzZXJJZCI6NCwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3NzQ3NTI2NjQsImV4cCI6MTc3NDgzOTA2NH0.5qIzIiPPeXaBhTLANUVNjFGI_o-pl3IH1ZaLfKvZs87H_SBpFLgSsuf_jIlc-v_J2Z5tlVHAZ5oYpUJ5ACkuVA
+@tokenMaestro    = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9mZXNvckBxdWltYmF5YS5lZHUuY28iLCJ1c2VySWQiOjIsInJvbGUiOiJtYWVzdHJvIiwiaWF0IjoxNzc0NzUyNjkxLCJleHAiOjE3NzQ4MzkwOTF9.AdvEhESvoVeyhRfNRAEC5YpN0dwFfKA4dYGV2yw7QR2G90lAhP_ZRrTaaNy77uEg54uwPf6R3yUk4ZofZcNTwQ
+@tokenCoordinador = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBxdWltYmF5YS5lZHUuY28iLCJ1c2VySWQiOjEsInJvbGUiOiJjb29yZGluYWRvciIsImlhdCI6MTc3NDc1Mjc4MCwiZXhwIjoxNzc0ODM5MTgwfQ.zV2klLaC0zqORiRi6Q7QN-ovm41eiuMoGtNozYa6bMgS89wLV3MwIa9yKODkxOIAsTJZp3_RDxyFNLocRqEq0w
+
+
+### ============================================================
+### 1. GET USUARIOS - Todos los usuarios activos
+### GET /api/users
+### Rol requerido: COORDINADOR o MAESTRO
+### Espera: 200 OK con lista de usuarios
+### ============================================================
+
+GET {{baseUrl}}/api/users
+Authorization: Bearer {{tokenMaestro}}
+
+
+### ============================================================
+### 2. GET USUARIOS - Filtrar por rol maestro
+### GET /api/users?role=maestro
+### Espera: 200 OK con lista de maestros
+### ============================================================
+
+GET {{baseUrl}}/api/users?role=maestro
+Authorization: Bearer {{tokenMaestro}}
+
+
+### ============================================================
+### 3. GET USUARIOS - Filtrar por rol estudiante
+### GET /api/users?role=estudiante
+### Espera: 200 OK con lista de estudiantes
+### ============================================================
+
+GET {{baseUrl}}/api/users?role=estudiante
+Authorization: Bearer {{tokenMaestro}}
+
+
+### ============================================================
+### 4. GET USUARIOS - Sin token (no autorizado)
+### GET /api/users
+### Espera: 401 o 403
+### ============================================================
+
+GET {{baseUrl}}/api/users
+
+
+### ============================================================
+### 5. GET MI PERFIL - Estudiante autenticado
+### GET /api/users/me
+### Espera: 200 OK con perfil + cursos inscritos
+### ============================================================
+
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer {{tokenEstudiante}}
+
+
+    ### ============================================================
+    ### 6. GET MI PERFIL - Maestro autenticado
+    ### GET /api/users/me
+    ### Espera: 200 OK con perfil + cursos asignados
+    ### ============================================================
+
+    GET {{baseUrl}}/api/users/me
+    Authorization: Bearer {{tokenMaestro}}
+
+
+### ============================================================
+### 7. PUT MI PERFIL - Actualizar nombre y foto
+### PUT /api/users/me
+### Espera: 200 OK con "Perfil actualizado exitosamente"
+### ============================================================
+
+PUT {{baseUrl}}/api/users/me
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenEstudiante}}
+
+{
+  "name": "Juan Estudiante Actualizado",
+  "fotoUrl": "https://example.com/foto.jpg"
+}
+
+
+### ============================================================
+### 8. PUT MI PERFIL - Solo actualizar nombre (sin foto)
+### PUT /api/users/me
+### Espera: 200 OK
+### ============================================================
+
+PUT {{baseUrl}}/api/users/me
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenEstudiante}}
+
+{
+  "name": "Juan Estudiante"
+}
+
+
+### ============================================================
+### 9. PUT CAMBIAR CONTRASEÑA - Contraseña correcta
+### PUT /api/users/me/password
+### Espera: 200 OK con "Contraseña actualizada exitosamente"
+### ============================================================
+
+PUT {{baseUrl}}/api/users/me/password
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenEstudiante}}
+
+{
+  "passwordActual": "nuevaPassword123",
+  "passwordNueva": "password"
+}
+
+
+### ============================================================
+### 10. PUT CAMBIAR CONTRASEÑA - Contraseña actual incorrecta
+### PUT /api/users/me/password
+### Espera: 400 "La contraseña actual es incorrecta"
+### ============================================================
+
+PUT {{baseUrl}}/api/users/me/password
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenEstudiante}}
+
+{
+  "passwordActual": "wrongpassword",
+  "passwordNueva": "nuevaPassword123"
+}
+
+
+### ============================================================
+### 11. PUT CAMBIAR CONTRASEÑA - Nueva contraseña muy corta
+### PUT /api/users/me/password
+### Espera: 400 "debe tener al menos 6 caracteres"
+### ============================================================
+
+PUT {{baseUrl}}/api/users/me/password
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenEstudiante}}
+
+{
+  "passwordActual": "password",
+  "passwordNueva": "123"
+}
+
+
+### ============================================================
+### 12. PUT CAMBIAR CONTRASEÑA - Faltan campos
+### PUT /api/users/me/password
+### Espera: 400 "passwordActual y passwordNueva son requeridos"
+### ============================================================
+
+PUT {{baseUrl}}/api/users/me/password
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenEstudiante}}
+
+{
+  "passwordActual": "password"
+}
+
+
+### ============================================================
+### 13. PATCH STATUS - Bloquear usuario (id=4 estudiante)
+### PATCH /api/users/{id}/status
+### Espera: 200 OK "Estado actualizado a: bloqueado"
+### ============================================================
+
+PATCH {{baseUrl}}/api/users/4/status
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenCoordinador}}
+
+{
+  "status": "bloqueado"
+}
+
+
+### ============================================================
+### 14. PATCH STATUS - Activar usuario
+### PATCH /api/users/{id}/status
+### Espera: 200 OK "Estado actualizado a: activo"
+### ============================================================
+
+PATCH {{baseUrl}}/api/users/4/status
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenCoordinador}}
+
+{
+  "status": "activo"
+}
+
+
+### ============================================================
+### 15. PATCH STATUS - Usuario inexistente
+### PATCH /api/users/{id}/status
+### Espera: 404 "Usuario no encontrado"
+### ============================================================
+
+PATCH {{baseUrl}}/api/users/9999/status
+Content-Type: {{contentType}}
+Authorization: Bearer {{tokenCoordinador}}
+
+{
+  "status": "activo"
+}
+
+
+### ============================================================
+### 16. DELETE USUARIO - Soft delete (id=4)
+### DELETE /api/users/{id}
+### Espera: 200 OK "Usuario eliminado exitosamente"
+### NOTA: ejecutar el request #14 antes para reactivarlo
+### ============================================================
+
+DELETE {{baseUrl}}/api/users/4
+Authorization: Bearer {{tokenCoordinador}}
+
+
+### ============================================================
+### 17. DELETE USUARIO - Usuario inexistente
+### DELETE /api/users/{id}
+### Espera: 404 "Usuario no encontrado"
+### ============================================================
+
+DELETE {{baseUrl}}/api/users/9999
+Authorization: Bearer {{tokenCoordinador}}

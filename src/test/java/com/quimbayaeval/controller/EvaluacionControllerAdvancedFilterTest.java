@@ -226,7 +226,7 @@ public class EvaluacionControllerAdvancedFilterTest {
 
     @Test
     void testActualizarInvalidaCache() throws Exception {
-        doNothing().when(evaluacionService).actualizar(any(Evaluacion.class));
+        doNothing().when(evaluacionService).actualizar(any(Evaluacion.class), any(), any());
 
         mockMvc.perform(put("/api/evaluaciones/1")
                 .with(csrf())

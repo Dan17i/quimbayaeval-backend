@@ -2,9 +2,11 @@ package com.quimbayaeval.controller;
 
 import com.quimbayaeval.model.Submission;
 import com.quimbayaeval.model.dto.ApiResponse;
+import com.quimbayaeval.security.JwtUserDetails;
 import com.quimbayaeval.service.SubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -14,7 +16,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/submissions")
-@CrossOrigin(origins = "*")
 public class SubmissionController {
 
     @Autowired
@@ -55,8 +56,20 @@ public class SubmissionController {
         return ResponseEntity.ok(ApiResponse.success("Submissions por estudiante", submissionService.obtenerPorEstudiante(estudianteId)));
     }
 
+    /** GET /api/submissions/mis-submissions — el estudiante ve solo las suyas (estudianteId del JWT) */
+    @GetMapping("/mis-submissions")
+    public ResponseEntity<ApiResponse<List<Submission>>> getMisSubmissions(Authentication authentication) {
+        JwtUserDetails userDetails = (JwtUserDetails) authentication.getDetails();
+        return ResponseEntity.ok(ApiResponse.success("Mis submissions",
+            submissionService.obtenerPorEstudiante(userDetails.getUserId())));
+    }
+
     @PostMapping
-    public ResponseEntity<ApiResponse<Submission>> create(@RequestBody Submission s) {
+    public ResponseEntity<ApiResponse<Submission>> create(
+            @RequestBody Submission s,
+            Authentication authentication) {
+        JwtUserDetails userDetails = (JwtUserDetails) authentication.getDetails();
+        s.setEstudianteId(userDetails.getUserId());
         Submission saved = submissionService.crear(s);
         return ResponseEntity.ok(ApiResponse.success("Submission creada", saved));
     }

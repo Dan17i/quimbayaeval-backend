@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/calificaciones")
-@CrossOrigin(origins = "*")
 public class CalificacionController {
 
     @Autowired

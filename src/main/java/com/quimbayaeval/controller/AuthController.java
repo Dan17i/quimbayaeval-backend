@@ -95,7 +95,8 @@ public class AuthController {
      * GET /api/auth/validate
      */
     @GetMapping("/validate")
-    public ResponseEntity<ApiResponse<String>> validateToken(@RequestHeader("Authorization") String bearerToken) {
+    public ResponseEntity<ApiResponse<String>> validateToken(
+            @RequestHeader(name = "Authorization", required = false) String bearerToken) {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             String token = bearerToken.substring(7);
             if (authService.validateToken(token)) {

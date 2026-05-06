@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +26,13 @@ public class PQRSDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL_COLS =
-        "id, tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at, created_at";
+        "id, tipo, asunto, descripcion, curso_id, usuario_id, estado, destinatario, " +
+        "fecha_creacion, fecha_respuesta, respuesta, respondido_por_id, updated_at, created_at";
+
     private static final String SQL_INSERT =
-        "INSERT INTO pqrs (tipo, asunto, descripcion, curso_id, usuario_id, estado, fecha_creacion, created_at) " +
-        "VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+        "INSERT INTO pqrs (tipo, asunto, descripcion, curso_id, usuario_id, estado, destinatario, fecha_creacion, created_at) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+
     private static final String SQL_SELECT_BY_ID =
         "SELECT " + SQL_COLS + " FROM pqrs WHERE id = ?";
     private static final String SQL_SELECT_ALL =
@@ -41,8 +43,22 @@ public class PQRSDao {
         "SELECT " + SQL_COLS + " FROM pqrs WHERE estado = ? ORDER BY fecha_creacion DESC";
     private static final String SQL_SELECT_BY_TIPO =
         "SELECT " + SQL_COLS + " FROM pqrs WHERE tipo = ? ORDER BY fecha_creacion DESC";
+
+    // PQRS visibles para un maestro: destinatario='maestro' y curso pertenece al maestro
+    private static final String SQL_SELECT_PARA_MAESTRO =
+        "SELECT p.id, p.tipo, p.asunto, p.descripcion, p.curso_id, p.usuario_id, p.estado, p.destinatario, " +
+        "p.fecha_creacion, p.fecha_respuesta, p.respuesta, p.respondido_por_id, p.updated_at, p.created_at " +
+        "FROM pqrs p " +
+        "JOIN cursos c ON p.curso_id = c.id " +
+        "WHERE p.destinatario = 'maestro' AND c.profesor_id = ? " +
+        "ORDER BY p.fecha_creacion DESC";
+
     private static final String SQL_UPDATE =
-        "UPDATE pqrs SET tipo = ?, asunto = ?, descripcion = ?, curso_id = ?, estado = ?, respuesta = ?, respondido_por_id = ?, fecha_respuesta = CASE WHEN respuesta IS NOT NULL THEN CURRENT_TIMESTAMP ELSE fecha_respuesta END, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        "UPDATE pqrs SET tipo = ?, asunto = ?, descripcion = ?, curso_id = ?, estado = ?, " +
+        "destinatario = ?, respuesta = ?, respondido_por_id = ?, " +
+        "fecha_respuesta = CASE WHEN respuesta IS NOT NULL THEN CURRENT_TIMESTAMP ELSE fecha_respuesta END, " +
+        "updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+
     private static final String SQL_DELETE =
         "DELETE FROM pqrs WHERE id = ?";
 
@@ -57,6 +73,7 @@ public class PQRSDao {
             pqrs.setCursoId(rs.getObject("curso_id") != null ? rs.getInt("curso_id") : null);
             pqrs.setUsuarioId(rs.getInt("usuario_id"));
             pqrs.setEstado(rs.getString("estado"));
+            pqrs.setDestinatario(rs.getString("destinatario"));
             pqrs.setFechaCreacion(rs.getTimestamp("fecha_creacion") != null ?
                     rs.getTimestamp("fecha_creacion").toLocalDateTime() : null);
             pqrs.setFechaRespuesta(rs.getTimestamp("fecha_respuesta") != null ?
@@ -71,12 +88,8 @@ public class PQRSDao {
         }
     };
 
-    /**
-     * Inserta un nuevo PQRS
-     */
     public PQRS save(PQRS pqrs) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(SQL_INSERT, new String[]{"id"});
             ps.setString(1, pqrs.getTipo());
@@ -84,7 +97,8 @@ public class PQRSDao {
             ps.setString(3, pqrs.getDescripcion());
             ps.setObject(4, pqrs.getCursoId());
             ps.setInt(5, pqrs.getUsuarioId());
-            ps.setString(6, pqrs.getEstado());
+            ps.setString(6, pqrs.getEstado() != null ? pqrs.getEstado() : "Pendiente");
+            ps.setString(7, pqrs.getDestinatario() != null ? pqrs.getDestinatario() : "maestro");
             return ps;
         }, keyHolder);
 
@@ -94,89 +108,49 @@ public class PQRSDao {
         return pqrs;
     }
 
-    /**
-     * Encuentra PQRS por ID
-     */
     public Optional<PQRS> findById(Integer id) {
-        List<PQRS> pqrsList = jdbcTemplate.query(SQL_SELECT_BY_ID, rowMapper, id);
-        return pqrsList.isEmpty() ? Optional.empty() : Optional.of(pqrsList.get(0));
+        List<PQRS> list = jdbcTemplate.query(SQL_SELECT_BY_ID, rowMapper, id);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
-    /**
-     * Obtiene todos los PQRS
-     */
     public List<PQRS> findAll() {
         return jdbcTemplate.query(SQL_SELECT_ALL + " ORDER BY fecha_creacion DESC", rowMapper);
     }
-/**
- * Convierte un Map en lista de criterios de igualdad (=)
- */
-private List<JdbcQueryBuilder.FilterCriteria> mapToCriteria(Map<String, Object> filters) {
-    List<JdbcQueryBuilder.FilterCriteria> criterios = new ArrayList<>();
-    if (filters != null) {
-        filters.forEach((campo, valor) -> {
-            criterios.add(new JdbcQueryBuilder.FilterCriteria(
-                campo,
-                JdbcQueryBuilder.FilterOperator.EQUALS, // operador por defecto
-                valor
-            ));
-        });
+
+    /** PQRS visibles para un maestro: destinatario='maestro' en sus propios cursos. */
+    public List<PQRS> findParaMaestro(Integer maestroId) {
+        return jdbcTemplate.query(SQL_SELECT_PARA_MAESTRO, rowMapper, maestroId);
     }
-    return criterios;
-}
 
-/**
- * Obtiene tickets con criterios dinámicos, ordenación y paginación.
- *
- * <p>Convierte el {@code Map<String,Object>} recibido en una lista de
- * {@link JdbcQueryBuilder.FilterCriteria}, usando por defecto el operador de igualdad (=).
- * Esto evita el uso del método deprecado y permite soportar operadores más avanzados
- * en el futuro (LIKE, BETWEEN, IN, etc.).</p>
- *
- * @param filters   Mapa de filtros simples (campo = valor). Se convierte internamente en criterios.
- * @param page      Número de página para la paginación (puede ser null).
- * @param size      Tamaño de página para la paginación (puede ser null).
- * @param sortBy    Campo por el cual ordenar los resultados.
- * @param direction Dirección de la ordenación ("ASC" o "DESC").
- * @return Lista de tickets PQRS que cumplen con los filtros y la paginación indicada.
- */
-public List<PQRS> findAll(Map<String, Object> filters,
-                          Integer page,
-                          Integer size,
-                          String sortBy,
-                          String direction) {
-    List<JdbcQueryBuilder.FilterCriteria> criterios = mapToCriteria(filters);
+    private List<JdbcQueryBuilder.FilterCriteria> mapToCriteria(Map<String, Object> filters) {
+        List<JdbcQueryBuilder.FilterCriteria> criterios = new ArrayList<>();
+        if (filters != null) {
+            filters.forEach((campo, valor) -> criterios.add(
+                new JdbcQueryBuilder.FilterCriteria(campo, JdbcQueryBuilder.FilterOperator.EQUALS, valor)
+            ));
+        }
+        return criterios;
+    }
 
-    JdbcQueryBuilder.QueryData q = JdbcQueryBuilder.build(
-            SQL_SELECT_ALL, criterios, sortBy, direction, page, size);
+    public List<PQRS> findAll(Map<String, Object> filters, Integer page, Integer size,
+                              String sortBy, String direction) {
+        List<JdbcQueryBuilder.FilterCriteria> criterios = mapToCriteria(filters);
+        JdbcQueryBuilder.QueryData q = JdbcQueryBuilder.build(SQL_SELECT_ALL, criterios, sortBy, direction, page, size);
+        return jdbcTemplate.query(q.sql, rowMapper, q.args);
+    }
 
-    return jdbcTemplate.query(q.sql, rowMapper, q.args);
-}
-
-    /**
-     * Obtiene PQRS por usuario
-     */
     public List<PQRS> findByUsuario(Integer usuarioId) {
         return jdbcTemplate.query(SQL_SELECT_BY_USUARIO, rowMapper, usuarioId);
     }
 
-    /**
-     * Obtiene PQRS por estado
-     */
     public List<PQRS> findByEstado(String estado) {
         return jdbcTemplate.query(SQL_SELECT_BY_ESTADO, rowMapper, estado);
     }
 
-    /**
-     * Obtiene PQRS por tipo
-     */
     public List<PQRS> findByTipo(String tipo) {
         return jdbcTemplate.query(SQL_SELECT_BY_TIPO, rowMapper, tipo);
     }
 
-    /**
-     * Actualiza un PQRS
-     */
     public void update(PQRS pqrs) {
         jdbcTemplate.update(SQL_UPDATE,
             pqrs.getTipo(),
@@ -184,15 +158,13 @@ public List<PQRS> findAll(Map<String, Object> filters,
             pqrs.getDescripcion(),
             pqrs.getCursoId(),
             pqrs.getEstado(),
+            pqrs.getDestinatario() != null ? pqrs.getDestinatario() : "maestro",
             pqrs.getRespuesta(),
             pqrs.getRespondidoPorId(),
             pqrs.getId()
         );
     }
 
-    /**
-     * Elimina un PQRS
-     */
     public void deleteById(Integer id) {
         jdbcTemplate.update(SQL_DELETE, id);
     }

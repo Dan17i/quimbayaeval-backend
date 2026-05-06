@@ -3,12 +3,14 @@ package com.quimbayaeval.controller;
 import com.quimbayaeval.dao.JdbcQueryBuilder;
 import com.quimbayaeval.model.Evaluacion;
 import com.quimbayaeval.model.dto.ApiResponse;
+import com.quimbayaeval.security.JwtUserDetails;
 import com.quimbayaeval.service.EvaluacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,7 +22,6 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/evaluaciones")
-@CrossOrigin(origins = "*")
 public class EvaluacionController {
 
     @Autowired
@@ -136,14 +137,19 @@ public class EvaluacionController {
     }
 
     /**
-     * Obtiene evaluaciones activas con caché
+     * Obtiene evaluaciones activas — filtradas por matrícula si el usuario es estudiante.
      * GET /api/evaluaciones/estado/activas
      */
     @GetMapping("/estado/activas")
-    @Cacheable(value = "evaluacionesByEstado", key = "'activas'")
-    public ResponseEntity<ApiResponse<List<Evaluacion>>> obtenerActivas() {
+    public ResponseEntity<ApiResponse<List<Evaluacion>>> obtenerActivas(Authentication authentication) {
         try {
-            List<Evaluacion> evaluaciones = evaluacionService.obtenerActivas();
+            List<Evaluacion> evaluaciones;
+            JwtUserDetails userDetails = (authentication != null && authentication.getDetails() instanceof JwtUserDetails jud) ? jud : null;
+            if (userDetails != null && "estudiante".equals(userDetails.getRole())) {
+                evaluaciones = evaluacionService.obtenerActivasParaEstudiante(userDetails.getUserId());
+            } else {
+                evaluaciones = evaluacionService.obtenerActivas();
+            }
             return ResponseEntity.ok(ApiResponse.success(evaluaciones));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -172,16 +178,27 @@ public class EvaluacionController {
     }
 
     /**
-     * Actualiza una evaluación (invalida caché)
+     * Actualiza una evaluación (invalida caché).
+     * Solo el maestro propietario o un coordinador pueden modificarla.
      * PUT /api/evaluaciones/{id}
      */
     @PutMapping("/{id}")
     @CacheEvict(value = {"evaluacionesByCurso", "evaluacionesByEstado"}, allEntries = true)
-    public ResponseEntity<ApiResponse<String>> actualizar(@PathVariable Integer id, @RequestBody Evaluacion evaluacion) {
+    public ResponseEntity<ApiResponse<String>> actualizar(
+            @PathVariable Integer id,
+            @RequestBody Evaluacion evaluacion,
+            Authentication authentication) {
         try {
+            JwtUserDetails userDetails = (authentication != null && authentication.getDetails() instanceof JwtUserDetails jud) ? jud : null;
             evaluacion.setId(id);
-            evaluacionService.actualizar(evaluacion);
+            evaluacionService.actualizar(evaluacion,
+                userDetails != null ? userDetails.getUserId() : null,
+                userDetails != null ? userDetails.getRole() : null);
             return ResponseEntity.ok(ApiResponse.success("Evaluación actualizada exitosamente"));
+        } catch (com.quimbayaeval.exception.UnauthorizedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                ApiResponse.error(e.getMessage())
+            );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ApiResponse.error("Error actualizando evaluación: " + e.getMessage())

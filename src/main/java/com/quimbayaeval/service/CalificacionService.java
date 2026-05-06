@@ -1,9 +1,11 @@
 package com.quimbayaeval.service;
 
 import com.quimbayaeval.dao.CalificacionDao;
+import com.quimbayaeval.dao.ResultadoDao;
 import com.quimbayaeval.model.Calificacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -18,8 +20,15 @@ public class CalificacionService {
     @Autowired
     private CalificacionDao calificacionDao;
 
+    @Autowired
+    private ResultadoDao resultadoDao;
+
+    @Transactional
     public Calificacion crear(Calificacion c) {
-        return calificacionDao.save(c);
+        Calificacion saved = calificacionDao.save(c);
+        // ISSUE-03: recalcular resultado automáticamente tras cada calificación
+        resultadoDao.upsertFromSubmission(c.getSubmissionId());
+        return saved;
     }
 
     public Optional<Calificacion> obtenerPorId(Integer id) {

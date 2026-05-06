@@ -137,6 +137,14 @@ public class SubmissionDao {
         return jdbcTemplate.query(SQL_SELECT_BY_ESTUDIANTE, rowMapper, estudianteId);
     }
 
+    public int countByEvaluacionAndEstudiante(Integer evaluacionId, Integer estudianteId) {
+        Integer count = jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM submissions WHERE evaluacion_id = ? AND estudiante_id = ?",
+            Integer.class, evaluacionId, estudianteId
+        );
+        return count != null ? count : 0;
+    }
+
     public void update(Submission sub) {
         jdbcTemplate.update(SQL_UPDATE,
             sub.getEvaluacionId(),

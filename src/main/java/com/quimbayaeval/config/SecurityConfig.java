@@ -53,6 +53,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     // Rutas públicas
                     .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/auth/validate").permitAll()
                     
                     // Swagger y Actuator
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
@@ -63,13 +64,18 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT, "/api/evaluaciones/**").hasAnyRole("MAESTRO", "COORDINADOR")
                     .requestMatchers(HttpMethod.DELETE, "/api/evaluaciones/**").hasAnyRole("MAESTRO", "COORDINADOR")
                     .requestMatchers(HttpMethod.POST, "/api/evaluaciones/*/publicar").hasAnyRole("MAESTRO", "COORDINADOR")
-                    
+
+                    // Preguntas - Solo maestros y coordinadores pueden escribir
+                    .requestMatchers(HttpMethod.POST, "/api/preguntas/**").hasAnyRole("MAESTRO", "COORDINADOR")
+                    .requestMatchers(HttpMethod.PUT, "/api/preguntas/**").hasAnyRole("MAESTRO", "COORDINADOR")
+                    .requestMatchers(HttpMethod.DELETE, "/api/preguntas/**").hasAnyRole("MAESTRO", "COORDINADOR")
+
                     // Calificaciones - Solo maestros
                     .requestMatchers("/api/calificaciones/**").hasRole("MAESTRO")
-                    
-                    // Usuarios - Solo coordinadores
-                    .requestMatchers("/api/usuarios/**").hasRole("COORDINADOR")
+
+                    // Usuarios - Coordinadores gestionan, maestros solo pueden listar
                     .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("COORDINADOR", "MAESTRO")
+                    .requestMatchers("/api/users/**").hasRole("COORDINADOR")
                     
                     // Reportes - Maestros y coordinadores
                     .requestMatchers("/api/reportes/**").hasAnyRole("MAESTRO", "COORDINADOR")
@@ -78,6 +84,11 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/cursos/**").authenticated()
                     .requestMatchers("/api/cursos/**").hasAnyRole("MAESTRO", "COORDINADOR")
                     
+                    // Submissions - estudiante puede crear y ver las suyas; el resto solo MAESTRO/COORDINADOR
+                    .requestMatchers(HttpMethod.GET, "/api/submissions/mis-submissions").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/api/submissions").authenticated()
+                    .requestMatchers("/api/submissions/**").hasAnyRole("MAESTRO", "COORDINADOR")
+
                     // PQRS - Todos pueden crear y ver los suyos
                     .requestMatchers("/api/pqrs/**").authenticated()
                     

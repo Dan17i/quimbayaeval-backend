@@ -51,7 +51,7 @@ class PQRSServiceTest {
         when(pqrsDao.findById(5)).thenReturn(Optional.of(p));
 
         pqrsService.responder(5, "ok", 2);
-        assertEquals("Resuelto", p.getEstado());
+        assertEquals("Resuelta", p.getEstado());
         assertEquals("ok", p.getRespuesta());
         verify(pqrsDao).update(p);
     }

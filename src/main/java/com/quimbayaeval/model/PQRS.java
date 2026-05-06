@@ -7,12 +7,15 @@ import java.time.LocalDateTime;
  */
 public class PQRS {
     private Integer id;
-    private String tipo;  // 'Pregunta', 'Reclamo', 'Sugerencia', 'Queja'
+    private String tipo;  // 'Petición', 'Queja', 'Reclamo', 'Sugerencia'
     private String asunto;
     private String descripcion;
     private Integer cursoId;
     private Integer usuarioId;
-    private String estado;  // 'Pendiente', 'En Proceso', 'Resuelto'
+    private String estado;  // 'Pendiente', 'En Proceso', 'Resuelta', 'Cerrada'
+    /** 'maestro' = asunto académico (visible al maestro del curso + coordinador).
+     *  'coordinador' = queja sobre el docente (visible solo al coordinador). */
+    private String destinatario;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaRespuesta;
     private String respuesta;
@@ -30,6 +33,7 @@ public class PQRS {
         this.descripcion = descripcion;
         this.usuarioId = usuarioId;
         this.estado = "Pendiente";
+        this.destinatario = "maestro";
     }
 
     // Getters y Setters
@@ -71,6 +75,14 @@ public class PQRS {
 
     public void setCursoId(Integer cursoId) {
         this.cursoId = cursoId;
+    }
+
+    public String getDestinatario() {
+        return destinatario;
+    }
+
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
     }
 
     public Integer getUsuarioId() {
