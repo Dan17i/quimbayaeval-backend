@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/quimbayaeval}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -31,12 +31,12 @@ spring:
 
 # JWT Configuration
 jwt:
-  secret: ${JWT_SECRET:tu-clave-secreta-muy-larga-y-segura-cambiar-en-produccion-debe-tener-minimo-256-bits}
-  expiration: 3600000  # 1 hora en milisegundos
+  secret: ${JWT_SECRET}
+  expiration: 86400000
 
 # CORS Configuration
 cors:
-  allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:*}
 
 # Server Configuration
 server:
