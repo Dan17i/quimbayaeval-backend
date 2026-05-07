@@ -48,6 +48,9 @@ buildNumber.properties
 # Frontend documentation (for frontend repo only)
 FRONTEND_API_GUIDE.md
 
+# AWS Elastic Beanstalk
+.elasticbeanstalk/
+
 # OS
 .DS_Store
 Thumbs.db

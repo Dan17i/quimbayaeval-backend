@@ -40,7 +40,7 @@ cors:
 
 # Server Configuration
 server:
-  port: ${PORT:8080}
+  port: ${SERVER_PORT:${PORT:8080}}
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
