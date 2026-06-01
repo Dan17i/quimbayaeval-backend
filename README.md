@@ -305,13 +305,18 @@ Incluye tests de integración para todos los controllers, tests unitarios para s
 
 ### Variables de entorno
 
-El `application.yml` tiene valores por defecto funcionales. Solo necesitas setear variables si quieres sobreescribir algo.
+El `application.yml` acepta las dos variantes más comunes. Prefiere `DATABASE_*`, pero también es compatible con `SPRING_DATASOURCE_*`.
 
 ```env
 # Base de datos (default: localhost:5433)
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5433/quimbayaeval
-SPRING_DATASOURCE_USERNAME=postgres
-SPRING_DATASOURCE_PASSWORD=postgres
+DATABASE_URL=jdbc:postgresql://localhost:5433/quimbayaeval
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+
+# Legacy support
+SPRING_DATASOURCE_URL=${DATABASE_URL}
+SPRING_DATASOURCE_USERNAME=${DATABASE_USER}
+SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
 
 # JWT (default definido en application.yml)
 JWT_SECRET=tu-secret-de-al-menos-256-bits

@@ -2,9 +2,9 @@ spring:
   application:
     name: quimbayaeval-backend
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/quimbayaeval}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    url: ${DATABASE_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/quimbayaeval}}
+    username: ${DATABASE_USER:${SPRING_DATASOURCE_USERNAME:postgres}}
+    password: ${DATABASE_PASSWORD:${SPRING_DATASOURCE_PASSWORD:postgres}}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -46,7 +46,7 @@ logging:
 
 # Server
 server:
-  port: 8081
+  port: ${SERVER_PORT:8080}
   servlet:
     context-path: /
   error:

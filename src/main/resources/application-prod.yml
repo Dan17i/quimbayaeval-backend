@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASSWORD}
+    url: ${DATABASE_URL:${SPRING_DATASOURCE_URL:}}
+    username: ${DATABASE_USER:${SPRING_DATASOURCE_USERNAME:}}
+    password: ${DATABASE_PASSWORD:${SPRING_DATASOURCE_PASSWORD:}}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -16,7 +16,6 @@ spring:
       ddl-auto: validate  # No crear/modificar tablas automáticamente en producción
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
         jdbc:
           batch_size: 20
