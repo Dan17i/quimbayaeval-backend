@@ -17,11 +17,5 @@ COPY --from=build /app/target/*.jar app.jar
 # Expone puerto
 EXPOSE 8080
 
-# Variables de entorno
-ENV SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/quimbayaeval
-ENV SPRING_DATASOURCE_USERNAME=postgres
-ENV SPRING_DATASOURCE_PASSWORD=postgres
-ENV JWT_SECRET=tu-clave-secreta-muy-larga-y-segura-cambiar-en-produccion-debe-tener-minimo-256-bits
-
 # Ejecutar la aplicación
 ENTRYPOINT ["java", "-jar", "app.jar"]
