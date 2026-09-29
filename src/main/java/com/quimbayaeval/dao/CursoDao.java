@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * DAO para entidad Curso
+ * DAO para la entidad Curso.
+ * Gestiona el acceso a datos para asignaturas y grupos académicos utilizando JdbcTemplate.
  */
 @Repository
 public class CursoDao {
@@ -73,8 +74,9 @@ public class CursoDao {
             return ps;
         }, keyHolder);
 
-        if (keyHolder.getKey() != null) {
-            curso.setId(keyHolder.getKey().intValue());
+        Integer generatedId = KeyHolderUtils.extractId(keyHolder);
+        if (generatedId != null) {
+            curso.setId(generatedId);
         }
         return curso;
     }

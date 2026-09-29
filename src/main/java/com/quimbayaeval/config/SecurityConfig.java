@@ -21,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Configuración de seguridad con autorización por rol
@@ -34,7 +35,7 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Value("${cors.allowed-origins}")
+    @Value("${cors.allowed-origins:http://localhost:5173,http://localhost:3000}")
     private String allowedOrigins;
 
     @Bean
@@ -101,26 +102,47 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configuración centralizada de CORS (Cross-Origin Resource Sharing).
+     * Permite peticiones desde aplicaciones cliente (Web React, móvil Android y entornos locales/emuladores),
+     * garantizando compatibilidad con credenciales (cookies/tokens Authorization) y evitando fallos
+     * por espacios en la lista separada por comas o patrones comodín.
+     */
     @Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    log.info("Configurando CORS con orígenes permitidos: {}", allowedOrigins);
-    
-    CorsConfiguration configuration = new CorsConfiguration();
-    
-    // Si es wildcard, no usar credentials
-    if ("*".equals(allowedOrigins.trim())) {
-        configuration.setAllowedOriginPatterns(List.of("*"));
-    } else {
-        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
-    }
-    
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    configuration.setAllowedHeaders(List.of("*"));
-    configuration.setAllowCredentials(true);
-    configuration.setMaxAge(3600L);
+    public CorsConfigurationSource corsConfigurationSource() {
+        log.info("Configurando CORS con orígenes permitidos: {}", allowedOrigins);
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-}
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        // Si contiene comodín '*', usar setAllowedOriginPatterns para permitir credenciales sin errores de navegador
+        boolean hasWildcard = origins.stream().anyMatch(o -> o.contains("*"));
+        if (hasWildcard) {
+            configuration.setAllowedOriginPatterns(origins);
+        } else {
+            configuration.setAllowedOrigins(origins);
+        }
+
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "Origin",
+                "X-Requested-With",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers"
+        ));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Disposition", "X-Total-Count"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }

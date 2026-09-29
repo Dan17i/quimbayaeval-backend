@@ -17,7 +17,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * DAO para entidad PQRS
+ * DAO para la entidad PQRS (Peticiones, Quejas, Reclamos y Sugerencias).
+ * Gestiona la persistencia y trazabilidad de solicitudes de usuarios mediante JdbcTemplate.
  */
 @Repository
 public class PQRSDao {
@@ -102,8 +103,9 @@ public class PQRSDao {
             return ps;
         }, keyHolder);
 
-        if (keyHolder.getKey() != null) {
-            pqrs.setId(keyHolder.getKey().intValue());
+        Integer generatedId = KeyHolderUtils.extractId(keyHolder);
+        if (generatedId != null) {
+            pqrs.setId(generatedId);
         }
         return pqrs;
     }

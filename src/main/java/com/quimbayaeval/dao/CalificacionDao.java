@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * DAO para Calificacion
+ * DAO para la entidad Calificacion.
+ * Maneja el acceso a datos mediante JdbcTemplate e integración segura de llaves autogeneradas.
  */
 @Repository
 public class CalificacionDao {
@@ -69,8 +70,9 @@ public class CalificacionDao {
             ps.setObject(6, cal.getCalificadoPorId());
             return ps;
         }, keyHolder);
-        if (keyHolder.getKey() != null) {
-            cal.setId(keyHolder.getKey().intValue());
+        Integer generatedId = KeyHolderUtils.extractId(keyHolder);
+        if (generatedId != null) {
+            cal.setId(generatedId);
         }
         return cal;
     }

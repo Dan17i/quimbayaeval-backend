@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * DAO para entidad User - Acceso a datos con JDBC
+ * DAO para la entidad User.
+ * Gestiona el acceso a datos para cuentas de usuario (estudiantes, maestros, coordinadores) mediante JdbcTemplate.
  */
 @Repository
 public class UserDao {
@@ -74,8 +75,9 @@ public class UserDao {
             return ps;
         }, keyHolder);
 
-        if (keyHolder.getKey() != null) {
-            user.setId(keyHolder.getKey().intValue());
+        Integer generatedId = KeyHolderUtils.extractId(keyHolder);
+        if (generatedId != null) {
+            user.setId(generatedId);
         }
         return user;
     }

@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * DAO para entidad Evaluacion
+ * DAO para la entidad Evaluacion.
+ * Administra las evaluaciones académicas, exámenes, quices y talleres usando JdbcTemplate.
  */
 @Repository
 public class EvaluacionDao {
@@ -94,8 +95,9 @@ public class EvaluacionDao {
             return ps;
         }, keyHolder);
 
-        if (keyHolder.getKey() != null) {
-            evaluacion.setId(keyHolder.getKey().intValue());
+        Integer generatedId = KeyHolderUtils.extractId(keyHolder);
+        if (generatedId != null) {
+            evaluacion.setId(generatedId);
         }
         return evaluacion;
     }

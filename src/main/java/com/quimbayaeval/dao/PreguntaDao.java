@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * DAO para entidad Pregunta
+ * DAO para la entidad Pregunta.
+ * Gestiona los reactivos y opciones de las evaluaciones académicas usando JdbcTemplate.
  */
 @Repository
 public class PreguntaDao {
@@ -71,11 +72,10 @@ public class PreguntaDao {
             return ps;
         }, keyHolder);
         
-        // Obtener el ID generado - compatible con H2 que retorna múltiples columnas
-        if (keyHolder.getKeys() != null && keyHolder.getKeys().containsKey("ID")) {
-            pregunta.setId(((Number) keyHolder.getKeys().get("ID")).intValue());
-        } else if (keyHolder.getKey() != null) {
-            pregunta.setId(keyHolder.getKey().intValue());
+        // Obtener el ID generado - compatible con PostgreSQL y H2
+        Integer generatedId = KeyHolderUtils.extractId(keyHolder);
+        if (generatedId != null) {
+            pregunta.setId(generatedId);
         } else {
             // Fallback: consultar el último ID insertado
             Integer lastId = jdbcTemplate.queryForObject(

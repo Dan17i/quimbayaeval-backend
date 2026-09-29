@@ -1,9 +1,9 @@
-﻿# QuimbayaEVAL — Backend
+# QuimbayaEVAL — Backend
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)](https://www.postgresql.org/)
-[![Tests](https://img.shields.io/badge/Tests-214%20passing-success.svg)](#testing)
+[![Tests](https://img.shields.io/badge/Tests-230%20passing-success.svg)](#testing)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 REST API para gestión de evaluaciones académicas. Soporta autenticación JWT, autorización por roles, gestión de cursos con inscripciones, calificaciones, resultados con escala 1-5 y sistema PQRS.
@@ -242,6 +242,9 @@ PostgreSQL 15 en Docker, puerto **5433**.
 |---------|-------------|
 | V1 | Schema completo + seed data (usuarios, cursos, evaluaciones, preguntas, submissions, resultados, PQRS) |
 | V2 | Agrega columna `foto_url` a la tabla `users` |
+| V3 | Agrega columna `destinatario` a la tabla `pqrs` |
+| V4 | Ajusta restricción UNIQUE en `submissions` (evaluacion_id, estudiante_id, intento_numero) |
+| V5 | Agrega restricción UNIQUE en `calificaciones` (submission_id, pregunta_id) |
 
 ### Tablas principales
 
@@ -295,9 +298,9 @@ echo $env:SPRING_DATASOURCE_URL
 # Si no imprime nada, mvn test funciona directo
 ```
 
-**Cobertura actual**: 214 tests — 0 failures, 0 errors.
+**Cobertura actual**: 230 tests — 0 failures, 0 errors.
 
-Incluye tests de integración para todos los controllers, tests unitarios para services y DAOs, y tests de validación de DTOs.
+Incluye tests de integración para todos los controllers, tests unitarios para services, DAOs (incluyendo `KeyHolderUtilsTest` para resolución segura de claves autogeneradas), y tests de validación de DTOs.
 
 ---
 

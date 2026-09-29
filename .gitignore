@@ -35,12 +35,14 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
-# IDE
+# IDE & Database Tools
 .vscode/
 .idea/
 *.iml
 *.iws
 *.ipr
+*.session.sql
+migration-complete.sql
 
 # Environment variables
 .env

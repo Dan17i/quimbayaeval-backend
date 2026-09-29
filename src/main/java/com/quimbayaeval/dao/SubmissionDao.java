@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * DAO para Submission
+ * DAO para la entidad Submission.
+ * Administra los envíos e intentos de respuesta de evaluaciones por parte de los estudiantes.
  */
 @Repository
 public class SubmissionDao {
@@ -69,8 +70,9 @@ public class SubmissionDao {
             ps.setInt(4, sub.getIntentoNumero() != null ? sub.getIntentoNumero() : 1);
             return ps;
         }, keyHolder);
-        if (keyHolder.getKey() != null) {
-            sub.setId(keyHolder.getKey().intValue());
+        Integer generatedId = KeyHolderUtils.extractId(keyHolder);
+        if (generatedId != null) {
+            sub.setId(generatedId);
         }
         return sub;
     }

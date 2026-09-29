@@ -711,6 +711,32 @@ src/main/java/com/quimbayaeval/
 - Soporte para JSON
 - Excelente rendimiento
 
+## 🗄️ Capa de Acceso a Datos y Persistencia
+
+### 1. Acceso Mixto: Spring Data JPA y JdbcTemplate DAOs
+
+El sistema utiliza:
+- **Spring Data JPA** para entidades principales como usuarios y autenticación (`UserRepository`, `UserEntity`).
+- **JdbcTemplate DAOs** (`CursoDao`, `EvaluacionDao`, `PreguntaDao`, `SubmissionDao`, `CalificacionDao`, `PQRSDao`, `InscripcionDao`, `ResultadoDao`) para consultas transaccionales de alto rendimiento, paginación dinámica (`JdbcQueryBuilder`) y operaciones optimizadas.
+
+### 2. Resolución de Claves Autogeneradas (`KeyHolderUtils`)
+
+Para evitar incompatibilidades entre drivers JDBC (especialmente PostgreSQL que retorna múltiples columnas autogeneradas o por defecto como `created_at` junto con `id`), se implementó la utilidad centralizada:
+
+`com.quimbayaeval.dao.KeyHolderUtils`
+
+* **Problema resuelto:** `keyHolder.getKey()` lanza `InvalidDataAccessApiUsageException` cuando el mapa de retorno contiene más de una columna generada.
+* **Solución:** `KeyHolderUtils.extractId(keyHolder)` inspecciona de forma insensible a mayúsculas/minúsculas la clave `"id"` o el primer valor numérico del mapa, con fallback seguro, garantizando total portabilidad entre PostgreSQL y H2 en pruebas.
+
+### 3. Política de CORS y Seguridad Multi-Cliente
+
+En `SecurityConfig`, la configuración de `CorsConfigurationSource`:
+- Admite múltiples orígenes separados por coma con sanitización automática de espacios.
+- Soporta patrones dinámicos (`allowedOriginPatterns`) para orígenes locales, emuladores Android (`10.0.2.2`), y wildcards con credenciales habilitadas (`allowCredentials(true)`).
+- Expone cabeceras HTTP estándar (`Authorization`, `Content-Disposition`, `X-Total-Count`).
+
+---
+
 ## 📚 Referencias
 
 - [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/)
@@ -721,5 +747,5 @@ src/main/java/com/quimbayaeval/
 
 ---
 
-**Última actualización**: Marzo 2026  
-**Versión**: 1.0.0
+**Última actualización**: Septiembre 2026 (Fase 1: Estabilización Backend, KeyHolderUtils & CORS)  
+**Versión**: 1.1.0
