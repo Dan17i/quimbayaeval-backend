@@ -157,6 +157,33 @@ public class UserController {
         }).orElse(ResponseEntity.status(404).body(ApiResponse.error("Usuario no encontrado")));
     }
 
+    /** PUT /api/users/{id} — actualizar nombre, email y/o rol de un usuario */
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> updateUser(
+            @PathVariable Integer id,
+            @RequestBody Map<String, String> body) {
+
+        return userRepository.findById(id).map(user -> {
+            if (body.get("name") != null && !body.get("name").isBlank()) {
+                user.setName(body.get("name").trim());
+            }
+            if (body.get("email") != null && !body.get("email").isBlank()) {
+                user.setEmail(body.get("email").trim());
+            }
+            if (body.get("role") != null && !body.get("role").isBlank()) {
+                user.setRole(body.get("role").trim().toLowerCase());
+            }
+            UserEntity updated = userRepository.save(user);
+            Map<String, Object> m = new HashMap<>();
+            m.put("id", updated.getId());
+            m.put("name", updated.getName());
+            m.put("email", updated.getEmail());
+            m.put("role", updated.getRole());
+            m.put("active", updated.getActive());
+            return ResponseEntity.ok(ApiResponse.success("Usuario actualizado exitosamente", m));
+        }).orElse(ResponseEntity.status(404).body(ApiResponse.error("Usuario no encontrado")));
+    }
+
     /** DELETE /api/users/{id} — soft delete */
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable Integer id) {
