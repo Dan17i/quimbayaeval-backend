@@ -28,7 +28,7 @@ public class SubmissionDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SQL_INSERT =
-        "INSERT INTO submissions (evaluacion_id, estudiante_id, fecha_inicio, estado, intento_numero) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?)";
+        "INSERT INTO submissions (evaluacion_id, estudiante_id, fecha_inicio, estado, intento_numero, respuestas_json, fecha_envio) VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)";
     private static final String SQL_SELECT_BY_ID =
         "SELECT id, evaluacion_id, estudiante_id, respuestas_json, estado, intento_numero, fecha_inicio, fecha_envio, created_at, updated_at FROM submissions WHERE id = ?";
     private static final String SQL_SELECT_ALL =
@@ -38,7 +38,7 @@ public class SubmissionDao {
     private static final String SQL_SELECT_BY_ESTUDIANTE =
         "SELECT id, evaluacion_id, estudiante_id, respuestas_json, estado, intento_numero, fecha_inicio, fecha_envio, created_at, updated_at FROM submissions WHERE estudiante_id = ?";
     private static final String SQL_UPDATE =
-        "UPDATE submissions SET evaluacion_id = ?, estudiante_id = ?, respuestas_json = ?::jsonb, estado = ?, intento_numero = ?, fecha_envio = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        "UPDATE submissions SET evaluacion_id = ?, estudiante_id = ?, respuestas_json = ?, estado = ?, intento_numero = ?, fecha_envio = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
     private static final String SQL_DELETE =
         "DELETE FROM submissions WHERE id = ?";
 
@@ -68,6 +68,8 @@ public class SubmissionDao {
             ps.setInt(2, sub.getEstudianteId());
             ps.setString(3, sub.getEstado() != null ? sub.getEstado() : "Borrador");
             ps.setInt(4, sub.getIntentoNumero() != null ? sub.getIntentoNumero() : 1);
+            ps.setString(5, sub.getRespuestasJson());
+            ps.setTimestamp(6, sub.getFechaEnvio() != null ? java.sql.Timestamp.valueOf(sub.getFechaEnvio()) : null);
             return ps;
         }, keyHolder);
         Integer generatedId = KeyHolderUtils.extractId(keyHolder);
