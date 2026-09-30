@@ -42,4 +42,13 @@ class PreguntaServiceTest {
         List<Pregunta> res = preguntaService.obtenerPorEvaluacion(3);
         assertEquals(1, res.size());
     }
+
+    @Test
+    void reordenarPreguntas_callsDaoBatch() {
+        var item1 = new com.quimbayaeval.model.dto.request.PreguntaOrdenDTO(1, 1);
+        var ordenes = List.of(item1);
+
+        preguntaService.reordenarPreguntas(ordenes);
+        verify(preguntaDao).updateOrdenBatch(ordenes);
+    }
 }

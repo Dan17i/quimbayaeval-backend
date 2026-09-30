@@ -22,6 +22,9 @@ class EvaluacionServiceValidationTest {
     @Mock
     private EvaluacionDao evaluacionDao;
 
+    @Mock
+    private com.quimbayaeval.dao.PreguntaDao preguntaDao;
+
     @InjectMocks
     private EvaluacionService evaluacionService;
 
@@ -99,12 +102,26 @@ class EvaluacionServiceValidationTest {
         eval.setPublicada(false);
         eval.setEstado("Borrador");
         when(evaluacionDao.findById(1)).thenReturn(Optional.of(eval));
+        when(preguntaDao.findByEvaluacion(1)).thenReturn(List.of(new com.quimbayaeval.model.Pregunta()));
 
         evaluacionService.publicar(1);
 
         assertTrue(eval.getPublicada());
         assertEquals("Activa", eval.getEstado());
         verify(evaluacionDao).update(eval);
+    }
+
+    @Test
+    void testPublicarEvaluacionSinPreguntasLanzaExcepcion() {
+        Evaluacion eval = new Evaluacion();
+        eval.setId(1);
+        when(evaluacionDao.findById(1)).thenReturn(Optional.of(eval));
+        when(preguntaDao.findByEvaluacion(1)).thenReturn(java.util.Collections.emptyList());
+
+        assertThrows(com.quimbayaeval.exception.BusinessValidationException.class, () -> {
+            evaluacionService.publicar(1);
+        });
+        verify(evaluacionDao, never()).update(any());
     }
 
     @Test

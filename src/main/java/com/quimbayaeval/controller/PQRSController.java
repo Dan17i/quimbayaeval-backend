@@ -86,6 +86,53 @@ public class PQRSController {
     }
 
     /**
+     * Obtiene listado de PQRS enriquecido con datos relacionales (usuario, curso, respondiente) y SLAs
+     * GET /api/pqrs/detalles
+     */
+    @GetMapping("/detalles")
+    public ResponseEntity<ApiResponse<List<com.quimbayaeval.model.dto.PQRSDetalleDTO>>> obtenerDetalles(
+            org.springframework.security.core.Authentication authentication) {
+        try {
+            com.quimbayaeval.security.JwtUserDetails userDetails =
+                (com.quimbayaeval.security.JwtUserDetails) authentication.getDetails();
+            String role = userDetails.getRole();
+
+            List<com.quimbayaeval.model.dto.PQRSDetalleDTO> lista;
+            if ("coordinador".equals(role)) {
+                lista = pqrsService.obtenerDetallesTodos();
+            } else if ("maestro".equals(role)) {
+                lista = pqrsService.obtenerDetallesParaMaestro(userDetails.getUserId());
+            } else {
+                lista = pqrsService.obtenerDetallesPorUsuario(userDetails.getUserId());
+            }
+            return ResponseEntity.ok(ApiResponse.success("Listado de PQRS enriquecido", lista));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                ApiResponse.error("Error obteniendo detalles de PQRS: " + e.getMessage())
+            );
+        }
+    }
+
+    /**
+     * Obtiene detalle enriquecido de un PQRS por ID
+     * GET /api/pqrs/{id}/detalle
+     */
+    @GetMapping("/{id}/detalle")
+    public ResponseEntity<ApiResponse<com.quimbayaeval.model.dto.PQRSDetalleDTO>> obtenerDetallePorId(@PathVariable Integer id) {
+        try {
+            Optional<com.quimbayaeval.model.dto.PQRSDetalleDTO> opt = pqrsService.obtenerDetallePorId(id);
+            if (opt.isPresent()) {
+                return ResponseEntity.ok(ApiResponse.success(opt.get()));
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("PQRS no encontrado"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                ApiResponse.error("Error obteniendo detalle de PQRS: " + e.getMessage())
+            );
+        }
+    }
+
+    /**
      * Obtiene un PQRS por ID
      * GET /api/pqrs/{id}
      */
@@ -206,9 +253,16 @@ public class PQRSController {
     @PutMapping("/{id}/responder")
     public ResponseEntity<ApiResponse<String>> responderPut(
             @PathVariable Integer id,
-            @RequestBody RespuestaRequest request) {
+            @RequestBody RespuestaRequest request,
+            org.springframework.security.core.Authentication authentication) {
         try {
-            pqrsService.responder(id, request.getRespuesta(), request.getRespondidoPorId());
+            Integer userId = null;
+            if (authentication != null && authentication.getDetails() instanceof com.quimbayaeval.security.JwtUserDetails jud) {
+                userId = jud.getUserId();
+            }
+            Integer respondiente = (request.getRespondidoPorId() != null) ? request.getRespondidoPorId() : userId;
+
+            pqrsService.responder(id, request.getRespuesta(), respondiente);
             // Actualizar estado si viene en el request
             if (request.getEstado() != null) {
                 Optional<PQRS> pqrsOpt = pqrsService.obtenerPorId(id);
@@ -232,9 +286,16 @@ public class PQRSController {
     @PostMapping("/{id}/respond")
     public ResponseEntity<ApiResponse<String>> responder(
             @PathVariable Integer id,
-            @RequestBody RespuestaRequest request) {
+            @RequestBody RespuestaRequest request,
+            org.springframework.security.core.Authentication authentication) {
         try {
-            pqrsService.responder(id, request.getRespuesta(), request.getRespondidoPorId());
+            Integer userId = null;
+            if (authentication != null && authentication.getDetails() instanceof com.quimbayaeval.security.JwtUserDetails jud) {
+                userId = jud.getUserId();
+            }
+            Integer respondiente = (request.getRespondidoPorId() != null) ? request.getRespondidoPorId() : userId;
+
+            pqrsService.responder(id, request.getRespuesta(), respondiente);
             return ResponseEntity.ok(ApiResponse.success("PQRS respondido exitosamente"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(

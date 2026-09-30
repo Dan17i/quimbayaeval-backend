@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quimbayaeval.dao.CursoDao;
 import com.quimbayaeval.dao.EvaluacionDao;
+import com.quimbayaeval.dao.PreguntaDao;
 import com.quimbayaeval.dao.UserDao;
 import com.quimbayaeval.model.Curso;
+import com.quimbayaeval.model.Pregunta;
 import com.quimbayaeval.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,9 @@ class EvaluacionControllerIntegrationTest {
     private EvaluacionDao evaluacionDao;
 
     @Autowired
+    private PreguntaDao preguntaDao;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -52,6 +57,7 @@ class EvaluacionControllerIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("DELETE FROM preguntas");
         jdbcTemplate.execute("DELETE FROM evaluaciones");
         jdbcTemplate.execute("DELETE FROM cursos");
         jdbcTemplate.execute("DELETE FROM users");
@@ -99,6 +105,12 @@ class EvaluacionControllerIntegrationTest {
 
         // publish
         Integer evalId = evaluacionDao.findByCurso(cursoId).get(0).getId();
+        Pregunta p = new Pregunta(evalId, "¿Pregunta de prueba?", "verdadero_falso");
+        p.setOrden(1);
+        p.setPuntuacion(5.0);
+        p.setRespuestaCorrectaJson("{\"respuesta\":\"verdadero\"}");
+        preguntaDao.save(p);
+
         mockMvc.perform(post("/api/evaluaciones/"+evalId+"/publicar")
                 .header("Authorization","Bearer " + token))
                 .andExpect(status().isOk())

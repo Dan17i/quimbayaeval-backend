@@ -162,4 +162,70 @@ public class SubmissionDao {
     public void deleteById(Integer id) {
         jdbcTemplate.update(SQL_DELETE, id);
     }
+
+    private static final String SQL_SELECT_DETALLE_BASE =
+        "SELECT s.id, s.evaluacion_id, s.estudiante_id, s.respuestas_json, s.estado, s.intento_numero, " +
+        "s.fecha_inicio, s.fecha_envio, s.created_at, s.updated_at, " +
+        "u.name AS estudiante_nombre, u.email AS estudiante_email, " +
+        "e.nombre AS evaluacion_nombre, e.curso_id, c.nombre AS curso_nombre, c.codigo AS curso_codigo, " +
+        "r.puntuacion_total, r.puntuacion_maxima, r.porcentaje, " +
+        "ROUND(CAST(1 + (r.porcentaje / 100.0) * 4 AS numeric), 2) AS nota_escala, " +
+        "r.estado_aprobacion, r.observaciones " +
+        "FROM submissions s " +
+        "JOIN users u ON s.estudiante_id = u.id " +
+        "JOIN evaluaciones e ON s.evaluacion_id = e.id " +
+        "JOIN cursos c ON e.curso_id = c.id " +
+        "LEFT JOIN resultados r ON r.submission_id = s.id";
+
+    private final RowMapper<com.quimbayaeval.model.dto.SubmissionDetalleDTO> detalleRowMapper = new RowMapper<>() {
+        @Override
+        public com.quimbayaeval.model.dto.SubmissionDetalleDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            com.quimbayaeval.model.dto.SubmissionDetalleDTO d = new com.quimbayaeval.model.dto.SubmissionDetalleDTO();
+            d.setId(rs.getInt("id"));
+            d.setEvaluacionId(rs.getInt("evaluacion_id"));
+            d.setEvaluacionNombre(rs.getString("evaluacion_nombre"));
+            d.setCursoId(rs.getInt("curso_id"));
+            d.setCursoNombre(rs.getString("curso_nombre"));
+            d.setCursoCodigo(rs.getString("curso_codigo"));
+            d.setEstudianteId(rs.getInt("estudiante_id"));
+            d.setEstudianteNombre(rs.getString("estudiante_nombre"));
+            d.setEstudianteEmail(rs.getString("estudiante_email"));
+            d.setRespuestasJson(rs.getString("respuestas_json"));
+            d.setEstado(rs.getString("estado"));
+            d.setIntentoNumero(rs.getInt("intento_numero"));
+            d.setFechaInicio(rs.getTimestamp("fecha_inicio") != null ? rs.getTimestamp("fecha_inicio").toLocalDateTime() : null);
+            d.setFechaEnvio(rs.getTimestamp("fecha_envio") != null ? rs.getTimestamp("fecha_envio").toLocalDateTime() : null);
+            d.setPuntuacionTotal(rs.getBigDecimal("puntuacion_total"));
+            d.setPuntuacionMaxima(rs.getBigDecimal("puntuacion_maxima"));
+            d.setPorcentaje(rs.getBigDecimal("porcentaje"));
+            d.setNotaEscala(rs.getBigDecimal("nota_escala"));
+            d.setEstadoAprobacion(rs.getString("estado_aprobacion"));
+            d.setObservaciones(rs.getString("observaciones"));
+            d.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+            d.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+            return d;
+        }
+    };
+
+    public List<com.quimbayaeval.model.dto.SubmissionDetalleDTO> findDetallesByEvaluacion(Integer evaluacionId) {
+        return jdbcTemplate.query(
+            SQL_SELECT_DETALLE_BASE + " WHERE s.evaluacion_id = ? ORDER BY u.name ASC, s.intento_numero DESC",
+            detalleRowMapper, evaluacionId
+        );
+    }
+
+    public Optional<com.quimbayaeval.model.dto.SubmissionDetalleDTO> findDetalleById(Integer id) {
+        List<com.quimbayaeval.model.dto.SubmissionDetalleDTO> list = jdbcTemplate.query(
+            SQL_SELECT_DETALLE_BASE + " WHERE s.id = ?",
+            detalleRowMapper, id
+        );
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
+    public List<com.quimbayaeval.model.dto.SubmissionDetalleDTO> findDetallesByEstudiante(Integer estudianteId) {
+        return jdbcTemplate.query(
+            SQL_SELECT_DETALLE_BASE + " WHERE s.estudiante_id = ? ORDER BY s.created_at DESC",
+            detalleRowMapper, estudianteId
+        );
+    }
 }

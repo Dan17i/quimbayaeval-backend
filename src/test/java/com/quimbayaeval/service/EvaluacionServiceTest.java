@@ -20,6 +20,9 @@ class EvaluacionServiceTest {
     @Mock
     private EvaluacionDao evaluacionDao;
 
+    @Mock
+    private com.quimbayaeval.dao.PreguntaDao preguntaDao;
+
     @InjectMocks
     private EvaluacionService evaluacionService;
 
@@ -50,6 +53,7 @@ class EvaluacionServiceTest {
         e.setId(10);
         e.setEstado("Borrador");
         when(evaluacionDao.findById(10)).thenReturn(Optional.of(e));
+        when(preguntaDao.findByEvaluacion(10)).thenReturn(List.of(new com.quimbayaeval.model.Pregunta()));
 
         evaluacionService.publicar(10);
         assertEquals("Activa", e.getEstado());

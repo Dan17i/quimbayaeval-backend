@@ -170,4 +170,69 @@ public class PQRSDao {
     public void deleteById(Integer id) {
         jdbcTemplate.update(SQL_DELETE, id);
     }
+
+    private static final String SQL_SELECT_DETALLE_BASE =
+        "SELECT p.id, p.tipo, p.asunto, p.descripcion, p.curso_id, p.usuario_id, p.estado, p.destinatario, " +
+        "p.fecha_creacion, p.fecha_respuesta, p.respuesta, p.respondido_por_id, p.updated_at, p.created_at, " +
+        "u.name AS usuario_nombre, u.email AS usuario_email, " +
+        "c.nombre AS curso_nombre, c.codigo AS curso_codigo, " +
+        "r.name AS respondido_por_nombre " +
+        "FROM pqrs p " +
+        "JOIN users u ON p.usuario_id = u.id " +
+        "LEFT JOIN cursos c ON p.curso_id = c.id " +
+        "LEFT JOIN users r ON p.respondido_por_id = r.id";
+
+    private final RowMapper<com.quimbayaeval.model.dto.PQRSDetalleDTO> detalleRowMapper = new RowMapper<>() {
+        @Override
+        public com.quimbayaeval.model.dto.PQRSDetalleDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            com.quimbayaeval.model.dto.PQRSDetalleDTO d = new com.quimbayaeval.model.dto.PQRSDetalleDTO();
+            d.setId(rs.getInt("id"));
+            d.setTipo(rs.getString("tipo"));
+            d.setAsunto(rs.getString("asunto"));
+            d.setDescripcion(rs.getString("descripcion"));
+            d.setCursoId(rs.getObject("curso_id") != null ? rs.getInt("curso_id") : null);
+            d.setCursoNombre(rs.getString("curso_nombre"));
+            d.setCursoCodigo(rs.getString("curso_codigo"));
+            d.setUsuarioId(rs.getInt("usuario_id"));
+            d.setUsuarioNombre(rs.getString("usuario_nombre"));
+            d.setUsuarioEmail(rs.getString("usuario_email"));
+            d.setEstado(rs.getString("estado"));
+            d.setDestinatario(rs.getString("destinatario"));
+            d.setFechaCreacion(rs.getTimestamp("fecha_creacion") != null ? rs.getTimestamp("fecha_creacion").toLocalDateTime() : null);
+            d.setFechaRespuesta(rs.getTimestamp("fecha_respuesta") != null ? rs.getTimestamp("fecha_respuesta").toLocalDateTime() : null);
+            d.setRespuesta(rs.getString("respuesta"));
+            d.setRespondidoPorId(rs.getObject("respondido_por_id") != null ? rs.getInt("respondido_por_id") : null);
+            d.setRespondidoPorNombre(rs.getString("respondido_por_nombre"));
+            d.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+            d.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+            d.calcularSLA();
+            return d;
+        }
+    };
+
+    public List<com.quimbayaeval.model.dto.PQRSDetalleDTO> findDetallesAll() {
+        return jdbcTemplate.query(SQL_SELECT_DETALLE_BASE + " ORDER BY p.fecha_creacion DESC", detalleRowMapper);
+    }
+
+    public List<com.quimbayaeval.model.dto.PQRSDetalleDTO> findDetallesByUsuario(Integer usuarioId) {
+        return jdbcTemplate.query(
+            SQL_SELECT_DETALLE_BASE + " WHERE p.usuario_id = ? ORDER BY p.fecha_creacion DESC",
+            detalleRowMapper, usuarioId
+        );
+    }
+
+    public List<com.quimbayaeval.model.dto.PQRSDetalleDTO> findDetallesParaMaestro(Integer maestroId) {
+        return jdbcTemplate.query(
+            SQL_SELECT_DETALLE_BASE + " WHERE p.destinatario = 'maestro' AND c.profesor_id = ? ORDER BY p.fecha_creacion DESC",
+            detalleRowMapper, maestroId
+        );
+    }
+
+    public Optional<com.quimbayaeval.model.dto.PQRSDetalleDTO> findDetalleById(Integer id) {
+        List<com.quimbayaeval.model.dto.PQRSDetalleDTO> list = jdbcTemplate.query(
+            SQL_SELECT_DETALLE_BASE + " WHERE p.id = ?",
+            detalleRowMapper, id
+        );
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
 }

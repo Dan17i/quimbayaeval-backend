@@ -80,15 +80,20 @@ public class PQRSService {
     }
 
     /**
-     * Responde un PQRS
+     * Responde un PQRS validando que la respuesta no sea vacía
      */
     public void responder(Integer id, String respuesta, Integer respondidoPorId) {
+        if (respuesta == null || respuesta.trim().isEmpty()) {
+            throw new com.quimbayaeval.exception.BusinessValidationException("La respuesta no puede estar vacía");
+        }
+
         Optional<PQRS> pqrsOpt = pqrsDao.findById(id);
         if (pqrsOpt.isPresent()) {
             PQRS pqrs = pqrsOpt.get();
-            pqrs.setRespuesta(respuesta);
+            pqrs.setRespuesta(respuesta.trim());
             pqrs.setRespondidoPorId(respondidoPorId);
             pqrs.setEstado("Resuelta");
+            pqrs.setFechaRespuesta(java.time.LocalDateTime.now());
             pqrsDao.update(pqrs);
         }
     }
@@ -105,5 +110,21 @@ public class PQRSService {
      */
     public void eliminar(Integer id) {
         pqrsDao.deleteById(id);
+    }
+
+    public List<com.quimbayaeval.model.dto.PQRSDetalleDTO> obtenerDetallesTodos() {
+        return pqrsDao.findDetallesAll();
+    }
+
+    public List<com.quimbayaeval.model.dto.PQRSDetalleDTO> obtenerDetallesPorUsuario(Integer usuarioId) {
+        return pqrsDao.findDetallesByUsuario(usuarioId);
+    }
+
+    public List<com.quimbayaeval.model.dto.PQRSDetalleDTO> obtenerDetallesParaMaestro(Integer maestroId) {
+        return pqrsDao.findDetallesParaMaestro(maestroId);
+    }
+
+    public Optional<com.quimbayaeval.model.dto.PQRSDetalleDTO> obtenerDetallePorId(Integer id) {
+        return pqrsDao.findDetalleById(id);
     }
 }

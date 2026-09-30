@@ -76,6 +76,10 @@ public class ResultadoDao {
         jdbcTemplate.update(SQL_INSERT_RESULTADO, submissionId);
     }
 
+    public void updateObservaciones(Integer submissionId, String observaciones) {
+        jdbcTemplate.update("UPDATE resultados SET observaciones = ? WHERE submission_id = ?", observaciones, submissionId);
+    }
+
     public List<Resultado> findByEstudiante(Integer estudianteId) {
         return jdbcTemplate.query(SQL_BASE + " WHERE s.estudiante_id = ? ORDER BY r.fecha_resultado DESC",
             rowMapper, estudianteId);

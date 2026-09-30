@@ -25,6 +25,9 @@ public class EvaluacionService {
 
     @Autowired
     private EvaluacionDao evaluacionDao;
+
+    @Autowired
+    private com.quimbayaeval.dao.PreguntaDao preguntaDao;
     
     @Autowired(required = false)
     private CustomMetrics customMetrics;
@@ -142,17 +145,66 @@ public class EvaluacionService {
     }
 
     /**
-     * Publica una evaluación
+     * Publica una evaluación validando que cuente con al menos una pregunta registrada.
      */
     @Transactional
     public void publicar(Integer id) {
         Optional<Evaluacion> evalOpt = evaluacionDao.findById(id);
         if (evalOpt.isPresent()) {
             Evaluacion eval = evalOpt.get();
+            if (preguntaDao != null) {
+                List<com.quimbayaeval.model.Pregunta> preguntas = preguntaDao.findByEvaluacion(id);
+                if (preguntas == null || preguntas.isEmpty()) {
+                    throw new com.quimbayaeval.exception.BusinessValidationException(
+                        "No se puede publicar una evaluación que no contenga preguntas registradas");
+                }
+            }
             eval.setPublicada(true);
             eval.setEstado("Activa");
             evaluacionDao.update(eval);
         }
+    }
+
+    /**
+     * Clona una evaluación completa junto con todas sus preguntas en una sola transacción.
+     */
+    @Transactional
+    public Evaluacion duplicar(Integer id, Integer profesorIdJwt, String rolJwt) {
+        Evaluacion original = evaluacionDao.findById(id)
+            .orElseThrow(() -> new com.quimbayaeval.exception.ResourceNotFoundException("Evaluacion", "id", id));
+
+        if (!"coordinador".equals(rolJwt) && profesorIdJwt != null && !original.getProfesorId().equals(profesorIdJwt)) {
+            throw new UnauthorizedException("Solo el profesor propietario o un coordinador pueden duplicar esta evaluación");
+        }
+
+        Evaluacion clon = new Evaluacion();
+        clon.setNombre("Copia de " + original.getNombre());
+        clon.setDescripcion(original.getDescripcion());
+        clon.setCursoId(original.getCursoId());
+        clon.setProfesorId(profesorIdJwt != null ? profesorIdJwt : original.getProfesorId());
+        clon.setTipo(original.getTipo());
+        clon.setEstado("Programada");
+        clon.setPublicada(false);
+        clon.setDuracionMinutos(original.getDuracionMinutos());
+        clon.setIntentosPermitidos(original.getIntentosPermitidos());
+        clon.setDeadline(original.getDeadline());
+
+        Evaluacion guardada = evaluacionDao.save(clon);
+
+        List<com.quimbayaeval.model.Pregunta> preguntasOriginales = preguntaDao.findByEvaluacion(id);
+        for (com.quimbayaeval.model.Pregunta p : preguntasOriginales) {
+            com.quimbayaeval.model.Pregunta clonP = new com.quimbayaeval.model.Pregunta();
+            clonP.setEvaluacionId(guardada.getId());
+            clonP.setEnunciado(p.getEnunciado());
+            clonP.setTipo(p.getTipo());
+            clonP.setPuntuacion(p.getPuntuacion());
+            clonP.setOrden(p.getOrden());
+            clonP.setOpcionesJson(p.getOpcionesJson());
+            clonP.setRespuestaCorrectaJson(p.getRespuestaCorrectaJson());
+            preguntaDao.save(clonP);
+        }
+
+        return guardada;
     }
     
     /**

@@ -27,6 +27,12 @@ public class EvaluacionController {
     @Autowired
     private EvaluacionService evaluacionService;
 
+    @Autowired
+    private com.quimbayaeval.service.SubmissionService submissionService;
+
+    @Autowired
+    private com.fasterxml.jackson.databind.ObjectMapper objectMapper;
+
     /**
      * Obtiene todas las evaluaciones con filtros avanzados
      * GET /api/evaluaciones
@@ -224,6 +230,32 @@ public class EvaluacionController {
     }
 
     /**
+     * Clona una evaluación completa junto con todas sus preguntas
+     * POST /api/evaluaciones/{id}/duplicar
+     */
+    @PostMapping("/{id}/duplicar")
+    @CacheEvict(value = {"evaluacionesByCurso", "evaluacionesByEstado"}, allEntries = true)
+    public ResponseEntity<ApiResponse<Evaluacion>> duplicar(
+            @PathVariable Integer id,
+            Authentication authentication) {
+        try {
+            JwtUserDetails userDetails = (authentication != null && authentication.getDetails() instanceof JwtUserDetails jud) ? jud : null;
+            Integer userId = userDetails != null ? userDetails.getUserId() : null;
+            String role = userDetails != null ? userDetails.getRole() : null;
+            Evaluacion duplicada = evaluacionService.duplicar(id, userId, role);
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.success("Evaluación duplicada exitosamente", duplicada)
+            );
+        } catch (com.quimbayaeval.exception.UnauthorizedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.error(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ApiResponse.error("Error duplicando evaluación: " + e.getMessage())
+            );
+        }
+    }
+
+    /**
      * Elimina una evaluación (invalida caché)
      * DELETE /api/evaluaciones/{id}
      */
@@ -241,15 +273,33 @@ public class EvaluacionController {
     }
 
     /**
-     * Envía respuesta de evaluación (estudiante completa evaluación)
+     * Envía respuesta de evaluación (estudiante completa evaluación y se autocalifica)
      * POST /api/evaluaciones/{id}/submit
      */
     @PostMapping("/{id}/submit")
-    public ResponseEntity<ApiResponse<String>> submitEvaluacion(@PathVariable Integer id, @RequestBody Object respuestas) {
+    public ResponseEntity<ApiResponse<com.quimbayaeval.model.Submission>> submitEvaluacion(
+            @PathVariable Integer id,
+            @RequestBody Object respuestas,
+            Authentication authentication) {
         try {
-            // TODO: Implementar lógica de submit de evaluación
-            // Esto guardará las respuestas del estudiante en la tabla de submissions
-            return ResponseEntity.ok(ApiResponse.success("Evaluación enviada exitosamente"));
+            JwtUserDetails userDetails = (authentication != null && authentication.getDetails() instanceof JwtUserDetails jud) ? jud : null;
+            if (userDetails == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("Usuario no autenticado"));
+            }
+
+            com.quimbayaeval.model.Submission sub = new com.quimbayaeval.model.Submission();
+            sub.setEvaluacionId(id);
+            sub.setEstudianteId(userDetails.getUserId());
+            sub.setEstado("Enviada");
+            sub.setFechaEnvio(java.time.LocalDateTime.now());
+            if (respuestas instanceof String s) {
+                sub.setRespuestasJson(s);
+            } else {
+                sub.setRespuestasJson(objectMapper.writeValueAsString(respuestas));
+            }
+
+            com.quimbayaeval.model.Submission saved = submissionService.crear(sub);
+            return ResponseEntity.ok(ApiResponse.success("Evaluación enviada y autocalificada exitosamente", saved));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ApiResponse.error("Error enviando evaluación: " + e.getMessage())

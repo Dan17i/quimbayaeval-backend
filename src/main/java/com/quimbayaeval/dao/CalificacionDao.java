@@ -139,4 +139,22 @@ public List<Calificacion> findAll(Map<String, Object> filters,
     public void deleteById(Integer id) {
         jdbcTemplate.update(SQL_DELETE, id);
     }
+
+    public Optional<Calificacion> findBySubmissionAndPregunta(Integer submissionId, Integer preguntaId) {
+        String sql = "SELECT id, submission_id, pregunta_id, puntuacion_obtenida, puntuacion_maxima, retroalimentacion, " +
+                     "calificado_por_id, fecha_calificacion, created_at, updated_at " +
+                     "FROM calificaciones WHERE submission_id = ? AND pregunta_id = ?";
+        List<Calificacion> list = jdbcTemplate.query(sql, rowMapper, submissionId, preguntaId);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
+    public void upsert(Calificacion cal) {
+        Optional<Calificacion> existente = findBySubmissionAndPregunta(cal.getSubmissionId(), cal.getPreguntaId());
+        if (existente.isPresent()) {
+            cal.setId(existente.get().getId());
+            update(cal);
+        } else {
+            save(cal);
+        }
+    }
 }

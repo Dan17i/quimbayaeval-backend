@@ -6,15 +6,18 @@ import com.quimbayaeval.exception.BusinessValidationException;
 import com.quimbayaeval.exception.ResourceNotFoundException;
 import com.quimbayaeval.model.Evaluacion;
 import com.quimbayaeval.model.Submission;
+import com.quimbayaeval.model.dto.SubmissionDetalleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Servicio de submissions
+ * Servicio de submissions con soporte para autocalificación y consultas enriquecidas.
  */
 @Service
 public class SubmissionService {
@@ -25,6 +28,10 @@ public class SubmissionService {
     @Autowired
     private EvaluacionDao evaluacionDao;
 
+    @Autowired
+    private CalificacionService calificacionService;
+
+    @Transactional
     public Submission crear(Submission s) {
         // ISSUE-01: la evaluación debe estar Activa y publicada
         Evaluacion eval = evaluacionDao.findById(s.getEvaluacionId())
@@ -44,20 +51,31 @@ public class SubmissionService {
                 "Se alcanzó el límite de intentos permitidos (" + intentosPermitidos + ")");
         }
 
-        return submissionDao.save(s);
+        if ("Enviada".equalsIgnoreCase(s.getEstado()) && s.getFechaEnvio() == null) {
+            s.setFechaEnvio(LocalDateTime.now());
+        }
+
+        Submission saved = submissionDao.save(s);
+
+        if ("Enviada".equalsIgnoreCase(s.getEstado()) && saved.getId() != null) {
+            calificacionService.autocalificarSubmission(saved.getId());
+        }
+
+        return saved;
     }
 
     public Optional<Submission> obtenerPorId(Integer id) {
         return submissionDao.findById(id);
     }
 
+    public Optional<SubmissionDetalleDTO> obtenerDetallePorId(Integer id) {
+        return submissionDao.findDetalleById(id);
+    }
+
     public List<Submission> obtenerTodos() {
         return submissionDao.findAll();
     }
 
-    /**
-     * Obtiene submissions con criterios dinámicos
-     */
     public List<Submission> obtenerTodos(Map<String, Object> filters,
                                          Integer page,
                                          Integer size,
@@ -70,12 +88,28 @@ public class SubmissionService {
         return submissionDao.findByEvaluacion(evaluacionId);
     }
 
+    public List<SubmissionDetalleDTO> obtenerDetallesPorEvaluacion(Integer evaluacionId) {
+        return submissionDao.findDetallesByEvaluacion(evaluacionId);
+    }
+
     public List<Submission> obtenerPorEstudiante(Integer estudianteId) {
         return submissionDao.findByEstudiante(estudianteId);
     }
 
+    public List<SubmissionDetalleDTO> obtenerDetallesPorEstudiante(Integer estudianteId) {
+        return submissionDao.findDetallesByEstudiante(estudianteId);
+    }
+
+    @Transactional
     public void actualizar(Submission s) {
+        if ("Enviada".equalsIgnoreCase(s.getEstado()) && s.getFechaEnvio() == null) {
+            s.setFechaEnvio(LocalDateTime.now());
+        }
         submissionDao.update(s);
+
+        if ("Enviada".equalsIgnoreCase(s.getEstado()) && s.getId() != null) {
+            calificacionService.autocalificarSubmission(s.getId());
+        }
     }
 
     public void eliminar(Integer id) {

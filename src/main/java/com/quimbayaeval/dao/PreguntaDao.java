@@ -32,9 +32,9 @@ public class PreguntaDao {
     private static final String SQL_SELECT_BY_ID =
         "SELECT id, evaluacion_id, enunciado, tipo, puntuacion, orden, opciones_json, respuesta_correcta_json, created_at, updated_at FROM preguntas WHERE id = ?";
     private static final String SQL_SELECT_ALL =
-        "SELECT id, evaluacion_id, enunciado, tipo, puntuacion, orden, opciones_json, respuesta_correcta_json, created_at, updated_at FROM preguntas";
+        "SELECT id, evaluacion_id, enunciado, tipo, puntuacion, orden, opciones_json, respuesta_correcta_json, created_at, updated_at FROM preguntas ORDER BY orden ASC, id ASC";
     private static final String SQL_SELECT_BY_EVALUACION =
-        "SELECT id, evaluacion_id, enunciado, tipo, puntuacion, orden, opciones_json, respuesta_correcta_json, created_at, updated_at FROM preguntas WHERE evaluacion_id = ?";
+        "SELECT id, evaluacion_id, enunciado, tipo, puntuacion, orden, opciones_json, respuesta_correcta_json, created_at, updated_at FROM preguntas WHERE evaluacion_id = ? ORDER BY orden ASC, id ASC";
     private static final String SQL_UPDATE =
         "UPDATE preguntas SET evaluacion_id = ?, enunciado = ?, tipo = ?, puntuacion = ?, orden = ?, opciones_json = ?, respuesta_correcta_json = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
     private static final String SQL_DELETE =
@@ -165,5 +165,22 @@ public class PreguntaDao {
 
     public void deleteById(Integer id) {
         jdbcTemplate.update(SQL_DELETE, id);
+    }
+
+    public void updateOrdenBatch(List<com.quimbayaeval.model.dto.request.PreguntaOrdenDTO> items) {
+        if (items == null || items.isEmpty()) return;
+        String sql = "UPDATE preguntas SET orden = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        jdbcTemplate.batchUpdate(sql, new org.springframework.jdbc.core.BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(java.sql.PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, items.get(i).getOrden());
+                ps.setInt(2, items.get(i).getId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return items.size();
+            }
+        });
     }
 }

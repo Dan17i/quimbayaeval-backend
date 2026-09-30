@@ -62,6 +62,15 @@ public class CalificacionController {
         return ResponseEntity.ok(ApiResponse.success("Calificación creada", saved));
     }
 
+    @PostMapping("/batch")
+    public ResponseEntity<ApiResponse<String>> createBatch(
+            @RequestBody com.quimbayaeval.model.dto.request.CalificacionBatchRequestDTO request,
+            Authentication authentication) {
+        JwtUserDetails userDetails = (JwtUserDetails) authentication.getDetails();
+        calificacionService.calificarBatch(request, userDetails.getUserId());
+        return ResponseEntity.ok(ApiResponse.success("Calificaciones en lote registradas exitosamente"));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Calificacion>> update(@PathVariable Integer id, @RequestBody Calificacion c) {
         c.setId(id);

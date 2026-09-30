@@ -51,6 +51,25 @@ public class SubmissionController {
         return ResponseEntity.ok(ApiResponse.success("Submissions por evaluación", submissionService.obtenerPorEvaluacion(evaluacionId)));
     }
 
+    @GetMapping("/evaluacion/{evaluacionId}/detalles")
+    public ResponseEntity<ApiResponse<List<com.quimbayaeval.model.dto.SubmissionDetalleDTO>>> getDetallesByEvaluacion(
+            @PathVariable Integer evaluacionId) {
+        return ResponseEntity.ok(ApiResponse.success(
+            "Detalles de submissions por evaluación",
+            submissionService.obtenerDetallesPorEvaluacion(evaluacionId)
+        ));
+    }
+
+    @GetMapping("/{id}/detalle")
+    public ResponseEntity<ApiResponse<com.quimbayaeval.model.dto.SubmissionDetalleDTO>> getDetalleById(
+            @PathVariable Integer id) {
+        Optional<com.quimbayaeval.model.dto.SubmissionDetalleDTO> opt = submissionService.obtenerDetallePorId(id);
+        if (opt.isPresent()) {
+            return ResponseEntity.ok(ApiResponse.success("Detalle de submission encontrado", opt.get()));
+        }
+        return ResponseEntity.status(404).body(ApiResponse.error("Submission no encontrada"));
+    }
+
     @GetMapping("/estudiante/{estudianteId}")
     public ResponseEntity<ApiResponse<List<Submission>>> getByEstudiante(@PathVariable Integer estudianteId) {
         return ResponseEntity.ok(ApiResponse.success("Submissions por estudiante", submissionService.obtenerPorEstudiante(estudianteId)));
@@ -62,6 +81,16 @@ public class SubmissionController {
         JwtUserDetails userDetails = (JwtUserDetails) authentication.getDetails();
         return ResponseEntity.ok(ApiResponse.success("Mis submissions",
             submissionService.obtenerPorEstudiante(userDetails.getUserId())));
+    }
+
+    @GetMapping("/mis-submissions/detalles")
+    public ResponseEntity<ApiResponse<List<com.quimbayaeval.model.dto.SubmissionDetalleDTO>>> getMisSubmissionsDetalles(
+            Authentication authentication) {
+        JwtUserDetails userDetails = (JwtUserDetails) authentication.getDetails();
+        return ResponseEntity.ok(ApiResponse.success(
+            "Mis submissions detalladas",
+            submissionService.obtenerDetallesPorEstudiante(userDetails.getUserId())
+        ));
     }
 
     @PostMapping

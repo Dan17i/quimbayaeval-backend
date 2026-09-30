@@ -66,6 +66,15 @@ public class PreguntaController {
         return ResponseEntity.ok(ApiResponse.success("Pregunta actualizada", p));
     }
 
+    @PutMapping("/reordenar")
+    public ResponseEntity<ApiResponse<String>> reordenar(
+            @RequestBody com.quimbayaeval.model.dto.request.ReordenarPreguntasRequestDTO request) {
+        if (request != null && request.getOrdenes() != null) {
+            preguntaService.reordenarPreguntas(request.getOrdenes());
+        }
+        return ResponseEntity.ok(ApiResponse.success("Preguntas reordenadas exitosamente"));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Object>> delete(@PathVariable Integer id) {
         preguntaService.eliminar(id);

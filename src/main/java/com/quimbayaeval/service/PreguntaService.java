@@ -52,4 +52,10 @@ public class PreguntaService {
     public void eliminar(Integer id) {
         preguntaDao.deleteById(id);
     }
+
+    @org.springframework.transaction.annotation.Transactional
+    public void reordenarPreguntas(List<com.quimbayaeval.model.dto.request.PreguntaOrdenDTO> ordenes) {
+        if (ordenes == null || ordenes.isEmpty()) return;
+        preguntaDao.updateOrdenBatch(ordenes);
+    }
 }
