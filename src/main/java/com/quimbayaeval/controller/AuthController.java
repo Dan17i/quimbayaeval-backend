@@ -52,6 +52,7 @@ public class AuthController {
             user.getEmail(), 
             user.getRole()
         );
+        response.setFotoUrl(user.getFotoUrl());
 
         log.info("Login exitoso para usuario: {}", user.getEmail());
         return ResponseEntity.ok(ApiResponse.success("Login exitoso", response));
@@ -84,6 +85,7 @@ public class AuthController {
             newUser.getEmail(), 
             newUser.getRole()
         );
+        response.setFotoUrl(newUser.getFotoUrl());
 
         log.info("Usuario registrado exitosamente: {}", newUser.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED)

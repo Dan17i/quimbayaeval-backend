@@ -91,20 +91,36 @@ public class UserController {
      * Body: { "name": "...", "fotoUrl": "https://..." }
      */
     @PutMapping("/me")
-    public ResponseEntity<ApiResponse<String>> updateMe(
+    public ResponseEntity<ApiResponse<Map<String, Object>>> updateMe(
             Authentication authentication,
             @RequestBody EditarPerfilRequestDTO dto) {
 
         JwtUserDetails userDetails = (JwtUserDetails) authentication.getDetails();
         return userDao.findById(userDetails.getUserId()).map(user -> {
             if (dto.getName() != null && !dto.getName().isBlank()) {
-                user.setName(dto.getName());
+                user.setName(dto.getName().trim());
             }
             if (dto.getFotoUrl() != null) {
-                user.setFotoUrl(dto.getFotoUrl());
+                user.setFotoUrl(dto.getFotoUrl().isBlank() ? null : dto.getFotoUrl().trim());
             }
             userDao.updatePerfil(user);
-            return ResponseEntity.ok(ApiResponse.success("Perfil actualizado exitosamente"));
+
+            Map<String, Object> perfil = new HashMap<>();
+            perfil.put("id",      user.getId());
+            perfil.put("name",    user.getName());
+            perfil.put("email",   user.getEmail());
+            perfil.put("role",    user.getRole());
+            perfil.put("fotoUrl", user.getFotoUrl());
+
+            if ("estudiante".equals(user.getRole())) {
+                List<Curso> cursos = inscripcionDao.findCursosByEstudiante(user.getId());
+                perfil.put("cursos", cursos);
+            } else if ("maestro".equals(user.getRole())) {
+                List<Curso> cursos = cursoDao.findByProfesor(user.getId());
+                perfil.put("cursos", cursos);
+            }
+
+            return ResponseEntity.ok(ApiResponse.success("Perfil actualizado exitosamente", perfil));
         }).orElse(ResponseEntity.status(404).body(ApiResponse.error("Usuario no encontrado")));
     }
 

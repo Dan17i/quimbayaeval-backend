@@ -10,6 +10,7 @@ public class LoginResponse {
     private String name;
     private String email;
     private String role;
+    private String fotoUrl;
 
     // Constructores
     public LoginResponse() {
@@ -72,5 +73,13 @@ public class LoginResponse {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
     }
 }

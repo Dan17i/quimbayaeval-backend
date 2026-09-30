@@ -92,4 +92,49 @@ class UserControllerIntegrationTest {
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    void getMe_returnsAuthenticatedUserProfile() throws Exception {
+        mockMvc.perform(get("/api/users/me")
+                .header("Authorization", "Bearer " + tokenMaestro))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.email").value("profe.test@q.edu.co"))
+                .andExpect(jsonPath("$.data.role").value("maestro"));
+    }
+
+    @Test
+    void updateMe_updatesNameAndFotoAndReturnsProfile() throws Exception {
+        String body = "{\"name\":\"Profe Actualizado\",\"fotoUrl\":\"https://example.com/foto.jpg\"}";
+        mockMvc.perform(put("/api/users/me")
+                .header("Authorization", "Bearer " + tokenMaestro)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.name").value("Profe Actualizado"))
+                .andExpect(jsonPath("$.data.fotoUrl").value("https://example.com/foto.jpg"));
+    }
+
+    @Test
+    void changePassword_validPassword_updatesSuccessfully() throws Exception {
+        String body = "{\"passwordActual\":\"pwd\",\"passwordNueva\":\"nuevaClave123\"}";
+        mockMvc.perform(put("/api/users/me/password")
+                .header("Authorization", "Bearer " + tokenMaestro)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    void changePassword_wrongCurrentPassword_returnsBadRequest() throws Exception {
+        String body = "{\"passwordActual\":\"wrongPwd\",\"passwordNueva\":\"nuevaClave123\"}";
+        mockMvc.perform(put("/api/users/me/password")
+                .header("Authorization", "Bearer " + tokenMaestro)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false));
+    }
 }

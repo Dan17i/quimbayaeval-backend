@@ -74,6 +74,9 @@ public class SecurityConfig {
                     // Calificaciones - Solo maestros
                     .requestMatchers("/api/calificaciones/**").hasRole("MAESTRO")
 
+                    // Perfil del usuario autenticado (estudiante, maestro, coordinador)
+                    .requestMatchers("/api/users/me", "/api/users/me/**").authenticated()
+
                     // Usuarios - Coordinadores gestionan, maestros solo pueden listar
                     .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("COORDINADOR", "MAESTRO")
                     .requestMatchers("/api/users/**").hasRole("COORDINADOR")
